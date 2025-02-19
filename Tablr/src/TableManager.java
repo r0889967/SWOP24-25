@@ -21,8 +21,14 @@ public class TableManager {
     public static void createAndAddTable(){
         if(Tablr.tables.size()<Tablr.maxTables) {
             String name = generateRandomName();
+            String finalName = name;
+            while(getTables().stream().anyMatch(t -> t.name.equals(finalName))){
+                name = generateRandomName();
+            }
             Table table = new Table(name);
             Tablr.tables.add(table);
         }
     }
+
+    public static void deleteTable(String name){}
 }
