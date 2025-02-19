@@ -16,7 +16,7 @@ public class TableManager {
         return "Table"+name;
     }
 
-    public static Table selectTable(int idx){
+    public static void selectTable(int idx){
         for(int i=0;i<tables.size();i++){
             if(i==idx){
                 tables.get(i).selected = true;
@@ -24,10 +24,6 @@ public class TableManager {
                 tables.get(i).selected = false;
             }
         }
-        if(idx<tables.size()) {
-            return tables.get(idx);
-        }
-        return null;
     }
 
     public static void editTableName(int idx){
@@ -50,7 +46,14 @@ public class TableManager {
         }
     }
 
-    public static void deleteTable(Table table){
-        tables.remove(table);
+    public static void deleteTable(){
+        for(Table t:tables){
+            if(t.isSelected()){
+                tables.remove(t);
+                break;
+            }
+        }
+
+
     }
 }

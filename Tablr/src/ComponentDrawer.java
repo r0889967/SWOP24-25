@@ -18,7 +18,7 @@ public class ComponentDrawer {
             g.setColor(Color.black);
             g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
             String name = table.getName();
-            if(table.selected){
+            if(table.isSelected()){
                 name+="<<";
             }
             g.drawString(name,col*entryWidth,row*entryHeight+entryHeight/2);

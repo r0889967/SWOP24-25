@@ -13,6 +13,10 @@ public class Table {
         this.name = name;
     }
 
+    public boolean isSelected(){
+        return selected;
+    }
+
     public String getName(){
         return name;
     }
