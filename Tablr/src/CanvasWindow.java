@@ -1,10 +1,6 @@
 
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -21,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HexFormat;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -270,19 +267,52 @@ public class CanvasWindow {
      * @param g This object offers the methods that allow you to paint on the canvas.
      */
     protected void paint(Graphics g) {
+
+        int width = frame.getWidth();
+        int height = frame.getHeight();
+        g.setColor(Color.blue);
+        g.fillRect(0, 0, width, height/3);
+
+        int entryWidth = width/6;
+        int entryHeight = height/30;
+        int row = 0;
+        int col = 0;
+        for(Table table:TableManager.getTables()) {
+            g.setColor(Color.lightGray);
+            g.fillRect(col*entryWidth,row*entryHeight,entryWidth,entryHeight);
+            g.setColor(Color.black);
+            g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 14));
+            g.drawString(table.name,col*entryWidth,row*entryHeight+entryHeight/2);
+            col++;
+            if(col%6==0){
+                row++;
+                col = 0;
+            }
+
+        }
+
+
+
     }
 
     private void handleMouseEvent_(MouseEvent e) {
         System.out.println(e);
         if (recording != null)
             recording.items.add(new MouseEventItem(e.getID(), e.getX(), e.getY(), e.getClickCount()));
+
         handleMouseEvent(e.getID(), e.getX(), e.getY(), e.getClickCount());
+
     }
 
     /**
      * Called when the user presses (id == MouseEvent.MOUSE_PRESSED), releases (id == MouseEvent.MOUSE_RELEASED), or drags (id == MouseEvent.MOUSE_DRAGGED) the mouse.
      */
     protected void handleMouseEvent(int id, int x, int y, int clickCount) {
+        int height = frame.getHeight();
+        if(id==500 && y>height/3 && clickCount==2){
+            TableManager.createAndAddTable();
+            CanvasWindow.this.repaint();
+        }
 
     }
 
@@ -408,6 +438,12 @@ public class CanvasWindow {
         panel = new Panel();
         frame = new Frame(title);
         frame.setVisible(true);
+        CanvasWindow.this.paint(frame.getGraphics());
+
+
+
+
+
 
 
     }
