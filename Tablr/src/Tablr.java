@@ -1,11 +1,10 @@
 import java.util.ArrayList;
-import java.util.Random;
+
 
 public class Tablr {
 
-    static ArrayList<Table> tables = new ArrayList<Table>();
+
     static String mode = "Tables mode";
-    static int maxTables = 60;
 
 
 

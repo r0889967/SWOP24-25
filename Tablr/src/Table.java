@@ -2,12 +2,21 @@ import java.util.ArrayList;
 
 public class Table {
 
-    String name;
+    private String name;
     ArrayList<Column> cols = new ArrayList<Column>();
+
 
     ArrayList<ArrayList<Cell>> rows = new ArrayList<ArrayList<Cell>>();
 
     Table(String name){
+        this.name = name;
+    }
+
+    public String getName(){
+        return name;
+    }
+
+    public void setName(String name){
         this.name = name;
     }
 

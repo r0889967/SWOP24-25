@@ -2,6 +2,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class TableManager {
+    private static int maxTables = 60;
+    private static ArrayList<Table> tables = new ArrayList<Table>();
 
     private static String generateRandomName(){
         Random random = new Random();
@@ -14,21 +16,27 @@ public class TableManager {
         return "Table"+name;
     }
 
+    public static void selectTable(){
+
+    }
+
     public static ArrayList<Table> getTables(){
-        return Tablr.tables;
+        return tables;
     }
 
     public static void createAndAddTable(){
-        if(Tablr.tables.size()<Tablr.maxTables) {
+        if(tables.size()<maxTables) {
             String name = generateRandomName();
             String finalName = name;
-            while(getTables().stream().anyMatch(t -> t.name.equals(finalName))){
+            while(getTables().stream().anyMatch(t -> t.getName().equals(finalName))){
                 name = generateRandomName();
             }
             Table table = new Table(name);
-            Tablr.tables.add(table);
+            tables.add(table);
         }
     }
 
-    public static void deleteTable(String name){}
+    public static void deleteTable(Table table){
+        tables.remove(table);
+    }
 }
