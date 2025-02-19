@@ -4,6 +4,7 @@ public class Table {
 
     private String name;
     ArrayList<Column> cols = new ArrayList<Column>();
+    boolean selected = false;
 
 
     ArrayList<ArrayList<Cell>> rows = new ArrayList<ArrayList<Cell>>();

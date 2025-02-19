@@ -16,7 +16,21 @@ public class TableManager {
         return "Table"+name;
     }
 
-    public static void selectTable(){
+    public static Table selectTable(int idx){
+        for(int i=0;i<tables.size();i++){
+            if(i==idx){
+                tables.get(i).selected = true;
+            }else{
+                tables.get(i).selected = false;
+            }
+        }
+        if(idx<tables.size()) {
+            return tables.get(idx);
+        }
+        return null;
+    }
+
+    public static void editTableName(int idx){
 
     }
 

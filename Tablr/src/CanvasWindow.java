@@ -286,10 +286,17 @@ public class CanvasWindow {
      */
     protected void handleMouseEvent(int id, int x, int y, int clickCount) {
         int height = frame.getHeight();
+        int heightPerCol = 20;
+        int widthPerRow = 100;
         if(id==500 && y>height/3 && clickCount==2){
             TableManager.createAndAddTable();
-            CanvasWindow.this.repaint();
+        }else if(id==500 && y<=height/3 && clickCount==1){
+            int col = x/widthPerRow;
+            int row = y/heightPerCol;
+            int idx = (row*6)+col;
+            TableManager.selectTable(idx);
         }
+        CanvasWindow.this.repaint();
 
     }
 
@@ -304,6 +311,7 @@ public class CanvasWindow {
      * Called when the user presses a key (id == KeyEvent.KEY_PRESSED) or enters a character (id == KeyEvent.KEY_TYPED).
      */
     protected void handleKeyEvent(int id, int keyCode, char keyChar) {
+
     }
 
     BufferedImage captureImage() {

@@ -16,8 +16,12 @@ public class ComponentDrawer {
             g.setColor(Color.lightGray);
             g.fillRect(col*entryWidth,row*entryHeight,entryWidth,entryHeight);
             g.setColor(Color.black);
-            g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 14));
-            g.drawString(table.getName(),col*entryWidth,row*entryHeight+entryHeight/2);
+            g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+            String name = table.getName();
+            if(table.selected){
+                name+="<<";
+            }
+            g.drawString(name,col*entryWidth,row*entryHeight+entryHeight/2);
             col++;
             if(col%6==0){
                 row++;
