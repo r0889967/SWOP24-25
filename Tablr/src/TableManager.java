@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class TableManager {
-    private static int maxTables = 60;
+    private static int maxTables = 90;
     private static ArrayList<Table> tables = new ArrayList<Table>();
 
     private static String generateRandomName(){
@@ -26,7 +26,22 @@ public class TableManager {
         }
     }
 
-    public static void editTableName(int idx){
+    public static Table getSelectedTable(){
+        for(int i=0;i<tables.size();i++){
+            if(tables.get(i).selected){
+                return tables.get(i);
+            }
+        }
+        return null;
+    }
+
+    public static void editTableName(Table table,char keyChar){
+        String name = table.getName();
+        if(keyChar=='\b'){
+            table.setName(name.substring(0, name.length()-1));
+        }else{
+            table.setName(name+keyChar);
+        }
 
     }
 
@@ -46,14 +61,7 @@ public class TableManager {
         }
     }
 
-    public static void deleteTable(){
-        for(Table t:tables){
-            if(t.isSelected()){
-                tables.remove(t);
-                break;
-            }
-        }
-
-
+    public static void deleteTable(Table table){
+        tables.remove(table);
     }
 }

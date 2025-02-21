@@ -6,7 +6,7 @@ public class ComponentDrawer {
         int width = frame.getWidth();
         int height = frame.getHeight();
         g.setColor(Color.blue);
-        g.fillRect(0, 0, width, height/3);
+        g.fillRect(0, 0, width, height/2);
 
         int entryWidth = width/6;
         int entryHeight = height/30;
@@ -19,7 +19,7 @@ public class ComponentDrawer {
             g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
             String name = table.getName();
             if(table.isSelected()){
-                name+="<<";
+                name+="<";
             }
             g.drawString(name,col*entryWidth,row*entryHeight+entryHeight/2);
             col++;

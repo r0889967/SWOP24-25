@@ -311,8 +311,12 @@ public class CanvasWindow {
      * Called when the user presses a key (id == KeyEvent.KEY_PRESSED) or enters a character (id == KeyEvent.KEY_TYPED).
      */
     protected void handleKeyEvent(int id, int keyCode, char keyChar) {
-        if(keyCode==127){
-            TableManager.deleteTable();
+        Table selected = TableManager.getSelectedTable();
+
+        if(id == 401 && keyCode==127){
+            TableManager.deleteTable(selected);
+        }else if (id == 401 && keyCode!=127){
+            TableManager.editTableName(selected,keyChar);
         }
         CanvasWindow.this.repaint();
 
