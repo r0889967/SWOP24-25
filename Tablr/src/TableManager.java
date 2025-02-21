@@ -19,16 +19,16 @@ public class TableManager {
     public static void selectTable(int idx){
         for(int i=0;i<tables.size();i++){
             if(i==idx){
-                tables.get(i).selected = true;
+                tables.get(i).select();
             }else{
-                tables.get(i).selected = false;
+                tables.get(i).unselect();
             }
         }
     }
 
     public static Table getSelectedTable(){
         for(int i=0;i<tables.size();i++){
-            if(tables.get(i).selected){
+            if(tables.get(i).isSelected()){
                 return tables.get(i);
             }
         }

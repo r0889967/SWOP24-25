@@ -3,11 +3,9 @@ import java.util.ArrayList;
 public class Table {
 
     private String name;
-    ArrayList<Column> cols = new ArrayList<Column>();
-    boolean selected = false;
-
-
-    ArrayList<ArrayList<Cell>> rows = new ArrayList<ArrayList<Cell>>();
+    private ArrayList<Column> cols = new ArrayList<Column>();
+    private ArrayList<ArrayList<Cell>> rows = new ArrayList<ArrayList<Cell>>();
+    private boolean selected = false;
 
     Table(String name){
         this.name = name;
@@ -15,6 +13,14 @@ public class Table {
 
     public boolean isSelected(){
         return selected;
+    }
+
+    public void select(){
+        selected = true;
+    }
+
+    public void unselect(){
+        selected = false;
     }
 
     public String getName(){
@@ -29,8 +35,16 @@ public class Table {
         rows.add(row);
     }
 
+    public ArrayList<ArrayList<Cell>> getRows(){
+        return rows;
+    }
+
     public void addCol(Column col){
         cols.add(col);
+    }
+
+    public ArrayList<Column> getCols(){
+        return cols;
     }
 
     public void render(){

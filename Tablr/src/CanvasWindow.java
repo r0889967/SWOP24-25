@@ -288,13 +288,20 @@ public class CanvasWindow {
         int height = frame.getHeight();
         int heightPerEntry = frame.getHeight() / 30;
         int widthPerEntry = frame.getWidth()/6;
-        if(id==500 && y>height/3 && clickCount==2){
+        int col = x/widthPerEntry;
+        int row = y/heightPerEntry;
+        int idx = (row*6)+col;
+
+        if(id==500 && y>height/2 && clickCount==2){
             TableManager.createAndAddTable();
-        }else if(id==500 && y<=height/3 && clickCount==1){
-            int col = x/widthPerEntry;
-            int row = y/heightPerEntry;
-            int idx = (row*6)+col;
+        }else if(id==500 && y<=height/2 && clickCount==1){
             TableManager.selectTable(idx);
+        }else if(id==500 && y<=height/2 && clickCount==2){
+            TableManager.selectTable(idx);
+            ModeManager.setMode("Table Design Mode");
+            CanvasWindow.this.setTitle("Tablr "+"Table Design Mode");
+
+
         }
         CanvasWindow.this.repaint();
 
