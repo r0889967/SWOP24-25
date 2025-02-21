@@ -1,15 +1,12 @@
 public class Column {
 
     private String name;
-    private String type;
-    private boolean allowsBlanks;
-    private String defaultValue;
+    private String type = "string";
+    private boolean allowsBlanks = true;
+    private String defaultValue = "";
 
-    Column(String name, String type, boolean allowsBlanks, String defaultValue) {
+    Column(String name) {
         this.name = name;
-        this.type = type;
-        this.allowsBlanks = allowsBlanks;
-        this.defaultValue = defaultValue;
     }
 
     public void render(){

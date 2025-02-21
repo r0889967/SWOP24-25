@@ -1,12 +1,14 @@
 public class ModeManager {
 
-    private static String mode = "Tables mode";
+    private static int mode = 0;
 
-    public static String getMode() {
+    //retrieve the current mode
+    public static int getMode() {
         return mode;
     }
 
-    public static void setMode(String newMode) {
+    //change the mode
+    public static void setMode(int newMode) {
         mode = newMode;
     }
 }

@@ -47,6 +47,7 @@ public class Table {
         return cols;
     }
 
+
     public void render(){
         for(Column col : cols){
             col.render();
