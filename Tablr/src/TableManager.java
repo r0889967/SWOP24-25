@@ -4,19 +4,12 @@ import java.util.Random;
 public class TableManager {
     private static int maxTables = 90;
     private static ArrayList<Table> tables = new ArrayList<Table>();
+    private static int sequenceNumber = 0;
 
     //generate random name for table
-    private static String generateRandomName(){
-        Random random = new Random();
-        String name = "";
-        String alphabet = "abcdefghijklmnopqrstuvwxyz0123456789";
-
-        for(int i=0;i<5;i++){
-            int idx = random.nextInt(alphabet.length());
-            name += alphabet.charAt(idx);
-        }
-
-        return "Table"+name;
+    private static String generateName(){
+        sequenceNumber++;
+        return "Table"+sequenceNumber;
     }
 
     //select table with idx
@@ -59,13 +52,7 @@ public class TableManager {
     //create and add a new table
     public static void createAndAddTable(){
         if(tables.size()<maxTables) {
-            String name = generateRandomName();
-            String finalName = name;
-
-            while(getTables().stream().anyMatch(t -> t.getName().equals(finalName))){
-                name = generateRandomName();
-            }
-            
+            String name = generateName();
             Table table = new Table(name);
             tables.add(table);
         }
