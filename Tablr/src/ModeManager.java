@@ -10,5 +10,6 @@ public class ModeManager {
     //change the mode
     public static void setMode(int newMode) {
         mode = newMode;
+
     }
 }

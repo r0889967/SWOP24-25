@@ -7,26 +7,55 @@ public class Column {
     private boolean allowsBlanks = true;
     private String defaultValue = "";
 
+    private boolean isSelected = false;
+
     Column(String name) {
         this.name = name;
     }
 
-    //generate random name for table
-    private static String generateRandomName(){
-        Random random = new Random();
-        String name = "";
-        String alphabet = "abcdefghijklmnopqrstuvwxyz0123456789";
-
-        for(int i=0;i<3;i++){
-            int idx = random.nextInt(alphabet.length());
-            name += alphabet.charAt(idx);
-        }
-
-        return "Column"+name;
+    public String getName() {
+        return name;
     }
 
-    public void render(){
-
+    public void setName(String name) {
+        this.name = name;
     }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public boolean allowsBlanks() {
+        return allowsBlanks;
+    }
+
+    public void setAllowsBlanks(boolean allowsBlanks) {
+        this.allowsBlanks = allowsBlanks;
+    }
+
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
+    }
+
+    public boolean isSelected(){
+        return isSelected;
+    }
+
+    public void select(){
+        isSelected = true;
+    }
+
+    public void unselect(){
+        isSelected = false;
+    }
+
 
 }

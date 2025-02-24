@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.util.ArrayList;
 
 public class ComponentDrawer {
 
@@ -8,9 +9,9 @@ public class ComponentDrawer {
         int height = frame.getHeight();
 
         g.setColor(Color.blue);
-        g.fillRect(0, 0, width, height/2);
+        g.fillRect(0, 0, width, 30*TableManager.getMaxTablePerCol());
 
-        int entryWidth = width/6;
+        int entryWidth = width/TableManager.getMaxTablePerRow();
         int entryHeight = height/30;
 
         int row = 0;
@@ -18,20 +19,28 @@ public class ComponentDrawer {
 
         for(Table table:TableManager.getTables()) {
 
+
             g.setColor(Color.lightGray);
             g.fillRect(col*entryWidth,row*entryHeight,entryWidth,entryHeight);
             g.setColor(Color.black);
             g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
             String name = table.getName();
 
+
             if(table.isSelected()){
                 name+="<<";
             }
 
+            if(!TableManager.hasValidName(table)) {
+                g.setColor(Color.red);
+                g.fillRect(col*entryWidth,row*entryHeight,entryWidth,entryHeight);
+            }
+
+            g.setColor(Color.black);
             g.drawString(name,col*entryWidth,row*entryHeight+entryHeight/2);
 
             col++;
-            if(col%6==0){
+            if(col%TableManager.getMaxTablePerRow()==0){
                 row++;
                 col = 0;
             }
@@ -42,6 +51,42 @@ public class ComponentDrawer {
     public static void drawTableColDesigner(Frame frame,Graphics g, Table table){
         int width = frame.getWidth();
         int height = frame.getHeight();
+
+        g.setColor(Color.CYAN);
+        g.fillRect(0, 0, width, height/4);
+
+        ArrayList<Column> cols = table.getCols();
+
+        if(!cols.isEmpty()) {
+
+            int entryWidth = width / cols.size();
+            int entryHeight = height / 8;
+
+
+            int i = 0;
+            for (Column col : cols) {
+
+                g.setColor(Color.lightGray);
+                g.fillRect(i * entryWidth, 0, entryWidth, entryHeight);
+                g.setColor(Color.black);
+                g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+
+                String name = cols.get(i).getName();
+                if(col.isSelected()){
+                    name+="<<";
+                }
+
+
+                g.drawString(name, i * entryWidth, 10);
+                g.drawString(col.getType(), i * entryWidth, 20);
+                g.drawString(String.valueOf(col.allowsBlanks()), i * entryWidth, 30);
+                g.drawString(col.getDefaultValue(), i * entryWidth, 40);
+                i++;
+
+            }
+        }
+
+
     }
 
     //draw row designer for selected table

@@ -2,9 +2,12 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class TableManager {
-    private static int maxTables = 90;
+    private static int maxTablePerRow = 3;
+    private static int maxTablePerCol = 6;
+    private static int maxTables = maxTablePerRow*maxTablePerCol;
     private static ArrayList<Table> tables = new ArrayList<Table>();
     private static int sequenceNumber = 0;
+
 
     //generate random name for table
     private static String generateName(){
@@ -12,13 +15,41 @@ public class TableManager {
         return "Table"+sequenceNumber;
     }
 
+    public static boolean hasValidName(Table table){
+        if(table == null){
+            return true;
+        }
+        if(table.getName()==""||table.getTmpName()==""){
+            return false;
+        }
+        for(Table t:tables){
+            if(t==table){
+                continue;
+            }
+            if(t.getName().equals(table.getName())||t.getTmpName().equals(table.getName())){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static int getMaxTablePerRow(){
+        return maxTablePerRow;
+    }
+
+    public static int getMaxTablePerCol(){
+        return maxTablePerCol;
+    }
+
     //select table with idx
     public static void selectTable(int idx){
-        for(int i=0;i<tables.size();i++){
-            if(i==idx){
-                tables.get(i).select();
-            }else{
-                tables.get(i).unselect();
+        if(hasValidName(getSelectedTable())) {
+            for (int i = 0; i < tables.size(); i++) {
+                if (i == idx) {
+                    tables.get(i).select();
+                } else {
+                    tables.get(i).unselect();
+                }
             }
         }
     }
@@ -33,6 +64,11 @@ public class TableManager {
         return null;
     }
 
+    //save the name for table
+    public static void saveName(Table table){
+        table.setName(table.getTmpName());
+    }
+
     //edit selected table's name
     public static void editTableName(Table table,char keyChar){
         String name = table.getName();
@@ -42,6 +78,12 @@ public class TableManager {
         }else{
             table.setName(name+keyChar);
         }
+
+    }
+
+    public static void stopEditingName(Table table){
+        table.setName(table.getName());
+        table.setNameBeingEdited(false);
     }
 
     //retrieve all tables
@@ -51,10 +93,12 @@ public class TableManager {
 
     //create and add a new table
     public static void createAndAddTable(){
-        if(tables.size()<maxTables) {
-            String name = generateName();
-            Table table = new Table(name);
-            tables.add(table);
+        if(hasValidName(getSelectedTable())) {
+            if (tables.size() < maxTables) {
+                String name = generateName();
+                Table table = new Table(name);
+                tables.add(table);
+            }
         }
     }
 
@@ -62,4 +106,6 @@ public class TableManager {
     public static void deleteTable(Table table){
         tables.remove(table);
     }
+
+
 }
