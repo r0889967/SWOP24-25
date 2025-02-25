@@ -8,11 +8,11 @@ public class ComponentDrawer {
         int width = frame.getWidth();
         int height = frame.getHeight();
 
-        g.setColor(Color.blue);
-        g.fillRect(0, 0, width, 30*TableManager.getMaxTablePerCol());
 
         int entryWidth = width/TableManager.getMaxTablePerRow();
         int entryHeight = height/30;
+        g.setColor(Color.blue);
+        g.fillRect(0, 0, width, entryHeight*TableManager.getMaxTablePerCol());
 
         int row = 0;
         int col = 0;

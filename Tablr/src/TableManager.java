@@ -2,8 +2,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class TableManager {
-    private static int maxTablePerRow = 3;
-    private static int maxTablePerCol = 6;
+    private static int maxTablePerRow = 1;
+    private static int maxTablePerCol = 10;
     private static int maxTables = maxTablePerRow*maxTablePerCol;
     private static ArrayList<Table> tables = new ArrayList<Table>();
     private static int sequenceNumber = 0;
