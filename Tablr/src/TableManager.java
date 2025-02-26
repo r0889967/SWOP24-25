@@ -43,18 +43,20 @@ public class TableManager {
 
     //select table with idx
     public static void selectTable(int idx){
-        if(hasValidName(getSelectedTable())) {
-            if(getSelectedTable()!=null) {
-                getSelectedTable().unselect();
+        Table table = getSelectedTable();
+        if(hasValidName(table)) {
+            if(table!=null) {
+                table.unselect();
             }
             tables.get(idx).select();
         }
     }
 
     public static void unselectTable(){
-        if(hasValidName(getSelectedTable())) {
-            if (getSelectedTable() != null) {
-                getSelectedTable().unselect();
+        Table table = getSelectedTable();
+        if(hasValidName(table)) {
+            if (table != null) {
+                table.unselect();
             }
         }
     }
@@ -84,6 +86,24 @@ public class TableManager {
         }
     }
 
+    public static void undoEditName(){
+        Table table = getSelectedTable();
+        if(table!=null) {
+            String oldName = table.getOldName();
+            table.setName(oldName);
+        }
+    }
+
+    public static void saveNewName(){
+        Table table = getSelectedTable();
+        if(hasValidName(table)) {
+            if (table != null) {
+                String newName = table.getName();
+                table.setOldName(newName);
+            }
+        }
+    }
+
 
     //retrieve all tables
     public static ArrayList<Table> getTables(){
@@ -92,11 +112,17 @@ public class TableManager {
 
     //create and add a new table
     public static void createAndAddTable(){
-        if(hasValidName(getSelectedTable())) {
+        Table table = getSelectedTable();
+        if(hasValidName(table)) {
             if (tables.size() < maxTables) {
                 String name = generateName();
-                Table table = new Table(name);
-                tables.add(table);
+                Table table_ = new Table(name);
+                while(!hasValidName(table_)) {
+                    name = generateName();
+                    table_.setName(name);
+                    table_.setOldName(name);
+                }
+                tables.add(table_);
             }
         }
     }

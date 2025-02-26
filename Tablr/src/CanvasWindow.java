@@ -302,6 +302,7 @@ public class CanvasWindow {
 
                 //mouse clicked, select table list entry
                 if(clickCount==1){
+                    TableManager.saveNewName();
                     int idx = Locator.getIdx(frame,30,TableManager.getMaxTablePerRow(),x,y);
                     TableManager.selectTable(idx);
                 }
@@ -379,8 +380,13 @@ public class CanvasWindow {
                     TableManager.deleteTable();
                 }
 
+                else if(keyCode==27){
+                    TableManager.undoEditName();
+                }
+
                 //enter key
                 else if(keyCode==10){
+                    TableManager.saveNewName();
                     TableManager.unselectTable();
                 }
 

@@ -3,14 +3,14 @@ import java.util.ArrayList;
 public class Table {
 
     private String name;
-    private String tmpName;
+    private String oldName;
     private ArrayList<Column> cols = new ArrayList<Column>();
     private ArrayList<ArrayList<Cell>> rows = new ArrayList<ArrayList<Cell>>();
     private boolean selected = false;
 
     Table(String name){
         this.name = name;
-        this.tmpName = name;
+        this.oldName = name;
     }
 
 
@@ -30,22 +30,17 @@ public class Table {
         return name;
     }
 
+    public String getOldName(){
+        return oldName;
+    }
+
     public void setName(String name){
         this.name = name;
     }
 
-    public String getTmpName(){
-        return tmpName;
+    public void setOldName(String oldName){
+        this.oldName = oldName;
     }
-
-    public void setTmpName(String tmpName){
-        this.tmpName = tmpName;
-    }
-
-    public boolean isNameBeingEdited(){
-        return name!=tmpName;
-    }
-
 
     public void addRow(ArrayList<Cell> row){
         rows.add(row);
