@@ -8,8 +8,15 @@ public class ModeManager {
     }
 
     //change the mode
-    public static void setMode(int newMode) {
+    public static String setMode(int newMode) {
         mode = newMode;
+        if(newMode==0){
+            return "Tables mode";
+        }else if(newMode==1){
+            return "Table design mode";
+        }else{
+            return "Table rows mode";
+        }
 
     }
 }

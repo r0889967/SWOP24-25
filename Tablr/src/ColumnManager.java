@@ -13,12 +13,11 @@ public class ColumnManager {
 
     public static void selectCol(Table table,int idx){
         ArrayList<Column> cols = table.getCols();
-        for(int i=0;i<cols.size();i++){
-            if(i==idx){
-                cols.get(i).select();
-            }else{
-                cols.get(i).unselect();
-            }
+        if(getSelectedCol(table)==null) {
+            cols.get(idx).select();
+        }else {
+            getSelectedCol(table).unselect();
+            cols.get(idx).select();
         }
     }
 

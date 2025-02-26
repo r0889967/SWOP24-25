@@ -300,49 +300,52 @@ public class CanvasWindow {
             //tables mode
             if(ModeManager.getMode()==0) {
 
-                //mouse is clicked outside table list
-                if (y > 30*TableManager.getMaxTablePerCol() && clickCount == 1) {
+                //mouse clicked, select table list entry
+                if(clickCount==1){
                     int idx = Locator.getIdx(frame,30,TableManager.getMaxTablePerRow(),x,y);
                     TableManager.selectTable(idx);
                 }
-                //mouse is double clicked outside table list
-                else if (y > 30*TableManager.getMaxTablePerCol() && clickCount == 2) {
-                    TableManager.createAndAddTable();
-                }
-                //mouse is clicked on list entry
-                else if (y <= 30*TableManager.getMaxTablePerCol() && clickCount == 1) {
-                    int idx = Locator.getIdx(frame,30,TableManager.getMaxTablePerRow(),x,y);
-                    TableManager.selectTable(idx);
-                }
-                //mouse is double clicked on list entry
-                else if (y <= 30*TableManager.getMaxTablePerCol() && clickCount == 2) {
-                    Table selected = TableManager.getSelectedTable();
 
-                    if (TableManager.hasValidName(selected)) {
+                //mouse double clicked
+                else if(clickCount==2){
 
-                        //if table has no columns, change to design mode
-                        if (selected.getCols().isEmpty()) {
-                            ModeManager.setMode(1);
-                            CanvasWindow.this.setTitle("Tablr " + "Table Design Mode");
-                        }
-                        //else change to rows mode
-                        else {
-                            ModeManager.setMode(2);
-                            CanvasWindow.this.setTitle("Tablr " + "Table Rows mode");
+                    //create new table list entry
+                    if(y>30*TableManager.getMaxTablePerCol()){
+                        TableManager.createAndAddTable();
+                    }
 
+                    //open table design mode or rows mode for table
+                    else{
+                        Table selected = TableManager.getSelectedTable();
+
+                        if (TableManager.hasValidName(selected)) {
+
+                            //if table has no columns, change to design mode
+                            if (selected.getCols().isEmpty()) {
+
+                                CanvasWindow.this.setTitle("Tablr " + ModeManager.setMode(1));
+                            }
+                            //else change to rows mode
+                            else {
+                                ModeManager.setMode(2);
+                                CanvasWindow.this.setTitle("Tablr " + ModeManager.setMode(2));
+
+                            }
                         }
                     }
                 }
+
             }
             //table design mode
             else if (ModeManager.getMode()==1) {
 
-                //mouse is clicked outside column list
-                if (y > height / 4 && clickCount == 1) {
+                //mouse clicked, select col of table
+                if(clickCount==1){
                     Table selected = TableManager.getSelectedTable();
                     int idx = Locator.getIdx(frame,8,selected.getCols().size(),x,y);
                     ColumnManager.selectCol(selected, idx);
                 }
+
                 //mouse is double clicked outside column list
                 else if (y > height / 4 && clickCount == 2) {
                     Table selected = TableManager.getSelectedTable();
@@ -350,14 +353,6 @@ public class CanvasWindow {
                         ColumnManager.createAndAddCol(selected);
                     }
                 }
-                //mouse is clicked on col entry
-                else if (y <= height / 4 && clickCount == 1) {
-                    Table selected = TableManager.getSelectedTable();
-                    int idx = Locator.getIdx(frame,8,selected.getCols().size(),x,y);
-                    ColumnManager.selectCol(selected, idx);
-
-                }
-
 
             }
             //table rows mode
@@ -390,8 +385,7 @@ public class CanvasWindow {
 
                 //escape key
                 if (keyCode == 27) {
-                    ModeManager.setMode(0);
-                    CanvasWindow.this.setTitle("Tablr " + "Tables Mode");
+                    CanvasWindow.this.setTitle("Tablr " + ModeManager.setMode(0));
                 }
                 //del key
                 else if (keyCode == 127) {
@@ -415,17 +409,12 @@ public class CanvasWindow {
 
                 //escape key
                 if (keyCode == 27) {
-                    ModeManager.setMode(0);
-                    CanvasWindow.this.setTitle("Tablr " + "Tables Mode");
-
-
+                    CanvasWindow.this.setTitle("Tablr " + ModeManager.setMode(0));
                 }
 
                 //crtl+enter
                 else if(keyCode == 10){
-                    ModeManager.setMode(2);
-                    CanvasWindow.this.setTitle("Tablr " + "Table Rows Mode");
-
+                    CanvasWindow.this.setTitle("Tablr " + ModeManager.setMode(2));
                 }
 
                 //del key
@@ -458,24 +447,17 @@ public class CanvasWindow {
 
                 //escape key
                 if (keyCode == 27) {
-                    ModeManager.setMode(0);
-                    CanvasWindow.this.setTitle("Tablr " + "Tables Mode");
-
-
+                    CanvasWindow.this.setTitle("Tablr " + ModeManager.setMode(0));
                 }
 
                 //crtl+enter
                 else if(keyCode == 10){
-                    ModeManager.setMode(1);
-                    CanvasWindow.this.setTitle("Tablr " + "Table Design Mode");
-
+                    CanvasWindow.this.setTitle("Tablr " + ModeManager.setMode(1));
                 }
 
             }
 
         }
-
-
 
         CanvasWindow.this.repaint();
 
