@@ -15,10 +15,11 @@ public class TableManager {
     }
 
     public static boolean hasValidName(Table table){
+
         if(table == null){
             return true;
         }
-        if(table.getName()==""){
+        if(table.getName().equals("")){
             return false;
         }
         for(Table t:tables){
@@ -43,13 +44,18 @@ public class TableManager {
     //select table with idx
     public static void selectTable(int idx){
         if(hasValidName(getSelectedTable())) {
-            if(getSelectedTable()==null) {
-                tables.get(idx).select();
-            }else {
+            if(getSelectedTable()!=null) {
                 getSelectedTable().unselect();
-                tables.get(idx).select();
             }
+            tables.get(idx).select();
+        }
+    }
 
+    public static void unselectTable(){
+        if(hasValidName(getSelectedTable())) {
+            if (getSelectedTable() != null) {
+                getSelectedTable().unselect();
+            }
         }
     }
 
@@ -65,15 +71,17 @@ public class TableManager {
 
 
     //edit selected table's name
-    public static void editTableName(Table table,char keyChar){
-        String name = table.getName();
+    public static void editTableName(char keyChar){
+        Table table = getSelectedTable();
+        if(table!=null) {
+            String name = table.getName();
 
-        if(keyChar=='\b'){
-            table.setName(name.substring(0, name.length()-1));
-        }else{
-            table.setName(name+keyChar);
+            if (keyChar == '\b') {
+                table.setName(name.substring(0, name.length() - 1));
+            } else {
+                table.setName(name + keyChar);
+            }
         }
-
     }
 
 
@@ -94,7 +102,8 @@ public class TableManager {
     }
 
     //delete selected table
-    public static void deleteTable(Table table){
+    public static void deleteTable(){
+        Table table = getSelectedTable();
         tables.remove(table);
     }
 

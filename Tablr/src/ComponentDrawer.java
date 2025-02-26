@@ -18,25 +18,25 @@ public class ComponentDrawer {
 
         for(Table table:TableManager.getTables()) {
 
-
-            g.setColor(Color.lightGray);
-            g.fillRect(col*entryWidth,row*entryHeight,entryWidth,entryHeight);
             g.setColor(Color.black);
             g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
             String name = table.getName();
 
-
             if(table.isSelected()){
-                name+="<<";
+                name+="\uD83D\uDC46";
             }
+
 
             if(!TableManager.hasValidName(table)) {
                 g.setColor(Color.red);
-                g.fillRect(col*entryWidth,row*entryHeight,entryWidth,entryHeight);
+            }else{
+                g.setColor(Color.lightGray);
             }
+            g.fillRect(col*entryWidth,row*entryHeight,entryWidth,entryHeight);
 
             g.setColor(Color.black);
-            g.drawString(name,col*entryWidth,row*entryHeight+entryHeight/2);
+            g.drawString(name, col * entryWidth, row * entryHeight + entryHeight / 2);
+
 
             col++;
             if(col%TableManager.getMaxTablePerRow()==0){
@@ -52,7 +52,7 @@ public class ComponentDrawer {
         int height = frame.getHeight();
 
         g.setColor(Color.CYAN);
-        g.fillRect(0, 0, width, height/4);
+        g.fillRect(0, 0, width, height/8);
 
         ArrayList<Column> cols = table.getCols();
 
@@ -65,17 +65,21 @@ public class ComponentDrawer {
             int i = 0;
             for (Column col : cols) {
 
-                g.setColor(Color.lightGray);
-                g.fillRect(i * entryWidth, 0, entryWidth, entryHeight);
-                g.setColor(Color.black);
                 g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
 
                 String name = cols.get(i).getName();
                 if(col.isSelected()){
-                    name+="<<";
+                    name+="\uD83D\uDC46";
                 }
 
+                if(!ColumnManager.hasValidName(col)) {
+                    g.setColor(Color.red);
+                }else{
+                    g.setColor(Color.lightGray);
+                }
+                g.fillRect(i * entryWidth, 0, entryWidth, entryHeight);
 
+                g.setColor(Color.black);
                 g.drawString(name, i * entryWidth, 10);
                 g.drawString(col.getType(), i * entryWidth, 20);
                 g.drawString(String.valueOf(col.allowsBlanks()), i * entryWidth, 30);

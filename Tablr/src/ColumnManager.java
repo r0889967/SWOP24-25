@@ -10,19 +10,47 @@ public class ColumnManager {
         return "Column"+sequenceNumber;
     }
 
+    public static boolean hasValidName(Column col){
+        Table table = TableManager.getSelectedTable();
+
+        if(col == null){
+            return true;
+        }
+        if(col.getName().equals("")){
+            return false;
+        }
+        for(Column c:getCols(table)){
+            if(c==col){
+                continue;
+            }
+            if(c.getName().equals(col.getName())){
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     public static void selectCol(Table table,int idx){
         ArrayList<Column> cols = table.getCols();
-        if(getSelectedCol(table)==null) {
-            cols.get(idx).select();
-        }else {
-            getSelectedCol(table).unselect();
+        if(hasValidName(getSelectedCol())) {
+            if (getSelectedCol() != null) {
+                getSelectedCol().unselect();
+            }
             cols.get(idx).select();
         }
     }
 
-    public static Column getSelectedCol(Table table){
-        ArrayList<Column> cols = table.getCols();
+    public static void unselectCol(){
+        if(hasValidName(getSelectedCol())) {
+            if (getSelectedCol() != null) {
+                getSelectedCol().unselect();
+            }
+        }
+    }
+
+    public static Column getSelectedCol(){
+        ArrayList<Column> cols = TableManager.getSelectedTable().getCols();
         for(int i=0;i<cols.size();i++){
             if(cols.get(i).isSelected()){
                 return cols.get(i);
@@ -31,7 +59,8 @@ public class ColumnManager {
         return null;
     }
 
-    public static void editColName(Column col,char keyChar){
+    public static void editColName(char keyChar){
+        Column col = getSelectedCol();
         String name = col.getName();
         if(keyChar=='\b'){
             col.setName(name.substring(0, name.length()-1));
@@ -40,21 +69,29 @@ public class ColumnManager {
         }
     }
 
+    public static void editColType(Column col){
+
+    }
+
     public static ArrayList<Column> getCols(Table table){
         return table.getCols();
     }
 
     //create and add a new col
-    public static void createAndAddCol(Table table){
-        String name = generateName();
-        Column col = new Column(name);
-        table.addCol(col);
-
-
+    public static void createAndAddCol(){
+        if(hasValidName(getSelectedCol())) {
+            Table table = TableManager.getSelectedTable();
+            String name = generateName();
+            Column col = new Column(name);
+            table.addCol(col);
+        }
     }
 
     //delete selected col
-    public static void deleteCol(Table table,Column col){
-        table.deleteCol(col);
+    public static void deleteCol(){
+        Table table = TableManager.getSelectedTable();
+        if(getSelectedCol()!=null) {
+            table.deleteCol(getSelectedCol());
+        }
     }
 }

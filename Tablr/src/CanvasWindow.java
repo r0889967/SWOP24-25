@@ -267,9 +267,9 @@ public class CanvasWindow {
      */
     protected void paint(Graphics g) {
         Table selected = TableManager.getSelectedTable();
-        if(ModeManager.getMode()==0) {
+        if(ModeManager.getMode().equals("Tables mode")) {
             ComponentDrawer.drawTableList(frame, g);
-        }else if(ModeManager.getMode()==1) {
+        }else if(ModeManager.getMode().equals("Table design mode")) {
             ComponentDrawer.drawTableColDesigner(frame,g,selected);
         }else{
             ComponentDrawer.drawTableRowDesigner(frame,g,selected);
@@ -298,7 +298,7 @@ public class CanvasWindow {
         if(id==500){
 
             //tables mode
-            if(ModeManager.getMode()==0) {
+            if(ModeManager.getMode().equals("Tables mode")) {
 
                 //mouse clicked, select table list entry
                 if(clickCount==1){
@@ -318,40 +318,31 @@ public class CanvasWindow {
                     else{
                         Table selected = TableManager.getSelectedTable();
 
-                        if (TableManager.hasValidName(selected)) {
+                        //if table has no columns, change to design mode
+                        if (selected.getCols().isEmpty()) {
+                            CanvasWindow.this.setTitle("Tablr " + ModeManager.setMode(1));
+                        }
 
-                            //if table has no columns, change to design mode
-                            if (selected.getCols().isEmpty()) {
-
-                                CanvasWindow.this.setTitle("Tablr " + ModeManager.setMode(1));
-                            }
-                            //else change to rows mode
-                            else {
-                                ModeManager.setMode(2);
-                                CanvasWindow.this.setTitle("Tablr " + ModeManager.setMode(2));
-
-                            }
+                        //else change to rows mode
+                        else {
+                            CanvasWindow.this.setTitle("Tablr " + ModeManager.setMode(2));
                         }
                     }
                 }
-
             }
             //table design mode
-            else if (ModeManager.getMode()==1) {
+            else if (ModeManager.getMode().equals("Table design mode")) {
 
                 //mouse clicked, select col of table
                 if(clickCount==1){
                     Table selected = TableManager.getSelectedTable();
                     int idx = Locator.getIdx(frame,8,selected.getCols().size(),x,y);
-                    ColumnManager.selectCol(selected, idx);
+                    ColumnManager.selectCol(selected,idx);
                 }
 
                 //mouse is double clicked outside column list
                 else if (y > height / 4 && clickCount == 2) {
-                    Table selected = TableManager.getSelectedTable();
-                    if (selected != null) {
-                        ColumnManager.createAndAddCol(selected);
-                    }
+                    ColumnManager.createAndAddCol();
                 }
 
             }
@@ -378,31 +369,30 @@ public class CanvasWindow {
     protected void handleKeyEvent(int id, int keyCode, char keyChar) {
 
         //tables mode
-        if(ModeManager.getMode()==0) {
+        if(ModeManager.getMode().equals("Tables mode")) {
 
             //when key is clicked
             if(id == 401) {
 
-                //escape key
-                if (keyCode == 27) {
-                    CanvasWindow.this.setTitle("Tablr " + ModeManager.setMode(0));
-                }
                 //del key
-                else if (keyCode == 127) {
-                    Table selected = TableManager.getSelectedTable();
-                    TableManager.deleteTable(selected);
+                if (keyCode == 127) {
+                    TableManager.deleteTable();
+                }
+
+                //enter key
+                else if(keyCode==10){
+                    TableManager.unselectTable();
                 }
 
                 //character keys
                 else {
-                    Table selected = TableManager.getSelectedTable();
-                    TableManager.editTableName(selected, keyChar);
+                    TableManager.editTableName(keyChar);
                 }
             }
         }
 
         //table design mode
-        else if(ModeManager.getMode()==1) {
+        else if(ModeManager.getMode().equals("Table design mode")) {
 
             //when key is clicked
             if(id == 401) {
@@ -412,26 +402,23 @@ public class CanvasWindow {
                     CanvasWindow.this.setTitle("Tablr " + ModeManager.setMode(0));
                 }
 
+                else if(keyCode==10){
+                    ColumnManager.unselectCol();
+                }
+
                 //crtl+enter
-                else if(keyCode == 10){
+                else if(keyCode == 17){
                     CanvasWindow.this.setTitle("Tablr " + ModeManager.setMode(2));
                 }
 
                 //del key
                 else if (keyCode == 127) {
-                    Table selected = TableManager.getSelectedTable();
-                    Column col = ColumnManager.getSelectedCol(selected);
-                    ColumnManager.deleteCol(selected,col);
-
+                    ColumnManager.deleteCol();
                 }
 
                 //character keys
                 else{
-                    Table selected = TableManager.getSelectedTable();
-                    Column col = ColumnManager.getSelectedCol(selected);
-                    ColumnManager.editColName(col,keyChar);
-
-
+                    ColumnManager.editColName(keyChar);
                 }
 
             }
@@ -451,9 +438,10 @@ public class CanvasWindow {
                 }
 
                 //crtl+enter
-                else if(keyCode == 10){
+                else if(keyCode == 17){
                     CanvasWindow.this.setTitle("Tablr " + ModeManager.setMode(1));
                 }
+
 
             }
 
