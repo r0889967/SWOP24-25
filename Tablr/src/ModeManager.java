@@ -15,9 +15,12 @@ public class ModeManager {
 
     public static String toTablesMode(){
         Table table = TableManager.getSelectedTable();
+        Column col = ColumnManager.getSelectedCol();
         if (TableManager.hasValidName(table)) {
+            if(ColumnManager.hasValidName(col)) {
             mode = 0;
             return "Tables mode";
+            }
         }
         return getMode();
     }
