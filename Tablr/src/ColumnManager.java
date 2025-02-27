@@ -16,10 +16,10 @@ public class ColumnManager {
     }
 
     public static void setEditMode(int mode){
-        Column col = getSelectedCol();
-        if(hasValidName(col)) {
-            editMode = mode;
+        if(mode>3){
+            mode = 3;
         }
+        editMode = mode;
     }
 
     public static boolean hasValidName(Column col){
@@ -99,10 +99,10 @@ public class ColumnManager {
 
     private static void editColallowsBlank(){
         Column col = getSelectedCol();
-        if(col.allowsBlanks()){
-            col.setAllowsBlanks(false);
+        if(col.allowsBlanks().equals("☑")){
+            col.setAllowsBlanks("☐");
         }else{
-            col.setAllowsBlanks(true);
+            col.setAllowsBlanks("☑");
         }
 
     }

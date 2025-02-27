@@ -4,7 +4,7 @@ public class Column {
 
     private String name;
     private String type = "String";
-    private boolean allowsBlanks = true;
+    private String allowsBlanks = "☑";
     private String defaultValue = "";
 
     private boolean isSelected = false;
@@ -29,11 +29,11 @@ public class Column {
         this.type = type;
     }
 
-    public boolean allowsBlanks() {
+    public String allowsBlanks() {
         return allowsBlanks;
     }
 
-    public void setAllowsBlanks(boolean allowsBlanks) {
+    public void setAllowsBlanks(String allowsBlanks) {
         this.allowsBlanks = allowsBlanks;
     }
 

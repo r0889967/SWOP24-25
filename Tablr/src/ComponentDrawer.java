@@ -19,7 +19,7 @@ public class ComponentDrawer {
         for(Table table:TableManager.getTables()) {
 
             g.setColor(Color.black);
-            g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+            g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 14));
             String name = table.getName();
 
             if(table.isSelected()){
@@ -65,7 +65,7 @@ public class ComponentDrawer {
             int i = 0;
             for (Column col : cols) {
 
-                g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+                g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 14));
 
                 String name = cols.get(i).getName();
                 String type = cols.get(i).getType();
@@ -93,8 +93,8 @@ public class ComponentDrawer {
                 g.setColor(Color.black);
                 g.drawString(name, i * entryWidth, 10);
                 g.drawString(type, i * entryWidth, height/32+10);
-                g.drawString(allowsBlanks, i * entryWidth, height*2/32+10);
-                g.drawString(defaultValue, i * entryWidth, height*3/32+10);
+                g.drawString("Blanks?"+allowsBlanks, i * entryWidth, height*2/32+10);
+                g.drawString("DVal:"+defaultValue, i * entryWidth, height*3/32+10);
                 i++;
 
             }
@@ -122,7 +122,7 @@ public class ComponentDrawer {
             int i = 0;
             for (Column col : cols) {
 
-                g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+                g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 14));
 
                 String name = cols.get(i).getName();
                 String type = cols.get(i).getType();
@@ -150,8 +150,8 @@ public class ComponentDrawer {
                 g.setColor(Color.black);
                 g.drawString(name, i * entryWidth, 10);
                 g.drawString(type, i * entryWidth, height/32+10);
-                g.drawString(allowsBlanks, i * entryWidth, height*2/32+10);
-                g.drawString(defaultValue, i * entryWidth, height*3/32+10);
+                g.drawString("Blanks?"+allowsBlanks, i * entryWidth, height*2/32+10);
+                g.drawString("DVal:"+defaultValue, i * entryWidth, height*3/32+10);
                 i++;
 
             }
