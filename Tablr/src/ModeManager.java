@@ -13,16 +13,30 @@ public class ModeManager {
         }
     }
 
-    //change the mode
-    public static String setMode(int newMode) {
+    public static String toTablesMode(){
         Table table = TableManager.getSelectedTable();
         if (TableManager.hasValidName(table)) {
-            mode = newMode;
-            if (newMode == 0) {
-                return "Tables mode";
-            } else if (newMode == 1) {
-                return "Table design mode";
-            } else {
+            mode = 0;
+            return "Tables mode";
+        }
+        return getMode();
+    }
+
+    public static String toTableDesignMode(){
+        Table table = TableManager.getSelectedTable();
+        if (TableManager.hasValidName(table)) {
+            mode = 1;
+            return "Table design mode";
+        }
+        return getMode();
+    }
+
+    public static String toTableRowsMode(){
+        Table table = TableManager.getSelectedTable();
+        Column col = ColumnManager.getSelectedCol();
+        if (TableManager.hasValidName(table)) {
+            if(ColumnManager.hasValidName(col)) {
+                mode = 2;
                 return "Table rows mode";
             }
         }

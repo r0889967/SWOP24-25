@@ -3,7 +3,7 @@ import java.util.Random;
 public class Column {
 
     private String name;
-    private String type = "string";
+    private String type = "String";
     private boolean allowsBlanks = true;
     private String defaultValue = "";
 

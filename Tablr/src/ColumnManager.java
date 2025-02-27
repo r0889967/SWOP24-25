@@ -4,10 +4,22 @@ import java.util.ArrayList;
 public class ColumnManager {
 
     private static int sequenceNumber = 0;
+    private static int editMode = 0;
 
     private static String generateName(){
         sequenceNumber++;
         return "Column"+sequenceNumber;
+    }
+
+    public static int getEditMode(){
+        return editMode;
+    }
+
+    public static void setEditMode(int mode){
+        Column col = getSelectedCol();
+        if(hasValidName(col)) {
+            editMode = mode;
+        }
     }
 
     public static boolean hasValidName(Column col){
@@ -33,18 +45,20 @@ public class ColumnManager {
 
     public static void selectCol(Table table,int idx){
         ArrayList<Column> cols = table.getCols();
-        if(hasValidName(getSelectedCol())) {
-            if (getSelectedCol() != null) {
-                getSelectedCol().unselect();
+        Column col = getSelectedCol();
+        if(hasValidName(col)) {
+            if (col != null) {
+                col.unselect();
             }
             cols.get(idx).select();
         }
     }
 
     public static void unselectCol(){
-        if(hasValidName(getSelectedCol())) {
-            if (getSelectedCol() != null) {
-                getSelectedCol().unselect();
+        Column col = getSelectedCol();
+        if(hasValidName(col)) {
+            if (col != null) {
+                col.unselect();
             }
         }
     }
@@ -59,7 +73,7 @@ public class ColumnManager {
         return null;
     }
 
-    public static void editColName(char keyChar){
+    private static void editColName(char keyChar){
         Column col = getSelectedCol();
         String name = col.getName();
         if(keyChar=='\b'){
@@ -69,8 +83,56 @@ public class ColumnManager {
         }
     }
 
-    public static void editColType(Column col){
+    private static void editColType(){
+        Column col = getSelectedCol();
+        if(col.getType().equals("String")){
+            col.setType("Email");
+        }else if(col.getType().equals("Email")){
+            col.setType("Boolean");
+        }else if(col.getType().equals("Boolean")){
+            col.setType("Integer");
+        }else{
+            col.setType("String");
+        }
 
+    }
+
+    private static void editColallowsBlank(){
+        Column col = getSelectedCol();
+        if(col.allowsBlanks()){
+            col.setAllowsBlanks(false);
+        }else{
+            col.setAllowsBlanks(true);
+        }
+
+    }
+
+    private static void editColDefaultValue(char keyChar){
+        Column col = getSelectedCol();
+        String defaultValue = col.getDefaultValue();
+        if(keyChar=='\b'){
+            col.setDefaultValue(defaultValue.substring(0, defaultValue.length()-1));
+        }else {
+            col.setDefaultValue(defaultValue + keyChar);
+
+        }
+
+    }
+
+    public static void editColAttributes(char keyChar){
+        if(editMode==0){
+            if(keyChar!='\0') {
+                editColName(keyChar);
+            }
+        }else if(editMode==1){
+            editColType();
+        }else if(editMode==2){
+            editColallowsBlank();
+        }else if(editMode==3){
+            if(keyChar!='\0') {
+                editColDefaultValue(keyChar);
+            }
+        }
     }
 
     public static ArrayList<Column> getCols(Table table){
@@ -90,8 +152,9 @@ public class ColumnManager {
     //delete selected col
     public static void deleteCol(){
         Table table = TableManager.getSelectedTable();
-        if(getSelectedCol()!=null) {
-            table.deleteCol(getSelectedCol());
+        Column col = getSelectedCol();
+        if(col!=null) {
+            table.deleteCol(col);
         }
     }
 }

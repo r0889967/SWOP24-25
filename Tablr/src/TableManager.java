@@ -48,6 +48,7 @@ public class TableManager {
             if(table!=null) {
                 table.unselect();
             }
+
             tables.get(idx).select();
         }
     }

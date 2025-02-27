@@ -68,8 +68,19 @@ public class ComponentDrawer {
                 g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
 
                 String name = cols.get(i).getName();
+                String type = cols.get(i).getType();
+                String allowsBlanks = String.valueOf(cols.get(i).allowsBlanks());
+                String defaultValue = cols.get(i).getDefaultValue();
                 if(col.isSelected()){
-                    name+="\uD83D\uDC46";
+                    if(ColumnManager.getEditMode()==0) {
+                        name += "\uD83D\uDC46";
+                    }else if(ColumnManager.getEditMode()==1) {
+                        type += "\uD83D\uDC46";
+                    }else if(ColumnManager.getEditMode()==2) {
+                        allowsBlanks += "\uD83D\uDC46";
+                    }else if(ColumnManager.getEditMode()==3) {
+                        defaultValue += "\uD83D\uDC46";
+                    }
                 }
 
                 if(!ColumnManager.hasValidName(col)) {
@@ -81,9 +92,9 @@ public class ComponentDrawer {
 
                 g.setColor(Color.black);
                 g.drawString(name, i * entryWidth, 10);
-                g.drawString(col.getType(), i * entryWidth, 20);
-                g.drawString(String.valueOf(col.allowsBlanks()), i * entryWidth, 30);
-                g.drawString(col.getDefaultValue(), i * entryWidth, 40);
+                g.drawString(type, i * entryWidth, height/32+10);
+                g.drawString(allowsBlanks, i * entryWidth, height*2/32+10);
+                g.drawString(defaultValue, i * entryWidth, height*3/32+10);
                 i++;
 
             }
@@ -96,6 +107,55 @@ public class ComponentDrawer {
     public static void drawTableRowDesigner(Frame frame,Graphics g, Table table){
         int width = frame.getWidth();
         int height = frame.getHeight();
+
+        g.setColor(Color.CYAN);
+        g.fillRect(0, 0, width, height/8);
+
+        ArrayList<Column> cols = table.getCols();
+
+        if(!cols.isEmpty()) {
+
+            int entryWidth = width / cols.size();
+            int entryHeight = height / 8;
+
+
+            int i = 0;
+            for (Column col : cols) {
+
+                g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+
+                String name = cols.get(i).getName();
+                String type = cols.get(i).getType();
+                String allowsBlanks = String.valueOf(cols.get(i).allowsBlanks());
+                String defaultValue = cols.get(i).getDefaultValue();
+                if(col.isSelected()){
+                    if(ColumnManager.getEditMode()==0) {
+                        name += "\uD83D\uDC46";
+                    }else if(ColumnManager.getEditMode()==1) {
+                        type += "\uD83D\uDC46";
+                    }else if(ColumnManager.getEditMode()==2) {
+                        allowsBlanks += "\uD83D\uDC46";
+                    }else if(ColumnManager.getEditMode()==3) {
+                        defaultValue += "\uD83D\uDC46";
+                    }
+                }
+
+                if(!ColumnManager.hasValidName(col)) {
+                    g.setColor(Color.red);
+                }else{
+                    g.setColor(Color.lightGray);
+                }
+                g.fillRect(i * entryWidth, 0, entryWidth, entryHeight);
+
+                g.setColor(Color.black);
+                g.drawString(name, i * entryWidth, 10);
+                g.drawString(type, i * entryWidth, height/32+10);
+                g.drawString(allowsBlanks, i * entryWidth, height*2/32+10);
+                g.drawString(defaultValue, i * entryWidth, height*3/32+10);
+                i++;
+
+            }
+        }
     }
 
 

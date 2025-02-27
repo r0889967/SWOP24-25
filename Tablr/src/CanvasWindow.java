@@ -303,7 +303,7 @@ public class CanvasWindow {
                 //mouse clicked, select table list entry
                 if(clickCount==1){
                     TableManager.saveNewName();
-                    int idx = Locator.getIdx(frame,30,TableManager.getMaxTablePerRow(),x,y);
+                    int idx = Locator.getIdx(frame.getHeight(),30,frame.getWidth(),TableManager.getMaxTablePerRow(),x,y);
                     TableManager.selectTable(idx);
                 }
 
@@ -318,15 +318,16 @@ public class CanvasWindow {
                     //open table design mode or rows mode for table
                     else{
                         Table selected = TableManager.getSelectedTable();
+                        Column col = ColumnManager.getSelectedCol();
 
                         //if table has no columns, change to design mode
-                        if (selected.getCols().isEmpty()) {
-                            CanvasWindow.this.setTitle("Tablr " + ModeManager.setMode(1));
+                        if (selected.getCols().isEmpty() || !ColumnManager.hasValidName(col)) {
+                            CanvasWindow.this.setTitle("Tablr " + ModeManager.toTableDesignMode());
                         }
 
                         //else change to rows mode
                         else {
-                            CanvasWindow.this.setTitle("Tablr " + ModeManager.setMode(2));
+                            CanvasWindow.this.setTitle("Tablr " + ModeManager.toTableRowsMode());
                         }
                     }
                 }
@@ -337,8 +338,11 @@ public class CanvasWindow {
                 //mouse clicked, select col of table
                 if(clickCount==1){
                     Table selected = TableManager.getSelectedTable();
-                    int idx = Locator.getIdx(frame,8,selected.getCols().size(),x,y);
+                    int idx = Locator.getIdx(frame.getHeight(),8,frame.getWidth(),selected.getCols().size(),x,y);
                     ColumnManager.selectCol(selected,idx);
+                    int idx2 = Locator.getIdx(frame.getHeight()/8,4,frame.getWidth(),1,x,y);
+                    ColumnManager.setEditMode(idx2);
+                    ColumnManager.editColAttributes('\0');
                 }
 
                 //mouse is double clicked outside column list
@@ -382,6 +386,7 @@ public class CanvasWindow {
 
                 else if(keyCode==27){
                     TableManager.undoEditName();
+                    TableManager.unselectTable();
                 }
 
                 //enter key
@@ -405,7 +410,7 @@ public class CanvasWindow {
 
                 //escape key
                 if (keyCode == 27) {
-                    CanvasWindow.this.setTitle("Tablr " + ModeManager.setMode(0));
+                    CanvasWindow.this.setTitle("Tablr " + ModeManager.toTablesMode());
                 }
 
                 else if(keyCode==10){
@@ -414,7 +419,7 @@ public class CanvasWindow {
 
                 //crtl+enter
                 else if(keyCode == 17){
-                    CanvasWindow.this.setTitle("Tablr " + ModeManager.setMode(2));
+                    CanvasWindow.this.setTitle("Tablr " + ModeManager.toTableRowsMode());
                 }
 
                 //del key
@@ -424,7 +429,7 @@ public class CanvasWindow {
 
                 //character keys
                 else{
-                    ColumnManager.editColName(keyChar);
+                    ColumnManager.editColAttributes(keyChar);
                 }
 
             }
@@ -440,12 +445,12 @@ public class CanvasWindow {
 
                 //escape key
                 if (keyCode == 27) {
-                    CanvasWindow.this.setTitle("Tablr " + ModeManager.setMode(0));
+                    CanvasWindow.this.setTitle("Tablr " + ModeManager.toTablesMode());
                 }
 
                 //crtl+enter
                 else if(keyCode == 17){
-                    CanvasWindow.this.setTitle("Tablr " + ModeManager.setMode(1));
+                    CanvasWindow.this.setTitle("Tablr " + ModeManager.toTableDesignMode());
                 }
 
 

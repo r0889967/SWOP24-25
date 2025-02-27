@@ -1,10 +1,10 @@
-import java.awt.*;
+
 
 public class Locator {
 
-    public static int getIdx(Frame frame, int hscale, int wscale,int x, int y) {
-        int entryHeight = frame.getHeight() / hscale;
-        int entryWidth = frame.getWidth()/wscale;
+    public static int getIdx(int height, int hscale, int width, int wscale,int x, int y) {
+        int entryHeight = height / hscale;
+        int entryWidth = width/wscale;
         int entryCol = x/ entryWidth;
         int entryRow = y/ entryHeight;
         int entryIdx = (entryRow*wscale)+entryCol;
