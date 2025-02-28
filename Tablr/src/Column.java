@@ -33,6 +33,14 @@ public class Column {
         return allowsBlanks;
     }
 
+    public boolean allowsBlanks_() {
+        if(allowsBlanks == "☑"){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     public void setAllowsBlanks(String allowsBlanks) {
         this.allowsBlanks = allowsBlanks;
     }

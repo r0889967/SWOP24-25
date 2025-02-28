@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class ColumnManager {
@@ -64,10 +63,13 @@ public class ColumnManager {
     }
 
     public static Column getSelectedCol(){
-        ArrayList<Column> cols = TableManager.getSelectedTable().getCols();
-        for(int i=0;i<cols.size();i++){
-            if(cols.get(i).isSelected()){
-                return cols.get(i);
+        Table table = TableManager.getSelectedTable();
+        if(table!=null) {
+            ArrayList<Column> cols = table.getCols();
+            for (int i = 0; i < cols.size(); i++) {
+                if (cols.get(i).isSelected()) {
+                    return cols.get(i);
+                }
             }
         }
         return null;
@@ -110,11 +112,33 @@ public class ColumnManager {
     private static void editColDefaultValue(char keyChar){
         Column col = getSelectedCol();
         String defaultValue = col.getDefaultValue();
-        if(keyChar=='\b'){
-            col.setDefaultValue(defaultValue.substring(0, defaultValue.length()-1));
-        }else {
-            col.setDefaultValue(defaultValue + keyChar);
 
+        if(col.getType().equals("Boolean")) {
+            if(col.allowsBlanks().equals("☑")){
+                if(defaultValue.equals("True")){
+                    col.setDefaultValue("False");
+                }else if(defaultValue.equals("False")){
+                    col.setDefaultValue("");
+                }else{
+                    col.setDefaultValue("True");
+                }
+
+            }else{
+                if(defaultValue.equals("True")){
+                    col.setDefaultValue("False");
+                }else{
+                    col.setDefaultValue("True");
+                }
+
+            }
+
+        }else {
+
+            if (keyChar == '\b') {
+                col.setDefaultValue(defaultValue.substring(0, defaultValue.length() - 1));
+            } else {
+                col.setDefaultValue(defaultValue + keyChar);
+            }
         }
 
     }
