@@ -303,7 +303,7 @@ public class CanvasWindow {
                 //mouse clicked, select table list entry
                 if(clickCount==1){
                     TableManager.saveNewName();
-                    int idx = Locator.getIdx(frame.getHeight(),30,frame.getWidth(),TableManager.getMaxTablePerRow(),x,y);
+                    int idx = Locator.getIdx(frame.getHeight(),30,frame.getWidth(),TableManager.getMaxTablePerRow(),x,y,0,0);
                     TableManager.selectTable(idx);
                 }
 
@@ -318,18 +318,20 @@ public class CanvasWindow {
                     //open table design mode or rows mode for table
                     else{
                         Table selected = TableManager.getSelectedTable();
-                        Column col = ColumnManager.getSelectedCol();
+                        if(selected!=null) {
 
-                        //if table has no columns, change to design mode
-                        if (selected.getCols().isEmpty() || !ColumnManager.hasValidName(col)) {
-                            CanvasWindow.this.setTitle("Tablr " + ModeManager.toTableDesignMode());
-                        }
+                            //if table has no columns, change to design mode
+                            if (selected.getCols().isEmpty()) {
+                                CanvasWindow.this.setTitle("Tablr " + ModeManager.toTableDesignMode());
+                            }
 
-                        //else change to rows mode
-                        else {
-                            CanvasWindow.this.setTitle("Tablr " + ModeManager.toTableRowsMode());
+                            //else change to rows mode
+                            else {
+                                CanvasWindow.this.setTitle("Tablr " + ModeManager.toTableRowsMode());
+                            }
                         }
                     }
+
                 }
             }
             //table design mode
@@ -338,9 +340,9 @@ public class CanvasWindow {
                 //mouse clicked, select col of table
                 if(clickCount==1){
                     Table selected = TableManager.getSelectedTable();
-                    int idx = Locator.getIdx(frame.getHeight(),8,frame.getWidth(),selected.getCols().size(),x,y);
+                    int idx = Locator.getIdx(frame.getHeight(),8,frame.getWidth(),selected.getCols().size(),x,y,0,0);
                     ColumnManager.selectCol(selected,idx);
-                    int idx2 = Locator.getIdx(frame.getHeight()/8,4,frame.getWidth(),1,x,y);
+                    int idx2 = Locator.getIdx(frame.getHeight()/8,4,frame.getWidth(),1,x,y,0,0);
                     ColumnManager.setEditMode(idx2);
                     ColumnManager.editColAttributes('\0');
                 }

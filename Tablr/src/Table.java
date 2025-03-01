@@ -5,7 +5,7 @@ public class Table {
     private String name;
     private String oldName;
     private ArrayList<Column> cols = new ArrayList<Column>();
-    private ArrayList<ArrayList<Cell>> rows = new ArrayList<ArrayList<Cell>>();
+    private ArrayList<Row> rows = new ArrayList<Row>();
     private boolean selected = false;
 
     Table(String name){
@@ -35,30 +35,37 @@ public class Table {
     }
 
     public void setName(String name){
+
         this.name = name;
     }
 
     public void setOldName(String oldName){
+
         this.oldName = oldName;
     }
 
-    public void addRow(ArrayList<Cell> row){
+    public void addRow(Row row){
+
         rows.add(row);
     }
 
-    public ArrayList<ArrayList<Cell>> getRows(){
+    public ArrayList<Row> getRows(){
+
         return rows;
     }
 
     public void addCol(Column col){
+
         cols.add(col);
     }
 
     public void deleteCol(Column col){
+
         cols.remove(col);
     }
 
     public ArrayList<Column> getCols(){
+
         return cols;
     }
 
