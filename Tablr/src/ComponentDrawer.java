@@ -27,7 +27,7 @@ public class ComponentDrawer {
             }
 
 
-            if(!TableManager.hasValidName(table)) {
+            if(!ErrorChecker.validTableName(table,TableManager.getTables())) {
                 g.setColor(Color.red);
             }else{
                 g.setColor(Color.lightGray);
@@ -82,7 +82,7 @@ public class ComponentDrawer {
                     }
                 }
 
-                if (!ColumnManager.isColValid(col)) {
+                if (!ErrorChecker.validColumn(col, ColumnManager.getCols(table))) {
                     g.setColor(Color.red);
                 } else {
                     g.setColor(Color.lightGray);

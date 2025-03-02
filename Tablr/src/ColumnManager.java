@@ -21,83 +21,20 @@ public class ColumnManager {
         editMode = mode;
     }
 
-    private static boolean validEmail(String str){
-        int count = 0;
-        for(char chr: str.toCharArray()){
-            if(chr=='@'){
-                count++;
-            }
-        }
-        return count==1;
-    }
-
-    private static boolean validInt(String str){
-        if(str.isEmpty()){
-            return false;
-        }
-        for(char chr: str.toCharArray()){
-            if(!Character.isDigit(chr)){
-                return false;
-            }
-        }
-        return String.valueOf(Integer.parseInt(str)).equals(str);
-    }
-
-    private static boolean hasValidDefaultValue(Column col){
-        if(col==null || col.getType().equals("Boolean")){
-            return true;
-        }
-        String dValue = col.getDefaultValue();
-        return dValue.isEmpty() && col.allowsBlanks_()
-                || col.getType().equals("String") && !dValue.isEmpty()
-                || col.getType().equals("Integer") && validInt(dValue)
-                || col.getType().equals("Email") && validEmail(dValue);
-
-    }
-
-    private static boolean hasValidName(Column col){
-        Table table = TableManager.getSelectedTable();
-
-        if(col == null){
-            return true;
-        }
-        if(col.getName().equals("")){
-            return false;
-        }
-        for(Column c:getCols(table)){
-            if(c==col){
-                continue;
-            }
-            if(c.getName().equals(col.getName())){
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private static boolean hasValidRowValues(Column col){
-        return true;
-    }
-
-    public static boolean isColValid(Column col){
-        return hasValidName(col)&&hasValidDefaultValue(col)&&hasValidRowValues(col);
-    }
-
-
     public static void selectCol(Table table,int idx){
-        ArrayList<Column> cols = table.getCols();
         Column col = getSelectedCol();
-        if(isColValid(col)) {
+        if(ErrorChecker.validColumn(col,getCols(table))) {
             if (col != null) {
                 col.unselect();
             }
-            cols.get(idx).select();
+            getCols(table).get(idx).select();
         }
     }
 
     public static void unselectCol(){
+        Table table = TableManager.getSelectedTable();
         Column col = getSelectedCol();
-        if(hasValidName(col)) {
+        if(ErrorChecker.validColumn(col, getCols(table))) {
             if (col != null) {
                 col.unselect();
             }
@@ -107,7 +44,7 @@ public class ColumnManager {
     public static Column getSelectedCol(){
         Table table = TableManager.getSelectedTable();
         if(table!=null) {
-            ArrayList<Column> cols = table.getCols();
+            ArrayList<Column> cols = getCols(table);
             for (int i = 0; i < cols.size(); i++) {
                 if (cols.get(i).isSelected()) {
                     return cols.get(i);
@@ -207,8 +144,9 @@ public class ColumnManager {
     }
 
     private static int getColIdx(Table table, Column col){
-        for(int i=0;i<table.getCols().size();i++){
-            if(col==table.getCols().get(i)){
+        ArrayList<Column> cols = getCols(table);
+        for(int i=0;i<cols.size();i++){
+            if(col==cols.get(i)){
                 return i;
             }
         }
@@ -217,15 +155,16 @@ public class ColumnManager {
 
     //create and add a new col
     public static void createAndAddCol(){
-        if(hasValidName(getSelectedCol())) {
-            Table table = TableManager.getSelectedTable();
+        Table table = TableManager.getSelectedTable();
+        Column col = getSelectedCol();
+        if(ErrorChecker.validColumn(col,getCols(table))) {
             String name = generateName();
-            Column col = new Column(name);
-            while(!hasValidName(col)) {
+            Column col_ = new Column(name);
+            while(!ErrorChecker.validColumn(col,getCols(table))) {
                 name = generateName();
-                col.setName(name);
+                col_.setName(name);
             }
-            table.addCol(col);
+            table.addCol(col_);
             if(!getCols(table).isEmpty()) {
                 RowColMediator.synchronize2(table);
             }
@@ -241,6 +180,5 @@ public class ColumnManager {
             table.deleteCol(col);
             RowColMediator.synchronize(table,idx);
         }
-        
     }
 }

@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class ModeManager {
 
     private static int mode = 0;
@@ -16,11 +18,11 @@ public class ModeManager {
     public static String toTablesMode(){
         Table table = TableManager.getSelectedTable();
         Column col = ColumnManager.getSelectedCol();
-        if (TableManager.hasValidName(table)) {
-            if(ColumnManager.isColValid(col)) {
-            mode = 0;
-            ColumnManager.unselectCol();
-            return "Tables mode";
+        if (ErrorChecker.validTableName(table,TableManager.getTables())) {
+            if(ErrorChecker.validColumn(col, ColumnManager.getCols(table))) {
+                mode = 0;
+                ColumnManager.unselectCol();
+                return "Tables mode";
             }
         }
         return getMode();
@@ -28,7 +30,7 @@ public class ModeManager {
 
     public static String toTableDesignMode(){
         Table table = TableManager.getSelectedTable();
-        if (TableManager.hasValidName(table)) {
+        if (ErrorChecker.validTableName(table,TableManager.getTables())) {
             mode = 1;
             return "Table design mode";
         }
@@ -38,8 +40,9 @@ public class ModeManager {
     public static String toTableRowsMode(){
         Table table = TableManager.getSelectedTable();
         Column col = ColumnManager.getSelectedCol();
-        if (TableManager.hasValidName(table)) {
-            if(ColumnManager.isColValid(col)) {
+        ArrayList<Column> cols = ColumnManager.getCols(table);
+        if (ErrorChecker.validTableName(table,TableManager.getTables())) {
+            if(ErrorChecker.validColumn(col, cols) && !cols.isEmpty()) {
                 mode = 2;
                 ColumnManager.unselectCol();
                 return "Table rows mode";

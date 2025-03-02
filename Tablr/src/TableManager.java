@@ -14,25 +14,6 @@ public class TableManager {
         return "Table"+sequenceNumber;
     }
 
-    public static boolean hasValidName(Table table){
-
-        if(table == null){
-            return true;
-        }
-        if(table.getName().equals("")){
-            return false;
-        }
-        for(Table t:tables){
-            if(t==table){
-                continue;
-            }
-            if(t.getName().equals(table.getName())){
-                return false;
-            }
-        }
-        return true;
-    }
-
     public static int getMaxTablePerRow(){
         return maxTablePerRow;
     }
@@ -44,18 +25,17 @@ public class TableManager {
     //select table with idx
     public static void selectTable(int idx){
         Table table = getSelectedTable();
-        if(hasValidName(table)) {
+        if(ErrorChecker.validTableName(table,tables)) {
             if(table!=null) {
                 table.unselect();
             }
-
             tables.get(idx).select();
         }
     }
 
     public static void unselectTable(){
         Table table = getSelectedTable();
-        if(hasValidName(table)) {
+        if(ErrorChecker.validTableName(table,tables)) {
             if (table != null) {
                 table.unselect();
             }
@@ -97,7 +77,7 @@ public class TableManager {
 
     public static void saveNewName(){
         Table table = getSelectedTable();
-        if(hasValidName(table)) {
+        if(ErrorChecker.validTableName(table,tables)) {
             if (table != null) {
                 String newName = table.getName();
                 table.setOldName(newName);
@@ -114,11 +94,11 @@ public class TableManager {
     //create and add a new table
     public static void createAndAddTable(){
         Table table = getSelectedTable();
-        if(hasValidName(table)) {
+        if(ErrorChecker.validTableName(table,tables)) {
             if (tables.size() < maxTables) {
                 String name = generateName();
                 Table table_ = new Table(name);
-                while(!hasValidName(table_)) {
+                while(!ErrorChecker.validTableName(table,tables)) {
                     name = generateName();
                     table_.setName(name);
                     table_.setOldName(name);

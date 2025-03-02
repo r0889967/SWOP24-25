@@ -6,6 +6,18 @@ public class Row {
 
     private ArrayList<Cell> cells = new ArrayList<>();
 
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void select(){
+        isSelected = true;
+    }
+
+    public void unselect(){
+        isSelected = false;
+    }
+
     public ArrayList<Cell> getCells(){
         return cells;
     }
