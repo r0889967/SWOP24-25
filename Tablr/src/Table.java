@@ -7,12 +7,20 @@ public class Table {
     private ArrayList<Column> cols = new ArrayList<Column>();
     private ArrayList<Row> rows = new ArrayList<Row>();
     private boolean selected = false;
+    private int colSequenceNumber = 0;
 
     Table(String name){
         this.name = name;
         this.oldName = name;
     }
 
+    public int getColSequenceNumber(){
+        return colSequenceNumber;
+    }
+
+    public void addColSequenceNumber(){
+        this.colSequenceNumber++;
+    }
 
     public boolean isSelected(){
         return selected;
@@ -55,13 +63,15 @@ public class Table {
     }
 
     public void addCol(Column col){
-
         cols.add(col);
     }
 
     public void deleteCol(Column col){
-
         cols.remove(col);
+    }
+
+    public void deleteRow(Row row){
+        rows.remove(row);
     }
 
     public ArrayList<Column> getCols(){

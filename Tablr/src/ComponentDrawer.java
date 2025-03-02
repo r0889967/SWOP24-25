@@ -46,20 +46,19 @@ public class ComponentDrawer {
         }
     }
 
-    //draw col designer for selected table
-    public static void drawTableColDesigner(Frame frame,Graphics g, Table table){
+
+    private static void drawCols(Frame frame,Graphics g,Table table){
         int width = frame.getWidth();
         int height = frame.getHeight();
-
-        g.setColor(Color.CYAN);
-        g.fillRect(0, 0, width, height/8);
-
         ArrayList<Column> cols = table.getCols();
 
-        if(!cols.isEmpty()) {
+        g.setColor(Color.CYAN);
+        g.fillRect(0, 0, width, height / 8);
 
-            int entryWidth = width / cols.size();
-            int entryHeight = height / 8;
+        if (!cols.isEmpty()) {
+
+            int colEntryWidth = width / cols.size();
+            int colEntryHeight = height / 8;
 
 
             int i = 0;
@@ -71,92 +70,80 @@ public class ComponentDrawer {
                 String type = cols.get(i).getType();
                 String allowsBlanks = String.valueOf(cols.get(i).allowsBlanks());
                 String defaultValue = cols.get(i).getDefaultValue();
-                if(col.isSelected()){
-                    if(ColumnManager.getEditMode()==0) {
+                if (col.isSelected()) {
+                    if (ColumnManager.getEditMode() == 0) {
                         name += "\uD83D\uDC46";
-                    }else if(ColumnManager.getEditMode()==1) {
+                    } else if (ColumnManager.getEditMode() == 1) {
                         type += "\uD83D\uDC46";
-                    }else if(ColumnManager.getEditMode()==2) {
+                    } else if (ColumnManager.getEditMode() == 2) {
                         allowsBlanks += "\uD83D\uDC46";
-                    }else if(ColumnManager.getEditMode()==3) {
+                    } else if (ColumnManager.getEditMode() == 3) {
                         defaultValue += "\uD83D\uDC46";
                     }
                 }
 
-                if(!ColumnManager.isColValid(col)) {
+                if (!ColumnManager.isColValid(col)) {
                     g.setColor(Color.red);
-                }else{
+                } else {
                     g.setColor(Color.lightGray);
                 }
-                g.fillRect(i * entryWidth, 0, entryWidth, entryHeight);
+                g.fillRect(i * colEntryWidth, 0, colEntryWidth, colEntryHeight);
 
                 g.setColor(Color.black);
-                g.drawString(name, i * entryWidth, 10);
-                g.drawString(type, i * entryWidth, height/32+10);
-                g.drawString("Blanks?"+allowsBlanks, i * entryWidth, height*2/32+10);
-                g.drawString("DVal:"+defaultValue, i * entryWidth, height*3/32+10);
-                i++;
+                g.drawString(name, i * colEntryWidth, 10);
+                g.drawString(type, i * colEntryWidth, height / 32 + 10);
+                g.drawString("Blanks?" + allowsBlanks, i * colEntryWidth, height * 2 / 32 + 10);
+                g.drawString("DVal:" + defaultValue, i * colEntryWidth, height * 3 / 32 + 10);
 
+
+                g.drawLine(i*colEntryWidth, 0, i*colEntryWidth, 7*height/8);
+                i++;
             }
         }
 
-
     }
 
-    //draw row designer for selected table
-    public static void drawTableRowDesigner(Frame frame,Graphics g, Table table){
+    private static void drawRows(Frame frame,Graphics g,Table table){
         int width = frame.getWidth();
         int height = frame.getHeight();
-
-        g.setColor(Color.CYAN);
-        g.fillRect(0, 0, width, height/8);
-
         ArrayList<Column> cols = table.getCols();
+        ArrayList<Row> rows = table.getRows();
 
-        if(!cols.isEmpty()) {
+        g.setColor(Color.green);
+        g.fillRect(0, height / 8, width, 3 * height / 4);
 
-            int entryWidth = width / cols.size();
-            int entryHeight = height / 8;
+        if (!cols.isEmpty() && !rows.isEmpty()) {
+            int cellEntryWidth = width / cols.size();
+            int cellEntryHeight = (3*height / 4)/rows.size();
 
-
-            int i = 0;
-            for (Column col : cols) {
-
-                g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 14));
-
-                String name = cols.get(i).getName();
-                String type = cols.get(i).getType();
-                String allowsBlanks = String.valueOf(cols.get(i).allowsBlanks());
-                String defaultValue = cols.get(i).getDefaultValue();
-                if(col.isSelected()){
-                    if(ColumnManager.getEditMode()==0) {
-                        name += "\uD83D\uDC46";
-                    }else if(ColumnManager.getEditMode()==1) {
-                        type += "\uD83D\uDC46";
-                    }else if(ColumnManager.getEditMode()==2) {
-                        allowsBlanks += "\uD83D\uDC46";
-                    }else if(ColumnManager.getEditMode()==3) {
-                        defaultValue += "\uD83D\uDC46";
+            int row = 0;
+            int col = 0;
+            for (Row r : rows) {
+                for (Cell cell : r.getCells()) {
+                    if(row%2==0) {
+                        g.setColor(new Color(237, 237, 237));
+                    }else{
+                        g.setColor(new Color(200, 200, 200));
                     }
+                    g.fillRect(col * cellEntryWidth, (height / 8) + row * cellEntryHeight, cellEntryWidth, cellEntryHeight);
+                    g.setColor(Color.black);
+                    g.drawString(cell.getValue(), col * cellEntryWidth, (height / 8) +row * cellEntryHeight+10);
+                    col++;
                 }
-
-                if(!ColumnManager.isColValid(col)) {
-                    g.setColor(Color.red);
-                }else{
-                    g.setColor(Color.lightGray);
-                }
-                g.fillRect(i * entryWidth, 0, entryWidth, entryHeight);
-
-                g.setColor(Color.black);
-                g.drawString(name, i * entryWidth, 10);
-                g.drawString(type, i * entryWidth, height/32+10);
-                g.drawString("Blanks?"+allowsBlanks, i * entryWidth, height*2/32+10);
-                g.drawString("DVal:"+defaultValue, i * entryWidth, height*3/32+10);
-                i++;
-
+                col = 0;
+                row++;
             }
         }
+
+        g.setColor(Color.CYAN);
+        g.fillRect(0, 0, width, height / 8);
     }
 
+
+    //draw editor for selected table
+    public static void drawTableEditor(Frame frame,Graphics g, Table table) {
+        drawRows(frame, g, table);
+        drawCols(frame, g, table);
+    }
 
 }

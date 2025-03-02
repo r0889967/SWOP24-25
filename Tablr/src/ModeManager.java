@@ -19,6 +19,7 @@ public class ModeManager {
         if (TableManager.hasValidName(table)) {
             if(ColumnManager.isColValid(col)) {
             mode = 0;
+            ColumnManager.unselectCol();
             return "Tables mode";
             }
         }
@@ -40,6 +41,7 @@ public class ModeManager {
         if (TableManager.hasValidName(table)) {
             if(ColumnManager.isColValid(col)) {
                 mode = 2;
+                ColumnManager.unselectCol();
                 return "Table rows mode";
             }
         }

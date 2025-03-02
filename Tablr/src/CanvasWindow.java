@@ -269,10 +269,8 @@ public class CanvasWindow {
         Table selected = TableManager.getSelectedTable();
         if(ModeManager.getMode().equals("Tables mode")) {
             ComponentDrawer.drawTableList(frame, g);
-        }else if(ModeManager.getMode().equals("Table design mode")) {
-            ComponentDrawer.drawTableColDesigner(frame,g,selected);
         }else{
-            ComponentDrawer.drawTableRowDesigner(frame,g,selected);
+            ComponentDrawer.drawTableEditor(frame,g,selected);
         }
 
 
@@ -348,7 +346,7 @@ public class CanvasWindow {
                 }
 
                 //mouse is double clicked outside column list
-                else if (y > height / 4 && clickCount == 2) {
+                else if (y > 7*height/8 && clickCount == 2) {
                     ColumnManager.createAndAddCol();
                 }
 
@@ -356,6 +354,13 @@ public class CanvasWindow {
             //table rows mode
             else{
 
+                if(clickCount==1){
+
+                }
+
+                else if(y>7*height/8 && clickCount==2) {
+                    RowManager.createAndAddRow();
+                }
 
             }
         }

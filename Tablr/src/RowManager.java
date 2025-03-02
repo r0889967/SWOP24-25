@@ -14,28 +14,19 @@ public class RowManager {
         return null;
     }
 
+    public static ArrayList<Row> getRows(Table table){
+        return table.getRows();
+    }
+
 
 
     public static void createAndAddRow() {
-        boolean allColsValid = true;
         Table table = TableManager.getSelectedTable();
-
+        Row row = new Row();
         for (Column c : ColumnManager.getCols(table)) {
-            if (!ColumnManager.isColValid(c)) {
-                allColsValid = false;
-                break;
-            }
+            row.addCell(new Cell(c.getDefaultValue()));
         }
-
-        if (allColsValid) {
-            Row row = new Row();
-            for (Column c : ColumnManager.getCols(table)) {
-                row.addCell(new Cell(c.getDefaultValue()));
-            }
-            table.addRow(row);
-        }
-
-
+        table.addRow(row);
     }
 
 }

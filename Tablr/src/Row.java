@@ -14,5 +14,9 @@ public class Row {
         cells.add(cell);
     }
 
+    public void deleteCell(int idx){
+        cells.remove(idx);
+    }
+
 
 }

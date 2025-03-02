@@ -2,12 +2,12 @@ import java.util.ArrayList;
 
 public class ColumnManager {
 
-    private static int sequenceNumber = 0;
     private static int editMode = 0;
 
     private static String generateName(){
-        sequenceNumber++;
-        return "Column"+sequenceNumber;
+        Table table = TableManager.getSelectedTable();
+        table.addColSequenceNumber();
+        return "Column"+table.getColSequenceNumber();
     }
 
     public static int getEditMode(){
@@ -75,18 +75,12 @@ public class ColumnManager {
         return true;
     }
 
-    public static boolean isColValid(Column col){
-        return hasValidName(col)&&hasValidDefaultValue(col);
+    private static boolean hasValidRowValues(Column col){
+        return true;
     }
 
-    public static boolean allColsValid(){
-        Table table = TableManager.getSelectedTable();
-        for(Column c:getCols(table)){
-            if(!isColValid(c)){
-                return false;
-            }
-        }
-        return true;
+    public static boolean isColValid(Column col){
+        return hasValidName(col)&&hasValidDefaultValue(col)&&hasValidRowValues(col);
     }
 
 
@@ -139,6 +133,7 @@ public class ColumnManager {
             col.setType("Email");
         }else if(col.getType().equals("Email")){
             col.setType("Boolean");
+            col.setDefaultValue("True");
         }else if(col.getType().equals("Boolean")){
             col.setType("Integer");
         }else{
@@ -211,13 +206,29 @@ public class ColumnManager {
         return table.getCols();
     }
 
+    private static int getColIdx(Table table, Column col){
+        for(int i=0;i<table.getCols().size();i++){
+            if(col==table.getCols().get(i)){
+                return i;
+            }
+        }
+        return 0;
+    }
+
     //create and add a new col
     public static void createAndAddCol(){
         if(hasValidName(getSelectedCol())) {
             Table table = TableManager.getSelectedTable();
             String name = generateName();
             Column col = new Column(name);
+            while(!hasValidName(col)) {
+                name = generateName();
+                col.setName(name);
+            }
             table.addCol(col);
+            if(!getCols(table).isEmpty()) {
+                RowColMediator.synchronize2(table);
+            }
         }
     }
 
@@ -225,8 +236,10 @@ public class ColumnManager {
     public static void deleteCol(){
         Table table = TableManager.getSelectedTable();
         Column col = getSelectedCol();
+        int idx = getColIdx(table,col);
         if(col!=null) {
             table.deleteCol(col);
         }
+        RowColMediator.synchronize(table,idx);
     }
 }
