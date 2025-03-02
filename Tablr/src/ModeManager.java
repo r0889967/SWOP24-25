@@ -17,7 +17,7 @@ public class ModeManager {
         Table table = TableManager.getSelectedTable();
         Column col = ColumnManager.getSelectedCol();
         if (TableManager.hasValidName(table)) {
-            if(ColumnManager.hasValidName(col)) {
+            if(ColumnManager.isColValid(col)) {
             mode = 0;
             return "Tables mode";
             }
@@ -38,7 +38,7 @@ public class ModeManager {
         Table table = TableManager.getSelectedTable();
         Column col = ColumnManager.getSelectedCol();
         if (TableManager.hasValidName(table)) {
-            if(ColumnManager.hasValidName(col)) {
+            if(ColumnManager.isColValid(col)) {
                 mode = 2;
                 return "Table rows mode";
             }

@@ -430,7 +430,7 @@ public class CanvasWindow {
                 }
 
                 //character keys
-                else{
+                else if(!(keyCode>=16 && keyCode<=20)){
                     ColumnManager.editColAttributes(keyChar);
                 }
 

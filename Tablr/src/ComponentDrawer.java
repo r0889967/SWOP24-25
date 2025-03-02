@@ -83,7 +83,7 @@ public class ComponentDrawer {
                     }
                 }
 
-                if(!ColumnManager.hasValidName(col)) {
+                if(!ColumnManager.isColValid(col)) {
                     g.setColor(Color.red);
                 }else{
                     g.setColor(Color.lightGray);
@@ -140,7 +140,7 @@ public class ComponentDrawer {
                     }
                 }
 
-                if(!ColumnManager.hasValidName(col)) {
+                if(!ColumnManager.isColValid(col)) {
                     g.setColor(Color.red);
                 }else{
                     g.setColor(Color.lightGray);

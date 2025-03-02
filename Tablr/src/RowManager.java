@@ -21,7 +21,7 @@ public class RowManager {
         Table table = TableManager.getSelectedTable();
 
         for (Column c : ColumnManager.getCols(table)) {
-            if (!ColumnManager.hasValidName(c)) {
+            if (!ColumnManager.isColValid(c)) {
                 allColsValid = false;
                 break;
             }

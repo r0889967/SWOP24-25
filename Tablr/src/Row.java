@@ -14,15 +14,5 @@ public class Row {
         cells.add(cell);
     }
 
-    public boolean isSelected(){
-        return isSelected;
-    }
 
-    public void select(){
-        isSelected = true;
-    }
-
-    public void unselect(){
-        isSelected = false;
-    }
 }

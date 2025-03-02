@@ -21,7 +21,41 @@ public class ColumnManager {
         editMode = mode;
     }
 
-    public static boolean hasValidName(Column col){
+    private static boolean validEmail(String str){
+        int count = 0;
+        for(char chr: str.toCharArray()){
+            if(chr=='@'){
+                count++;
+            }
+        }
+        return count==1;
+    }
+
+    private static boolean validInt(String str){
+        if(str.isEmpty()){
+            return false;
+        }
+        for(char chr: str.toCharArray()){
+            if(!Character.isDigit(chr)){
+                return false;
+            }
+        }
+        return String.valueOf(Integer.parseInt(str)).equals(str);
+    }
+
+    private static boolean hasValidDefaultValue(Column col){
+        if(col==null || col.getType().equals("Boolean")){
+            return true;
+        }
+        String dValue = col.getDefaultValue();
+        return dValue.isEmpty() && col.allowsBlanks_()
+                || col.getType().equals("String") && !dValue.isEmpty()
+                || col.getType().equals("Integer") && validInt(dValue)
+                || col.getType().equals("Email") && validEmail(dValue);
+
+    }
+
+    private static boolean hasValidName(Column col){
         Table table = TableManager.getSelectedTable();
 
         if(col == null){
@@ -41,11 +75,25 @@ public class ColumnManager {
         return true;
     }
 
+    public static boolean isColValid(Column col){
+        return hasValidName(col)&&hasValidDefaultValue(col);
+    }
+
+    public static boolean allColsValid(){
+        Table table = TableManager.getSelectedTable();
+        for(Column c:getCols(table)){
+            if(!isColValid(c)){
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     public static void selectCol(Table table,int idx){
         ArrayList<Column> cols = table.getCols();
         Column col = getSelectedCol();
-        if(hasValidName(col)) {
+        if(isColValid(col)) {
             if (col != null) {
                 col.unselect();
             }
