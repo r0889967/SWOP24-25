@@ -98,7 +98,7 @@ public class TableManager {
             if (tables.size() < maxTables) {
                 String name = generateName();
                 Table table_ = new Table(name);
-                while(!ErrorChecker.validTableName(table,tables)) {
+                while(!ErrorChecker.validTableName(table_,tables)) {
                     name = generateName();
                     table_.setName(name);
                     table_.setOldName(name);
