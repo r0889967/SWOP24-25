@@ -239,7 +239,8 @@ public class ColumnManager {
         int idx = getColIdx(table,col);
         if(col!=null) {
             table.deleteCol(col);
+            RowColMediator.synchronize(table,idx);
         }
-        RowColMediator.synchronize(table,idx);
+        
     }
 }
