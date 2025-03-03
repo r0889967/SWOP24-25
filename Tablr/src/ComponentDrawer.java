@@ -4,7 +4,7 @@ import java.util.ArrayList;
 public class ComponentDrawer {
 
     //draw list of tables
-    public static void drawTableList(Frame frame,Graphics g){
+    private static void drawTableList(Frame frame,Graphics g){
         int width = frame.getWidth();
         int height = frame.getHeight();
 
@@ -141,9 +141,18 @@ public class ComponentDrawer {
 
 
     //draw editor for selected table
-    public static void drawTableEditor(Frame frame,Graphics g, Table table) {
+    private static void drawTableEditor(Frame frame,Graphics g, Table table) {
         drawRows(frame, g, table);
         drawCols(frame, g, table);
+    }
+
+    public static void draw(Frame frame,Graphics g){
+        Table selected = TableManager.getSelectedTable();
+        if(ModeManager.getMode().equals("Tables mode")) {
+            drawTableList(frame, g);
+        }else{
+            drawTableEditor(frame,g,selected);
+        }
     }
 
 }

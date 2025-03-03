@@ -266,14 +266,7 @@ public class CanvasWindow {
      * @param g This object offers the methods that allow you to paint on the canvas.
      */
     protected void paint(Graphics g) {
-        Table selected = TableManager.getSelectedTable();
-        if(ModeManager.getMode().equals("Tables mode")) {
-            ComponentDrawer.drawTableList(frame, g);
-        }else{
-            ComponentDrawer.drawTableEditor(frame,g,selected);
-        }
-
-
+        ComponentDrawer.draw(frame, g);
     }
 
     private void handleMouseEvent_(MouseEvent e) {
@@ -290,79 +283,9 @@ public class CanvasWindow {
      */
     protected void handleMouseEvent(int id, int x, int y, int clickCount) {
 
-
-
         //when mouse is clicked
         if(id==500){
-
-            //tables mode
-            if(ModeManager.getMode().equals("Tables mode")) {
-
-                //mouse clicked, select table list entry
-                if(clickCount==1){
-                    TableManager.saveNewName();
-                    int idx = Locator.getIdx(frame.getHeight(),30,frame.getWidth(),TableManager.getMaxTablePerRow(),x,y,0,0);
-                    TableManager.selectTable(idx);
-                }
-
-                //mouse double clicked
-                else if(clickCount==2){
-
-                    //create new table list entry
-                    if(y>30*TableManager.getMaxTablePerCol()){
-                        TableManager.createAndAddTable();
-                    }
-
-                    //open table design mode or rows mode for table
-                    else{
-                        Table selected = TableManager.getSelectedTable();
-                        if(selected!=null) {
-
-                            //if table has no columns, change to design mode
-                            if (selected.getCols().isEmpty()) {
-                                CanvasWindow.this.setTitle("Tablr " + ModeManager.toTableDesignMode());
-                            }
-
-                            //else change to rows mode
-                            else {
-                                CanvasWindow.this.setTitle("Tablr " + ModeManager.toTableRowsMode());
-                            }
-                        }
-                    }
-
-                }
-            }
-            //table design mode
-            else if (ModeManager.getMode().equals("Table design mode")) {
-
-                //mouse clicked, select col of table
-                if(clickCount==1){
-                    Table selected = TableManager.getSelectedTable();
-                    int idx = Locator.getIdx(frame.getHeight(),8,frame.getWidth(),selected.getCols().size(),x,y,0,0);
-                    ColumnManager.selectCol(selected,idx);
-                    int idx2 = Locator.getIdx(frame.getHeight()/8,4,frame.getWidth(),1,x,y,0,0);
-                    ColumnManager.setEditMode(idx2);
-                    ColumnManager.editColAttributes('\0');
-                }
-
-                //mouse is double clicked outside column list
-                else if (y > 7*height/8 && clickCount == 2) {
-                    ColumnManager.createAndAddCol();
-                }
-
-            }
-            //table rows mode
-            else{
-
-                if(clickCount==1){
-
-                }
-
-                else if(y>7*height/8 && clickCount==2) {
-                    RowManager.createAndAddRow();
-                }
-
-            }
+            MouseController.handle(frame,this,x,y,clickCount);
         }
 
         CanvasWindow.this.repaint();
@@ -380,93 +303,12 @@ public class CanvasWindow {
      */
     protected void handleKeyEvent(int id, int keyCode, char keyChar) {
 
-        //tables mode
-        if(ModeManager.getMode().equals("Tables mode")) {
-
-            //when key is clicked
-            if(id == 401) {
-
-                //del key
-                if (keyCode == 127) {
-                    TableManager.deleteTable();
-                }
-
-                else if(keyCode==27){
-                    TableManager.undoEditName();
-                    TableManager.unselectTable();
-                }
-
-                //enter key
-                else if(keyCode==10){
-                    TableManager.saveNewName();
-                    TableManager.unselectTable();
-                }
-
-                //character keys
-                else if(!(keyCode>=16 && keyCode<=20)) {
-                    TableManager.editTableName(keyChar);
-                }
-            }
-        }
-
-        //table design mode
-        else if(ModeManager.getMode().equals("Table design mode")) {
-
-            //when key is clicked
-            if(id == 401) {
-
-                //escape key
-                if (keyCode == 27) {
-                    CanvasWindow.this.setTitle("Tablr " + ModeManager.toTablesMode());
-                }
-
-                else if(keyCode==10){
-                    ColumnManager.unselectCol();
-                }
-
-                //crtl+enter
-                else if(keyCode == 17){
-                    CanvasWindow.this.setTitle("Tablr " + ModeManager.toTableRowsMode());
-                }
-
-                //del key
-                else if (keyCode == 127) {
-                    ColumnManager.deleteCol();
-                }
-
-                //character keys
-                else if(!(keyCode>=16 && keyCode<=20)){
-                    ColumnManager.editColAttributes(keyChar);
-                }
-
-            }
-
-
-        }
-
-        //table row mode
-        else{
-
-            //when key is clicked
-            if(id == 401) {
-
-                //escape key
-                if (keyCode == 27) {
-                    CanvasWindow.this.setTitle("Tablr " + ModeManager.toTablesMode());
-                }
-
-                //crtl+enter
-                else if(keyCode == 17){
-                    CanvasWindow.this.setTitle("Tablr " + ModeManager.toTableDesignMode());
-                }
-
-
-            }
-
+        //when key is clicked
+        if(id==401) {
+            KeyController.handle(this,keyCode,keyChar);
         }
 
         CanvasWindow.this.repaint();
-
     }
 
     BufferedImage captureImage() {
@@ -579,13 +421,6 @@ public class CanvasWindow {
         frame = new Frame(title);
         frame.setVisible(true);
         CanvasWindow.this.paint(frame.getGraphics());
-
-
-
-
-
-
-
     }
 
     public static void replayRecording(String path, CanvasWindow window) {
