@@ -127,10 +127,18 @@ public class ComponentDrawer {
                     }
                     g.fillRect(col * cellEntryWidth, (height / 8) + row * cellEntryHeight, cellEntryWidth, cellEntryHeight);
                     g.setColor(Color.black);
-                    g.drawString(cell.getValue(), col * cellEntryWidth, (height / 8) +row * cellEntryHeight+10);
+
+                    String value = cell.getValue();
+                    if(cell.isSelected()){
+                        value+="\uD83D\uDC46";
+                    }
+                    g.drawString(value, col * cellEntryWidth, (height / 8) +row * cellEntryHeight+10);
                     col++;
                 }
                 col = 0;
+                if(r.isSelected()){
+                    g.drawString("\uD83D\uDC46",0,height/8+(row+1)*cellEntryHeight);
+                }
                 row++;
             }
         }

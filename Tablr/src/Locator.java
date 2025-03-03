@@ -15,10 +15,10 @@ public class Locator {
         int[] position = {0,0};
         int entryHeight = height / hscale;
         int entryWidth = width/wscale;
-        int entryCol = (x-xoffset)/ entryWidth;
         int entryRow = (y-yoffset)/ entryHeight;
-        position[0] = Math.max(0,entryCol);
-        position[1] = Math.max(0,entryRow);
+        int entryCol = (x-xoffset)/ entryWidth;
+        position[0] = Math.max(0,entryRow);
+        position[1] = Math.max(0,entryCol);
         return position;
     }
 }

@@ -29,7 +29,9 @@ public class TableManager {
             if(table!=null) {
                 table.unselect();
             }
-            tables.get(idx).select();
+            if(idx<tables.size()) {
+                tables.get(idx).select();
+            }
         }
     }
 

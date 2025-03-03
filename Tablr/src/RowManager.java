@@ -2,25 +2,58 @@ import java.util.ArrayList;
 
 public class RowManager {
 
-    public static void selectCell(Table table,int row,int col){
-
-
+    public static void selectCell(Table table,int ridx,int cidx){
+        Cell cell = getSelectedCell();
+        if(cell!=null){
+            cell.unselect();
+        }
+        if(ridx<getRows(table).size()) {
+            getRows(table).get(ridx).getCells().get(cidx).select();
+        }
     }
 
     public static void unselectCell() {
-
+        Row r = getSelectedRow();
+        if(r!=null) {
+            for (Cell c : r.getCells()) {
+                if (c.isSelected()) {
+                    c.unselect();
+                    break;
+                }
+            }
+        }
     }
 
-    public static Row getSelectedCell(){
+    public static Cell getSelectedCell(){
+        Table table = TableManager.getSelectedTable();
+        for(Row row : getRows(table)) {
+            for (Cell c : row.getCells()) {
+                if (c.isSelected()) {
+                    return c;
+                }
+            }
+        }
         return null;
     }
 
-    public static void selectRow(Table table,int rowidx){
+    public static void editCellValue(char keyChar){
+        Cell cell = getSelectedCell();
+        String value = cell.getValue();
+        if(keyChar=='\b'){
+            cell.setValue(value.substring(0, value.length()-1));
+        }else{
+            cell.setValue(value+keyChar);
+        }
+    }
+
+    public static void selectRow(Table table,int idx){
         Row row = getSelectedRow();
         if (row != null) {
             row.unselect();
         }
-        getRows(table).get(rowidx).select();
+        if(idx<getRows(table).size()) {
+            getRows(table).get(idx).select();
+        }
     }
 
     public static void unselectRow(){
@@ -34,9 +67,9 @@ public class RowManager {
         Table table = TableManager.getSelectedTable();
         if(table!=null) {
             ArrayList<Row> rows = getRows(table);
-            for (int i = 0; i < rows.size(); i++) {
-                if (rows.get(i).isSelected()) {
-                    return rows.get(i);
+            for (Row row : rows) {
+                if (row.isSelected()) {
+                    return row;
                 }
             }
         }
@@ -49,7 +82,6 @@ public class RowManager {
     }
 
 
-
     public static void createAndAddRow() {
         Table table = TableManager.getSelectedTable();
         Row row = new Row();
@@ -57,6 +89,14 @@ public class RowManager {
             row.addCell(new Cell(c.getDefaultValue()));
         }
         table.addRow(row);
+    }
+
+    public static void deleteRow(){
+        Table table = TableManager.getSelectedTable();
+        Row row = getSelectedRow();
+        if(row!=null) {
+            table.deleteRow(row);
+        }
     }
 
 }

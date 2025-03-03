@@ -58,6 +58,12 @@ public class MouseController {
 
     private static void handle3(Frame frame, int x, int y, int clickCount) {
         if(clickCount==1){
+            Table selected = TableManager.getSelectedTable();
+            int idx = Locator.getIdx(3*frame.getHeight()/4,selected.getRows().size(),frame.getWidth(),1,x,y,x,frame.getHeight()/8);
+            RowManager.selectRow(selected,idx);
+
+            int[] position = Locator.getIdx2D(3*frame.getHeight()/4,selected.getRows().size(),frame.getWidth(),selected.getCols().size(),x,y,0,frame.getHeight()/8);
+            RowManager.selectCell(selected,position[0],position[1]);
 
         }
 

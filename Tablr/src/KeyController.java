@@ -28,7 +28,10 @@ public class KeyController {
         //escape key
         if (keyCode == 27) {
             window.setTitle("Tablr " + ModeManager.toTablesMode());
-        } else if (keyCode == 10) {
+        }
+
+        //enter
+        else if (keyCode == 10) {
             ColumnManager.unselectCol();
         }
 
@@ -55,9 +58,24 @@ public class KeyController {
             window.setTitle("Tablr " + ModeManager.toTablesMode());
         }
 
+        //enter
+        else if(keyCode == 10) {
+            RowManager.unselectCell();
+            RowManager.unselectRow();
+        }
+
         //crtl+enter
         else if (keyCode == 17) {
             window.setTitle("Tablr " + ModeManager.toTableDesignMode());
+        }
+
+        //del key
+        else if (keyCode == 127) {
+            RowManager.deleteRow();
+        }
+
+        else if (!((keyCode >= 16) && (keyCode <= 20))) {
+            RowManager.editCellValue(keyChar);
         }
 
     }

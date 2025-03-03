@@ -27,7 +27,9 @@ public class ColumnManager {
             if (col != null) {
                 col.unselect();
             }
-            getCols(table).get(idx).select();
+            if(idx<getCols(table).size()) {
+                getCols(table).get(idx).select();
+            }
         }
     }
 
