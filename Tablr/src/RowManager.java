@@ -2,26 +2,33 @@ import java.util.ArrayList;
 
 public class RowManager {
 
+
     public static void selectCell(Table table,int ridx,int cidx){
         Cell cell = getSelectedCell();
-        if(cell!=null){
+
+        if (cell != null) {
             cell.unselect();
         }
-        if(ridx<getRows(table).size()) {
+        if (ridx < getRows(table).size()) {
             getRows(table).get(ridx).getCells().get(cidx).select();
         }
+
     }
+
 
     public static void unselectCell() {
         Row r = getSelectedRow();
-        if(r!=null) {
+        Cell cell = getSelectedCell();
+
+        if (r != null) {
             for (Cell c : r.getCells()) {
                 if (c.isSelected()) {
                     c.unselect();
                     break;
+                    }
                 }
             }
-        }
+
     }
 
     public static Cell getSelectedCell(){
@@ -85,7 +92,7 @@ public class RowManager {
     public static void createAndAddRow() {
         Table table = TableManager.getSelectedTable();
         Row row = new Row();
-        for (Column c : ColumnManager.getCols(table)) {
+        for (Column c : RowColMediator.getCols(table)) {
             row.addCell(new Cell(c.getDefaultValue()));
         }
         table.addRow(row);

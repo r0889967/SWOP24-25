@@ -19,6 +19,14 @@ public class RowColMediator {
         }
     }
 
+    public static ArrayList<Column> getCols(Table table){
+        return ColumnManager.getCols(table);
+    }
+
+    public static ArrayList<Row> getRows(Table table){
+        return RowManager.getRows(table);
+    }
+
 
 
 

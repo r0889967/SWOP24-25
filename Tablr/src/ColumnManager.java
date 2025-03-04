@@ -21,6 +21,17 @@ public class ColumnManager {
         editMode = mode;
     }
 
+    public static ArrayList<Cell> getCellsOfCol(Column col){
+        Table table = TableManager.getSelectedTable();
+        int idx = getColIdx(table, col);
+        ArrayList<Row> rows = RowColMediator.getRows(table);
+        ArrayList<Cell> cells = new ArrayList<>();
+        for(Row row : rows){
+            cells.add(row.getCells().get(idx));
+        }
+        return cells;
+    }
+
     public static void selectCol(Table table,int idx){
         Column col = getSelectedCol();
         if(ErrorChecker.validColumn(col,getCols(table))) {
@@ -75,6 +86,7 @@ public class ColumnManager {
             col.setDefaultValue("True");
         }else if(col.getType().equals("Boolean")){
             col.setType("Integer");
+            col.setDefaultValue("");
         }else{
             col.setType("String");
         }

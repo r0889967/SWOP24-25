@@ -20,6 +20,17 @@ public class ErrorChecker {
         return true;
     }
 
+    private static boolean validCellValue(Cell cell,Column col){
+        if(col == null){
+            return true;
+        }
+        String value = cell.getValue();
+        return value.isEmpty() && col.allowsBlanks_()
+        || col.getType().equals("String") && !value.isEmpty()
+        || col.getType().equals("Integer") && validInt(value)
+        || col.getType().equals("Email") && validEmail(value);
+    }
+
     private static boolean validEmail(String str){
         int count = 0;
         for(char chr: str.toCharArray()){
@@ -42,7 +53,22 @@ public class ErrorChecker {
         return String.valueOf(Integer.parseInt(str)).equals(str);
     }
 
-    private static boolean validColDefaultValue(Column col){
+    public static boolean validColType(Column col){
+        if(col == null){
+            return true;
+        }
+        return true;
+    }
+
+    public static boolean validColAllowBlanks(Column col){
+        if(col == null||col.allowsBlanks_()){
+            return true;
+        }
+        ArrayList<Cell> cells = ColumnManager.getCellsOfCol(col);
+        return cells.stream().noneMatch(cell -> cell.getValue().isEmpty());
+    }
+
+    public static boolean validColDefaultValue(Column col){
         if(col==null || col.getType().equals("Boolean")){
             return true;
         }
@@ -54,7 +80,7 @@ public class ErrorChecker {
 
     }
 
-    private static boolean validColName(Column col,ArrayList<Column> cols){
+    public static boolean validColName(Column col,ArrayList<Column> cols){
         if(col == null){
             return true;
         }
@@ -74,7 +100,7 @@ public class ErrorChecker {
 
 
     public static boolean validColumn(Column col,ArrayList<Column> cols){
-        return validColName(col,cols)&&validColDefaultValue(col);
+        return validColName(col,cols)&&validColDefaultValue(col)&&validColAllowBlanks(col);
     }
 
 
