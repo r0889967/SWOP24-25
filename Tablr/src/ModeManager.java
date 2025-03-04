@@ -19,7 +19,7 @@ public class ModeManager {
         Table table = TableManager.getSelectedTable();
         Column col = ColumnManager.getSelectedCol();
         if (ErrorChecker.validTableName(table,TableManager.getTables())) {
-            if(ErrorChecker.validColumn(col, ColumnManager.getCols(table))) {
+            if(ErrorChecker.allValidColumns(ColumnManager.getCols(table))) {
                 mode = 0;
                 ColumnManager.unselectCol();
                 return "Tables mode";
