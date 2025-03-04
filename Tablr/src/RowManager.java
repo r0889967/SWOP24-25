@@ -92,7 +92,7 @@ public class RowManager {
     public static void createAndAddRow() {
         Table table = TableManager.getSelectedTable();
         Row row = new Row();
-        for (Column c : RowColMediator.getCols(table)) {
+        for (Column c : table.getCols()) {
             row.addCell(new Cell(c.getDefaultValue()));
         }
         table.addRow(row);

@@ -24,7 +24,7 @@ public class ColumnManager {
     public static ArrayList<Cell> getCellsOfCol(Column col){
         Table table = TableManager.getSelectedTable();
         int idx = getColIdx(table, col);
-        ArrayList<Row> rows = RowColMediator.getRows(table);
+        ArrayList<Row> rows = table.getRows();
         ArrayList<Cell> cells = new ArrayList<>();
         for(Row row : rows){
             cells.add(row.getCells().get(idx));

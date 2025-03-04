@@ -21,16 +21,8 @@ public class RowColMediator {
         }
     }
 
-    public static ArrayList<Column> getCols(Table table){
-        return table.getCols();
-    }
 
-    public static ArrayList<Row> getRows(Table table){
-        return table.getRows();
-    }
-
-
-
+    
 
 
 }
