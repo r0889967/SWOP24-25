@@ -6,6 +6,7 @@ public class KeyController {
             TableManager.deleteTable();
         }
 
+        //escape key
         else if(keyCode==27){
             TableManager.undoEditName();
             TableManager.unselectTable();
@@ -35,7 +36,7 @@ public class KeyController {
             ColumnManager.unselectCol();
         }
 
-        //crtl+enter
+        //crtl
         else if (keyCode == 17) {
             window.setTitle("Tablr " + ModeManager.toTableRowsMode());
         }
@@ -64,7 +65,7 @@ public class KeyController {
             RowManager.unselectRow();
         }
 
-        //crtl+enter
+        //crtl
         else if (keyCode == 17) {
             window.setTitle("Tablr " + ModeManager.toTableDesignMode());
         }
