@@ -82,12 +82,22 @@ public class ComponentDrawer {
                     }
                 }
 
-                if (!ErrorChecker.validColumn(col, ColumnManager.getCols(table))) {
-                    g.setColor(Color.red);
-                } else {
-                    g.setColor(Color.lightGray);
-                }
+
+                g.setColor(Color.lightGray);
                 g.fillRect(i * colEntryWidth, 0, colEntryWidth, colEntryHeight);
+                g.setColor(Color.red);
+                if(!ErrorChecker.validColName(col,cols)){
+                    g.fillRect(i * colEntryWidth, 0, colEntryWidth, colEntryHeight/4);
+                }
+                if(!ErrorChecker.validColType(col)){
+                    g.fillRect(i * colEntryWidth, colEntryHeight/4, colEntryWidth, colEntryHeight/4);
+                }
+                if(!ErrorChecker.validColAllowBlanks(col)){
+                    g.fillRect(i * colEntryWidth, colEntryHeight/2, colEntryWidth, colEntryHeight/4);
+                }
+                if(!ErrorChecker.validColDefaultValue(col)){
+                    g.fillRect(i * colEntryWidth, 3*colEntryHeight/4, colEntryWidth, colEntryHeight/4);
+                }
 
                 g.setColor(Color.black);
                 g.drawString(name, i * colEntryWidth, 10);

@@ -49,7 +49,7 @@ public class MouseController {
             ColumnManager.editColAttributes('\0');
         }
 
-        //mouse is double clicked outside column list
+        //mouse is double clicked outside column list, add col to table
         else if (y > 7*frame.getHeight()/8 && clickCount == 2) {
             ColumnManager.createAndAddCol();
         }
@@ -57,6 +57,7 @@ public class MouseController {
     }
 
     private static void handle3(Frame frame, int x, int y, int clickCount) {
+        //mouse clicked, select row and cell of table
         if(clickCount==1){
             Table selected = TableManager.getSelectedTable();
             int idx = Locator.getIdx(3*frame.getHeight()/4,selected.getRows().size(),frame.getWidth(),1,x,y,x,frame.getHeight()/8);
@@ -67,6 +68,7 @@ public class MouseController {
 
         }
 
+        //mouse is double clicked outside row list, add row to table
         else if(y>7*frame.getHeight()/8 && clickCount==2) {
             RowManager.createAndAddRow();
         }
