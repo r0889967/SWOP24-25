@@ -93,9 +93,9 @@ public class RowManager {
         Table table = TableManager.getSelectedTable();
         Row row = new Row();
         for (Column c : table.getCols()) {
-            row.addCell(new Cell(c.getDefaultValue()));
+            row.addCell(c.getDefaultValue());
         }
-        table.addRow(row);
+        table.addRow();
     }
 
     public static void deleteRow(){

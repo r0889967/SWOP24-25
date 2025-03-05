@@ -41,19 +41,20 @@ public class MouseController {
     private static void handle2(Frame frame, int x, int y, int clickCount) {
         //mouse clicked, select col of table
         if(clickCount==1){
-            Table selected = TableManager.getSelectedTable();
-            int idx = Locator.getIdx(frame.getHeight(),8,frame.getWidth(),selected.getCols().size(),x,y,0,0);
-            ColumnManager.selectCol(selected,idx);
+            Table selectedTable = TableManager.getSelectedTable();
+            int idx = Locator.getIdx(frame.getHeight(),8,frame.getWidth(),selectedTable.getCols().size(),x,y,0,0);
+            selectedTable.selectCol(idx);
             int idx2 = Locator.getIdx(frame.getHeight()/8,4,frame.getWidth(),1,x,y,0,0);
-            ColumnManager.setEditMode(idx2);
-            ColumnManager.editColAttributes('\0');
+            selectedTable.setColumnEditMode(idx2);
+            selectedTable.editColAttributes('\0');
         }
-
-        //mouse is double clicked outside column list, add col to table
+        //mouse is double-clicked outside column list, add col to table
         else if (y > 7*frame.getHeight()/8 && clickCount == 2) {
-            ColumnManager.createAndAddCol();
+            Table selected = TableManager.getSelectedTable();
+            if (selected != null){
+                selected.addCol();
+            }
         }
-
     }
 
     private static void handle3(Frame frame, int x, int y, int clickCount) {

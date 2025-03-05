@@ -7,7 +7,7 @@ public class ErrorChecker {
         if(table == null){
             return true;
         }
-        if(table.getName().equals("")){
+        if(table.getName().isEmpty()){
             return false;
         }
         for(Table t:tables){
@@ -27,7 +27,7 @@ public class ErrorChecker {
             return true;
         }
         String value = cell.getValue();
-        return value.isEmpty() && col.allowsBlanks_()
+        return value.isEmpty() && col.allowsBlanks()
         || col.getType().equals("String") && !value.isEmpty()
         || col.getType().equals("Boolean") && (value.equals("true") || value.equals("false")
                 || value.equals("True") || value.equals("False"))
@@ -61,11 +61,12 @@ public class ErrorChecker {
 
     //check if col has valid type
     public static boolean validColType(Column col){
-        if(col == null){
+        Table table = TableManager.getSelectedTable();
+        if(col == null || table == null){
             return true;
         }
         String dValue = col.getDefaultValue();
-        ArrayList<Cell> cells = ColumnManager.getCellsOfCol(col);
+        ArrayList<Cell> cells = table.getCellsByCol(col);
         if(dValue.isEmpty() && cells.isEmpty()){
             return true;
         }
@@ -84,20 +85,21 @@ public class ErrorChecker {
 
     //check if col has valid allowblanks
     public static boolean validColAllowBlanks(Column col){
-        if(col == null||col.allowsBlanks_()){
+        Table table = TableManager.getSelectedTable();
+        if(col == null||col.allowsBlanks()||table == null){
             return true;
         }
-        ArrayList<Cell> cells = ColumnManager.getCellsOfCol(col);
+        ArrayList<Cell> cells = table.getCellsByCol(col);
         return cells.stream().noneMatch(cell -> cell.getValue().isEmpty());
     }
 
-    //check if col has vlaid default value
+    //check if col has valid default value
     public static boolean validColDefaultValue(Column col){
         if(col==null || col.getType().equals("Boolean")){
             return true;
         }
         String dValue = col.getDefaultValue();
-        return dValue.isEmpty() && col.allowsBlanks_()
+        return dValue.isEmpty() && col.allowsBlanks()
                 || col.getType().equals("String") && !dValue.isEmpty()
                 || col.getType().equals("Integer") && validInt(dValue)
                 || col.getType().equals("Email") && validEmail(dValue);

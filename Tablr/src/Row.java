@@ -4,7 +4,7 @@ public class Row {
     private boolean isSelected = false;
 
 
-    private ArrayList<Cell> cells = new ArrayList<>();
+    private final ArrayList<Cell> cells = new ArrayList<>();
 
     public boolean isSelected() {
         return isSelected;
@@ -22,8 +22,8 @@ public class Row {
         return cells;
     }
 
-    public void addCell(Cell cell){
-        cells.add(cell);
+    public void addCell(String value){
+        cells.add(new Cell(value));
     }
 
     public void deleteCell(int idx){

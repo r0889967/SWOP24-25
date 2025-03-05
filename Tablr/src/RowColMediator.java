@@ -13,17 +13,6 @@ public class RowColMediator {
         }
     }
 
-    //add corresponding cells to rows when a col is added
-    public static void synchronize2(Table table){
-        ArrayList<Row> rows = table.getRows();
-        for(Row row : rows){
-            row.addCell(new Cell(""));
-        }
-    }
-
-
-    
-
 
 }
 

@@ -46,34 +46,26 @@ public class TableManager {
 
     //retrieve selected table
     public static Table getSelectedTable(){
-        for(int i=0;i<tables.size();i++){
-            if(tables.get(i).isSelected()){
-                return tables.get(i);
+        for (Table table : tables) {
+            if (table.isSelected()) {
+                return table;
             }
         }
         return null;
     }
 
-
     //edit selected table's name
     public static void editTableName(char keyChar){
         Table table = getSelectedTable();
         if(table!=null) {
-            String name = table.getName();
-
-            if (keyChar == '\b') {
-                table.setName(name.substring(0, name.length() - 1));
-            } else {
-                table.setName(name + keyChar);
-            }
+            table.editName(keyChar);
         }
     }
 
     public static void undoEditName(){
         Table table = getSelectedTable();
         if(table!=null) {
-            String oldName = table.getOldName();
-            table.setName(oldName);
+            table.restoreOldName();
         }
     }
 
@@ -81,8 +73,7 @@ public class TableManager {
         Table table = getSelectedTable();
         if(ErrorChecker.validTableName(table,tables)) {
             if (table != null) {
-                String newName = table.getName();
-                table.setOldName(newName);
+                table.saveName();
             }
         }
     }
@@ -102,8 +93,7 @@ public class TableManager {
                 Table table_ = new Table(name);
                 while(!ErrorChecker.validTableName(table_,tables)) {
                     name = generateName();
-                    table_.setName(name);
-                    table_.setOldName(name);
+                    table_.setBothNames(name);;
                 }
                 tables.add(table_);
             }
