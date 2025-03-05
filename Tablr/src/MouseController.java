@@ -42,11 +42,13 @@ public class MouseController {
         //mouse clicked, select col of table
         if(clickCount==1){
             Table selectedTable = TableManager.getSelectedTable();
-            int idx = Locator.getIdx(frame.getHeight(),8,frame.getWidth(),selectedTable.getCols().size(),x,y,0,0);
-            selectedTable.selectCol(idx);
-            int idx2 = Locator.getIdx(frame.getHeight()/8,4,frame.getWidth(),1,x,y,0,0);
-            selectedTable.setColumnEditMode(idx2);
-            selectedTable.editColAttributes('\0');
+            if (selectedTable != null){
+                int idx = Locator.getIdx(frame.getHeight(),8,frame.getWidth(),selectedTable.getCols().size(),x,y,0,0);
+                selectedTable.selectCol(idx);
+                int idx2 = Locator.getIdx(frame.getHeight()/8,4,frame.getWidth(),1,x,y,0,0);
+                selectedTable.setColumnEditMode(idx2);
+                selectedTable.editColAttributes('\0');
+            }
         }
         //mouse is double-clicked outside column list, add col to table
         else if (y > 7*frame.getHeight()/8 && clickCount == 2) {
@@ -60,18 +62,20 @@ public class MouseController {
     private static void handle3(Frame frame, int x, int y, int clickCount) {
         //mouse clicked, select row and cell of table
         if(clickCount==1){
-            Table selected = TableManager.getSelectedTable();
-            int idx = Locator.getIdx(3*frame.getHeight()/4,selected.getRows().size(),frame.getWidth(),1,x,y,x,frame.getHeight()/8);
-            RowManager.selectRow(selected,idx);
+            Table selectedTable = TableManager.getSelectedTable();
+            int idx = Locator.getIdx(3*frame.getHeight()/4,selectedTable.getRows().size(),frame.getWidth(),1,x,y,x,frame.getHeight()/8);
+            selectedTable.selectRow(idx);
 
-            int[] position = Locator.getIdx2D(3*frame.getHeight()/4,selected.getRows().size(),frame.getWidth(),selected.getCols().size(),x,y,0,frame.getHeight()/8);
-            RowManager.selectCell(selected,position[0],position[1]);
-
+            int[] position = Locator.getIdx2D(3*frame.getHeight()/4,selectedTable.getRows().size(),frame.getWidth(),selectedTable.getCols().size(),x,y,0,frame.getHeight()/8);
+            selectedTable.selectCell(position[0],position[1]);
         }
 
-        //mouse is double clicked outside row list, add row to table
+        //mouse is double-clicked outside row list, add row to table
         else if(y>7*frame.getHeight()/8 && clickCount==2) {
-            RowManager.createAndAddRow();
+            Table selectedTable = TableManager.getSelectedTable();
+            if (selectedTable != null){
+                selectedTable.addRow();
+            }
         }
 
     }

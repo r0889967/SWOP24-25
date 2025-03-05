@@ -56,29 +56,32 @@ public class KeyController {
     }
 
     private static void handle3(CanvasWindow window,int keyCode,char keyChar){
-        //escape key
-        if (keyCode == 27) {
-            window.setTitle("Tablr " + ModeManager.toTablesMode());
-        }
+        Table selectedTable = TableManager.getSelectedTable();
+        if (selectedTable != null) {
+            //escape key
+            if (keyCode == 27) {
+                window.setTitle("Tablr " + ModeManager.toTablesMode());
+            }
 
-        //enter
-        else if(keyCode == 10) {
-            RowManager.unselectCell();
-            RowManager.unselectRow();
-        }
+            //enter
+            else if(keyCode == 10) {
+                selectedTable.unSelectCell();
+                selectedTable.unSelectRow();
+            }
 
-        //crtl
-        else if (keyCode == 17) {
-            window.setTitle("Tablr " + ModeManager.toTableDesignMode());
-        }
+            //ctrl
+            else if (keyCode == 17) {
+                window.setTitle("Tablr " + ModeManager.toTableDesignMode());
+            }
 
-        //del key
-        else if (keyCode == 127) {
-            RowManager.deleteRow();
-        }
+            //del key
+            else if (keyCode == 127) {
+                selectedTable.deleteRow();
+            }
 
-        else if (!((keyCode >= 16) && (keyCode <= 20))) {
-            RowManager.editCellValue(keyChar);
+            else if (!((keyCode >= 16) && (keyCode <= 20))) {
+                selectedTable.editCellValue(keyChar);
+            }
         }
 
     }

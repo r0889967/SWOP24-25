@@ -3,7 +3,6 @@ import java.util.ArrayList;
 public class Row {
     private boolean isSelected = false;
 
-
     private final ArrayList<Cell> cells = new ArrayList<>();
 
     public boolean isSelected() {
@@ -30,5 +29,12 @@ public class Row {
         cells.remove(idx);
     }
 
-
+    public Cell getSelectedCell() {
+        for (Cell cell : cells) {
+            if (cell.isSelected()) {
+                return cell;
+            }
+        }
+        return null;
+    }
 }

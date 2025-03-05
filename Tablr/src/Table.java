@@ -76,13 +76,16 @@ public class Table {
     //region Column Management
     public void addCol(){
         Column col = new Column(generateColumnName());
-        if (ErrorChecker.validColumn(getSelectedCol(),this.cols)){
-            while(!ErrorChecker.validColumn(col,this.cols)){
+        Column selCol = getSelectedCol();
+        if (selCol == null || ErrorChecker.validColumn(selCol,this.cols)) {
+            col.select();
+            while (!ErrorChecker.validColName(col, this.cols)) {
                 name = generateColumnName();
                 col.setName(name);
             }
+            cols.add(col);
+            fillCells();
         }
-        cols.add(col);
     }
 
     public void deleteCol(){
@@ -90,7 +93,7 @@ public class Table {
         if (col != null){
             cols.remove(col);
             int idx = this.cols.indexOf(col);
-            RowColMediator.synchronize(this,idx);
+            synchronize(idx);
         }
     }
 
@@ -150,18 +153,16 @@ public class Table {
     }
 
     public void selectCol(int idx){
-        unselectCol();
-        if(idx<this.cols.size()) {
+        if (ErrorChecker.validColumn(getSelectedCol(),this.cols)){
+            unselectCol();
             this.cols.get(idx).select();
-        }
+        };
     }
 
     public void unselectCol(){
         Column col = getSelectedCol();
-        if(ErrorChecker.validColumn(col, this.cols)) {
-            if (col != null) {
-                col.unselect();
-            }
+        if (col != null) {
+            col.unselect();
         }
     }
     //endregion
@@ -174,9 +175,43 @@ public class Table {
         rows.add(row);
     }
 
-    public void deleteRow(Row row){
+    public void deleteRow(){
+        Row row = getSelectedRow();
         rows.remove(row);
     }
+
+    public Row getSelectedRow(){
+        for (Row row : this.rows){
+            if (row.isSelected()){
+                return row;
+            }
+        }
+        return null;
+    }
+
+    public void editCellValue(char keyChar) {
+        Cell cell = getSelectedCell();
+        if (cell != null){
+            int idx = getSelectedRow().getCells().indexOf(cell);
+            if (idx != -1){
+                String type = cols.get(idx).getType();
+                cell.editValue(keyChar, type);
+            }
+        }
+    }
+
+    public void selectRow(int idx) {
+        unSelectRow();
+        rows.get(idx).select();
+    }
+
+    public void unSelectRow(){
+        Row row = getSelectedRow();
+        if (row != null) {
+            row.unselect();
+        }
+    }
+
     //endregion
     //region Cell Management
     public ArrayList<Cell> getCellsByCol(Column col){
@@ -186,6 +221,42 @@ public class Table {
             cells.add(row.getCells().get(idx));
         }
         return cells;
+    }
+
+    public Cell getSelectedCell(){
+        return getSelectedRow().getSelectedCell();
+    }
+
+    public void selectCell(int ridx,int cidx) {
+        Cell cell = getSelectedCell();
+
+        if (cell != null) {
+            cell.unSelect();
+        }
+        if (ridx < rows.size()) {
+            rows.get(ridx).getCells().get(cidx).select();
+        }
+    }
+
+    public void unSelectCell() {getSelectedCell().unSelect();
+    }
+
+    //delete corresponding cells of rows when a col is deleted
+    private void synchronize(int idx){
+        for(Row row : rows){
+            row.deleteCell(idx);
+            if(row.getCells().isEmpty()){
+                this.deleteRow();
+            }
+        }
+    }
+
+    //adds cells when column is added and rows exist
+    private void fillCells(){
+        Column col = getSelectedCol();
+        for (Row row : rows){
+            row.addCell(col.getDefaultValue());
+        }
     }
     //endregion
 }

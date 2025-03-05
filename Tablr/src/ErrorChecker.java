@@ -111,7 +111,7 @@ public class ErrorChecker {
         if(col == null){
             return true;
         }
-        if(col.getName().equals("")){
+        if(col.getName().isEmpty()){
             return false;
         }
         for(Column c:cols){
@@ -127,8 +127,11 @@ public class ErrorChecker {
 
     //check if a given col is valid
     public static boolean validColumn(Column col,ArrayList<Column> cols){
-        return validColName(col,cols)&&validColDefaultValue(col)&&validColAllowBlanks(col)
-                &&validColType(col);
+        Boolean v1 = validColName(col,cols);
+        Boolean v2 = validColType(col);
+        Boolean v3 = validColAllowBlanks(col);
+        Boolean v4 = validColDefaultValue(col);
+        return v1 && v2 && v3 && v4;
     }
 
     //check if all cols of table are valid
