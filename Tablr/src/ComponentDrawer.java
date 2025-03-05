@@ -68,17 +68,24 @@ public class ComponentDrawer {
 
                 String name = cols.get(i).getName();
                 String type = cols.get(i).getType();
-                String allowsBlanks = String.valueOf(cols.get(i).allowsBlanks());
+                String allowsBlanks = cols.get(i).allowsBlanks() ? "☑" : "☐";
                 String defaultValue = cols.get(i).getDefaultValue();
                 if (col.isSelected()) {
-                    if (ColumnManager.getEditMode() == 0) {
-                        name += "\uD83D\uDC46";
-                    } else if (ColumnManager.getEditMode() == 1) {
-                        type += "\uD83D\uDC46";
-                    } else if (ColumnManager.getEditMode() == 2) {
-                        allowsBlanks += "\uD83D\uDC46";
-                    } else if (ColumnManager.getEditMode() == 3) {
-                        defaultValue += "\uD83D\uDC46";
+                    switch (table.getColumnEditMode()) {
+                        case 0:
+                            name += "\uD83D\uDC46";
+                            break;
+                        case 1:
+                            type += "\uD83D\uDC46";
+                            break;
+                        case 2:
+                            allowsBlanks += "\uD83D\uDC46";
+                            break;
+                        case 3:
+                            defaultValue += "\uD83D\uDC46";
+                            break;
+                        default:
+                            break;
                     }
                 }
 

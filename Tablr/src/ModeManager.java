@@ -19,9 +19,9 @@ public class ModeManager {
     public static String toTablesMode(){
         Table table = TableManager.getSelectedTable();
         if (ErrorChecker.validTableName(table,TableManager.getTables())) {
-            if(ErrorChecker.allValidColumns(ColumnManager.getCols(table))) {
+            if(ErrorChecker.allValidColumns(table.getCols())) {
                 mode = 0;
-                ColumnManager.unselectCol();
+                table.unselectCol();
                 return "Tables mode";
             }
         }
@@ -31,7 +31,7 @@ public class ModeManager {
     //go to design mode if selected table name is valid or return to design mode if all cols are valid
     public static String toTableDesignMode(){
         Table table = TableManager.getSelectedTable();
-        ArrayList<Column> cols = ColumnManager.getCols(table);
+        ArrayList<Column> cols = table.getCols();
         if (ErrorChecker.validTableName(table,TableManager.getTables())
         && ErrorChecker.allValidColumns(cols)) {
             mode = 1;
@@ -43,8 +43,8 @@ public class ModeManager {
     //go to rows mode if selected table name is valid and table is not empty or return to rows mode if selected col is valid
     public static String toTableRowsMode(){
         Table table = TableManager.getSelectedTable();
-        Column col = ColumnManager.getSelectedCol();
-        ArrayList<Column> cols = ColumnManager.getCols(table);
+        Column col = table.getSelectedCol();
+        ArrayList<Column> cols = table.getCols();
         if (ErrorChecker.validTableName(table,TableManager.getTables()) && !cols.isEmpty()
         && ErrorChecker.validColumn(col,cols)) {
             mode = 2;
