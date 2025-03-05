@@ -156,7 +156,7 @@ public class Table {
         if (ErrorChecker.validColumn(getSelectedCol(),this.cols)){
             unselectCol();
             this.cols.get(idx).select();
-        };
+        }
     }
 
     public void unselectCol(){
