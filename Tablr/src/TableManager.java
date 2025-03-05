@@ -93,7 +93,7 @@ public class TableManager {
                 Table table_ = new Table(name);
                 while(!ErrorChecker.validTableName(table_,tables)) {
                     name = generateName();
-                    table_.setBothNames(name);;
+                    table_.setBothNames(name);
                 }
                 tables.add(table_);
             }
