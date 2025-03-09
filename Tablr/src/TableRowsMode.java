@@ -29,8 +29,9 @@ public class TableRowsMode extends Mode {
             }
         }
     }
+    
     @Override
-    public void handleKeyEvent(CanvasWindow window, int keyCode, char keyChar) {
+    public void handleKeyEvent(CanvasWindow window, int keyCode, char keyChar, boolean isControlDown) {
         Table selectedTable = TableManager.getSelectedTable();
         if (selectedTable != null) {
             //escape key
@@ -40,13 +41,14 @@ public class TableRowsMode extends Mode {
 
             //enter
             else if(keyCode == 10) {
-                selectedTable.unSelectCell();
-                selectedTable.unSelectRow();
-            }
-
-            //ctrl
-            else if (keyCode == 17) {
-                window.setTitle("Tablr: " + ModeManager.toTableDesignMode());
+                if (isControlDown) {
+                    // Ctrl+Enter switches to table design mode
+                    window.setTitle("Tablr: " + ModeManager.toTableDesignMode());
+                } else {
+                    // Just Enter unselects cell and row
+                    selectedTable.unSelectCell();
+                    selectedTable.unSelectRow();
+                }
             }
 
             //del key
@@ -54,6 +56,7 @@ public class TableRowsMode extends Mode {
                 selectedTable.deleteRow();
             }
 
+            //other keys
             else if (!((keyCode >= 16) && (keyCode <= 20))) {
                 selectedTable.editCellValue(keyChar);
             }

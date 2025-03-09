@@ -42,8 +42,9 @@ public class TablesMode extends Mode {
             }
         }
     }
+    
     @Override
-    public void handleKeyEvent(CanvasWindow window, int keyCode, char keyChar) {
+    public void handleKeyEvent(CanvasWindow window, int keyCode, char keyChar, boolean isControlDown) {
         //del key
         if (keyCode == 127) {
             TableManager.deleteTable();

@@ -1,4 +1,3 @@
-
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.util.ArrayList;
@@ -36,7 +35,7 @@ public class TableDesignMode extends Mode {
     }
     
     @Override
-    public void handleKeyEvent(CanvasWindow window, int keyCode, char keyChar) {
+    public void handleKeyEvent(CanvasWindow window, int keyCode, char keyChar, boolean isControlDown) {
         Table selectedTable = TableManager.getSelectedTable();
         if (selectedTable != null) {
             //escape key
@@ -46,12 +45,13 @@ public class TableDesignMode extends Mode {
 
             //enter
             else if (keyCode == 10) {
-                selectedTable.unselectCol();
-            }
-
-            //ctrl
-            else if (keyCode == 17) {
-                window.setTitle("Tablr: " + ModeManager.toTableRowsMode());
+                if (isControlDown) {
+                    // Ctrl+Enter switches to table rows mode
+                    window.setTitle("Tablr: " + ModeManager.toTableRowsMode());
+                } else {
+                    // Just Enter unselects column
+                    selectedTable.unselectCol();
+                }
             }
 
             //del key

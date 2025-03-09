@@ -5,7 +5,7 @@ import java.awt.Graphics;
 public abstract class Mode {
 
     public abstract void handleMouseEvent(Frame frame, CanvasWindow window, int x, int y, int clickCount);
-    public abstract void handleKeyEvent(CanvasWindow window, int keyCode, char keyChar);
+    public abstract void handleKeyEvent(CanvasWindow window, int keyCode, char keyChar, boolean isControlDown);
     public abstract void drawMode(Frame frame, Graphics graphics);
 
     // ==========================

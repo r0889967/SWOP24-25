@@ -98,7 +98,7 @@ class KeyEventItem extends RecordingItem {
 
 	@Override
 	void replay(int itemIndex, CanvasWindow window) {
-		window.handleKeyEvent(id, keyCode, keyChar);
+		window.handleKeyEvent(id, keyCode, keyChar, false);
 	}
 }
 class PaintItem extends RecordingItem {
@@ -292,16 +292,16 @@ public class CanvasWindow {
 		System.out.println(e);
 		if (recording != null)
 			recording.items.add(new KeyEventItem(e.getID(), e.getKeyCode(), e.getKeyChar()));
-		handleKeyEvent(e.getID(), e.getKeyCode(), e.getKeyChar());
+		handleKeyEvent(e.getID(), e.getKeyCode(), e.getKeyChar(), e.isControlDown());
 	}
 	
 	/**
 	 * Called when the user presses a key (id == KeyEvent.KEY_PRESSED) or enters a character (id == KeyEvent.KEY_TYPED).
 	 */
-	protected void handleKeyEvent(int id, int keyCode, char keyChar) {
+	protected void handleKeyEvent(int id, int keyCode, char keyChar, boolean isControlDown) {
 
 		if(id == 401){
-			ModeManager.getMode().handleKeyEvent(this, keyCode, keyChar);
+			ModeManager.getMode().handleKeyEvent(this, keyCode, keyChar, isControlDown);
 		}
 		repaint();
 	}
