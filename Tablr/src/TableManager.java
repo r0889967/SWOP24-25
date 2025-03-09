@@ -25,7 +25,7 @@ public class TableManager {
     //select table with idx
     public static void selectTable(int idx){
         Table table = getSelectedTable();
-        if(ErrorChecker.validTableName(table,tables)) {
+        if(validTableName(table)) {
             if(table!=null) {
                 table.unselect();
             }
@@ -37,7 +37,7 @@ public class TableManager {
 
     public static void unselectTable(){
         Table table = getSelectedTable();
-        if(ErrorChecker.validTableName(table,tables)) {
+        if(validTableName(table)) {
             if (table != null) {
                 table.unselect();
             }
@@ -71,7 +71,7 @@ public class TableManager {
 
     public static void saveNewName(){
         Table table = getSelectedTable();
-        if(ErrorChecker.validTableName(table,tables)) {
+        if(validTableName(table)) {
             if (table != null) {
                 table.saveName();
             }
@@ -87,11 +87,11 @@ public class TableManager {
     //create and add a new table
     public static void createAndAddTable(){
         Table table = getSelectedTable();
-        if(ErrorChecker.validTableName(table,tables)) {
+        if(validTableName(table)) {
             if (tables.size() < maxTables) {
                 String name = generateName();
                 Table table_ = new Table(name);
-                while(!ErrorChecker.validTableName(table_,tables)) {
+                while(!validTableName(table_)) {
                     name = generateName();
                     table_.setBothNames(name);
                 }
@@ -107,4 +107,22 @@ public class TableManager {
     }
 
 
+    //check if table has valid name
+    public static boolean validTableName(Table table){
+        if(table == null){
+            return true;
+        }
+        if(table.getName().isEmpty()){
+            return false;
+        }
+        for(Table t:tables){
+            if(t==table){
+                continue;
+            }
+            if(t.getName().equals(table.getName())){
+                return false;
+            }
+        }
+        return true;
+    }
 }

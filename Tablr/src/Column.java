@@ -1,5 +1,3 @@
-import java.util.Objects;
-
 public class Column {
 
     private String name;
@@ -8,7 +6,7 @@ public class Column {
     private String defaultValue = "";
 
     private boolean isSelected = false;
-
+    
     Column(String name) {
         this.name = name;
     }
@@ -122,4 +120,5 @@ public class Column {
     public void unselect(){
         isSelected = false;
     }
+
 }

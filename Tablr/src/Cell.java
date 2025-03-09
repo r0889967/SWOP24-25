@@ -23,6 +23,7 @@ public class Cell {
         isSelected = false;
     }
 
+
     public void editValue(char keyChar, String type) {
         //Filter non-numbers for Integer fields
         if (type.equals("Integer")) {
