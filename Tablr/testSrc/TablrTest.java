@@ -250,6 +250,30 @@ class TablrTest {
         table.selectCol(1);
         assertEquals(table.getCols().get(1), table.getSelectedCol());
 
+        //Prep rows for next step
+        table.addRow();
+        table.addRow();
+        assert table.getRows().size() == 2;
+        for (Row row : table.getRows()) {
+            assert row.getCells().size() == 3;
+        }
+
+        //Try deleting column 2
+        ArrayList<Column> cols = table.getCols();
+        Column col1 = cols.get(0);
+        Column col2 = cols.get(1);
+        Column col3 = cols.get(2);
+        table.deleteCol();
+        //Make sure column 2, and only column 2 was deleted
+        assert table.getCols().size() == 2;
+        assertEquals(table.getCols().get(0), col1);
+        assertEquals(table.getCols().get(1), col3);
+        assert !table.getCols().contains(col2);
+        //Make sure cells from column 2 were wiped
+        for (Row row : table.getRows()) {
+            assert row.getCells().size() == 2;
+        }
+
         // Reset state for other tests
         resetState();
 

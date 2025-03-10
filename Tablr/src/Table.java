@@ -4,8 +4,8 @@ public class Table {
 
     private String name;
     private String oldName;
-    private final ArrayList<Column> cols = new ArrayList<Column>();
-    private final ArrayList<Row> rows = new ArrayList<Row>();
+    private final ArrayList<Column> cols = new ArrayList<>();
+    private final ArrayList<Row> rows = new ArrayList<>();
     private boolean selected = false;
     private int colSequenceNumber = 1;
     private int columnEditMode = 0;
@@ -93,8 +93,8 @@ public class Table {
     public void deleteCol(){
         Column col = getSelectedCol();
         if (col != null){
-            cols.remove(col);
             int idx = this.cols.indexOf(col);
+            cols.remove(col);
             synchronize(idx);
         }
     }
