@@ -14,10 +14,13 @@ public class TableRowsMode extends Mode {
         //mouse clicked, select row and cell of table
         if(clickCount==1){
             Table selectedTable = TableManager.getSelectedTable();
-            int idx = getIdx(3*frame.getHeight()/4,selectedTable.getRows().size(),frame.getWidth(),1,x,y,x,frame.getHeight()/8);
-            selectedTable.selectRow(idx);
 
+            selectedTable.unSelectCell();
+            selectedTable.unSelectRow();
+    
+            int idx = getIdx(3*frame.getHeight()/4,selectedTable.getRows().size(),frame.getWidth(),1,x,y,x,frame.getHeight()/8);
             int[] position = getIdx2D(3*frame.getHeight()/4,selectedTable.getRows().size(),frame.getWidth(),selectedTable.getCols().size(),x,y,0,frame.getHeight()/8);
+            selectedTable.selectRow(idx);
             selectedTable.selectCell(position[0],position[1]);
         }
 
@@ -92,26 +95,7 @@ public class TableRowsMode extends Mode {
                 String type = cols.get(i).getType();
                 String allowsBlanks = cols.get(i).allowsBlanks() ? "☑" : "☐";
                 String defaultValue = cols.get(i).getDefaultValue();
-                if (col.isSelected()) {
-                    switch (table.getColumnEditMode()) {
-                        case 0:
-                            name += "\uD83D\uDC46";
-                            break;
-                        case 1:
-                            type += "\uD83D\uDC46";
-                            break;
-                        case 2:
-                            allowsBlanks += "\uD83D\uDC46";
-                            break;
-                        case 3:
-                            defaultValue += "\uD83D\uDC46";
-                            break;
-                        default:
-                            break;
-                    }
-                }
-
-
+                
                 g.setColor(Color.lightGray);
                 g.fillRect(i * colEntryWidth, 0, colEntryWidth, colEntryHeight);
                 g.setColor(Color.red);

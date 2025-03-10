@@ -201,7 +201,6 @@ public class Table {
     }
 
     public void selectRow(int idx) {
-        unSelectRow();
         rows.get(idx).select();
     }
 
@@ -224,21 +223,20 @@ public class Table {
     }
 
     public Cell getSelectedCell(){
+        if (getSelectedRow() == null){
+            return null;
+        }
         return getSelectedRow().getSelectedCell();
     }
 
     public void selectCell(int ridx,int cidx) {
-        Cell cell = getSelectedCell();
-
-        if (cell != null) {
-            cell.unSelect();
-        }
         if (ridx < rows.size()) {
             rows.get(ridx).getCells().get(cidx).select();
         }
     }
 
-    public void unSelectCell() {getSelectedCell().unSelect();
+    public void unSelectCell() {
+        getSelectedCell().unSelect();
     }
 
     //delete corresponding cells of rows when a col is deleted
