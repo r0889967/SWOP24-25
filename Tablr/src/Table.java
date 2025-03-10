@@ -301,12 +301,11 @@ public class Table {
 
     //check if col has valid type
     public boolean validColType(Column col){
-        Table table = TableManager.getSelectedTable();
-        if(col == null || table == null){
+        if(col == null){
             return true;
         }
         String dValue = col.getDefaultValue();
-        ArrayList<Cell> cells = table.getCellsByCol(col);
+        ArrayList<Cell> cells = getCellsByCol(col);
         if(dValue.isEmpty() && cells.isEmpty()){
             return true;
         }
@@ -325,11 +324,10 @@ public class Table {
 
     //check if col has valid allowblanks
     public boolean validColAllowBlanks(Column col){
-        Table table = TableManager.getSelectedTable();
-        if(col == null||col.allowsBlanks()||table == null){
+        if(col == null||col.allowsBlanks()){
             return true;
         }
-        ArrayList<Cell> cells = table.getCellsByCol(col);
+        ArrayList<Cell> cells = getCellsByCol(col);
         return cells.stream().noneMatch(cell -> cell.getValue().isEmpty());
     }
 
