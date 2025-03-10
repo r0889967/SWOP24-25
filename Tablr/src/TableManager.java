@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class TableManager {
-    private static final int maxTablePerRow = 6;
+    private static final int maxTablePerRow = 2;
     private static final int maxTablePerCol = 10;
     private static final int maxTables = maxTablePerRow*maxTablePerCol;
     private static final ArrayList<Table> tables = new ArrayList<Table>();
@@ -20,6 +20,11 @@ public class TableManager {
 
     public static int getMaxTablePerCol(){
         return maxTablePerCol;
+    }
+
+    //get table by index
+    public static Table getTableByIndex(int idx){
+        return tables.get(idx);
     }
 
     //select table with idx
@@ -115,6 +120,14 @@ public class TableManager {
         if(table.getName().isEmpty()){
             return false;
         }
+        if (!uniqueTableName(table)){
+            return false;
+        }
+        return true;
+    }
+
+    // check if table name is unique
+    public static boolean uniqueTableName(Table table){
         for(Table t:tables){
             if(t==table){
                 continue;
