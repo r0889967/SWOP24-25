@@ -40,17 +40,21 @@ public class TableDesignMode extends Mode {
         if (selectedTable != null) {
             //escape key
             if (keyCode == 27) {
-                window.setTitle("Tablr: " + ModeManager.toTablesMode());
+                if (selectedTable.allValidColumns()) {
+                    window.setTitle("Tablr: " + ModeManager.toTablesMode());
+                }
             }
 
             //enter
             else if (keyCode == 10) {
-                if (isControlDown) {
-                    // Ctrl+Enter switches to table rows mode
-                    window.setTitle("Tablr: " + ModeManager.toTableRowsMode() + " - " + selectedTable.getName());
-                } else {
-                    // Just Enter unselects column
-                    selectedTable.unselectCol();
+                if (selectedTable.allValidColumns()){
+                    if (isControlDown) {
+                        // Ctrl+Enter switches to table rows mode
+                        window.setTitle("Tablr: " + ModeManager.toTableRowsMode() + " - " + selectedTable.getName());
+                    } else {
+                        // Just Enter unselects column
+                        selectedTable.unselectCol();
+                    }
                 }
             }
 

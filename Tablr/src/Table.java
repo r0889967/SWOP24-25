@@ -236,7 +236,10 @@ public class Table {
     }
 
     public void unSelectCell() {
-        getSelectedCell().unSelect();
+        Cell cell = getSelectedCell();
+        if (cell != null) {
+            cell.unSelect();
+        }
     }
 
     //delete corresponding cells of rows when a col is deleted
@@ -373,7 +376,7 @@ public class Table {
     }
 
     //check if all cols of table are valid
-    public boolean allValidColumns(ArrayList<Column> cols){
+    public boolean allValidColumns(){
         return cols.stream().allMatch(col -> validColumn(col,cols));
     }
 

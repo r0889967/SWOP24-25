@@ -39,18 +39,21 @@ public class TableRowsMode extends Mode {
         if (selectedTable != null) {
             //escape key
             if (keyCode == 27) {
-                window.setTitle("Tablr: " + ModeManager.toTablesMode());
+                if (selectedTable.allValidColumns()){
+                    window.setTitle("Tablr: " + ModeManager.toTablesMode());
+                }
             }
 
             //enter
             else if(keyCode == 10) {
-                if (isControlDown) {
-                    // Ctrl+Enter switches to table design mode
-                    window.setTitle("Tablr: " + ModeManager.toTableDesignMode()+ " - " + selectedTable.getName());
-                } else {
-                    // Just Enter unselects cell and row
-                    selectedTable.unSelectCell();
-                    selectedTable.unSelectRow();
+                if (selectedTable.allValidColumns()) {
+                    if (isControlDown) {
+                        // Ctrl+Enter switches to table rows mode
+                        window.setTitle("Tablr: " + ModeManager.toTableDesignMode() + " - " + selectedTable.getName());
+                    } else {
+                        // Just Enter unselects column
+                        selectedTable.unselectCol();
+                    }
                 }
             }
 
