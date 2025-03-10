@@ -7,7 +7,7 @@ public class Table {
     private final ArrayList<Column> cols = new ArrayList<Column>();
     private final ArrayList<Row> rows = new ArrayList<Row>();
     private boolean selected = false;
-    private int colSequenceNumber = 0;
+    private int colSequenceNumber = 1;
     private int columnEditMode = 0;
 
     Table(String name){
@@ -78,7 +78,9 @@ public class Table {
         Column col = new Column(generateColumnName());
         Column selCol = getSelectedCol();
         if (selCol == null || validColumn(selCol,this.cols)) {
-            col.select();
+            if (selCol == null){
+                col.select();
+            }
             while (!validColName(col, this.cols)) {
                 name = generateColumnName();
                 col.setName(name);
@@ -154,12 +156,22 @@ public class Table {
 
     public void selectCol(int idx){
         if (validColumn(getSelectedCol(),this.cols)){
-            unselectCol();
+            unselectColNoCheck();
             this.cols.get(idx).select();
         }
     }
 
     public void unselectCol(){
+        Column col = getSelectedCol();
+        if (col != null){
+            if (validColumn(col,cols)) {
+                col.unselect();
+            }
+        }
+    }
+
+    // Warning: Does not check for valid column
+    private void unselectColNoCheck(){
         Column col = getSelectedCol();
         if (col != null) {
             col.unselect();
@@ -323,7 +335,7 @@ public class Table {
         return validColDefaultValue(col);
     }
 
-    //check if col has valid allowblanks
+    //check if col has valid allow blanks
     public boolean validColAllowBlanks(Column col){
         if(col == null||col.allowsBlanks()){
             return true;

@@ -5,13 +5,12 @@ public class TableManager {
     private static final int maxTablePerCol = 20;
     private static final int maxTables = maxTablePerRow*maxTablePerCol;
     private static final ArrayList<Table> tables = new ArrayList<Table>();
-    private static int sequenceNumber = 0;
+    private static int sequenceNumber = 1;
 
 
     //generate random name for table
     private static String generateName(){
-        sequenceNumber++;
-        return "Table"+sequenceNumber;
+        return "Table"+sequenceNumber++;
     }
 
     public static int getMaxTablePerRow(){

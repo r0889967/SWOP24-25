@@ -1,7 +1,5 @@
 import org.junit.jupiter.api.Test;
 
-import java.awt.*;
-import java.awt.event.InputEvent;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -93,6 +91,7 @@ class TablrTest {
 
     @Test
     void columnManager() {
+
         // Create initial table to edit
         TableManager.createAndAddTable();
         TableManager.selectTable(0);
@@ -118,6 +117,138 @@ class TablrTest {
         assertEquals(table.getCols().get(0), table.getSelectedCol());
 
         // Try editing column 1
+        int const_name = 0;
+        int const_type = 1;
+        int const_allow_blanks = 2;
+        int const_default_val = 3;
+        table.setColumnEditMode(const_name);
+        table.editColAttributes('\b');
+        table.editColAttributes('3');
+        assertEquals("Column3", table.getCols().get(0).getName());
+
+        // Generate column3 with name Column4 (because 3 is taken)
+        table.addCol();
+        assert table.getCols().size() == 3;
+        assertEquals(("Column4"), table.getCols().get(2).getName());
+
+        // Try editing column 1
+        table.setColumnEditMode(const_name);
+        table.editColAttributes('\b');
+        table.editColAttributes('2');
+        assertEquals("Column2", table.getCols().get(0).getName());
+
+        // Column 1 is now invalid, try unselecting or selecting other column
+        table.selectCol(1);
+        assertEquals(table.getCols().get(0), table.getSelectedCol());
+        table.unselectCol();
+        assertEquals(table.getCols().get(0), table.getSelectedCol());
+
+        // Revert column 1 to basic name
+        table.editColAttributes('\b');
+        table.editColAttributes('1');
+
+        //Try switching types
+        Column selCol = table.getSelectedCol();
+        assert selCol != null;
+        table.setColumnEditMode(const_type);
+        assertEquals("String", selCol.getType());
+        assertEquals("", selCol.getDefaultValue());
+        table.editColAttributes('\0');
+        assertEquals("Email", selCol.getType());
+        assertEquals("", selCol.getDefaultValue());
+        table.editColAttributes('\0');
+        assertEquals("Boolean", selCol.getType());
+        assertEquals("True", selCol.getDefaultValue());
+        table.editColAttributes('\0');
+        assertEquals("Integer", selCol.getType());
+        assertEquals("0", selCol.getDefaultValue());
+        table.editColAttributes('\0');
+        assertEquals("String", selCol.getType());
+        assertEquals("", selCol.getDefaultValue());
+
+        //Try editing allow blanks
+        table.setColumnEditMode(const_allow_blanks);
+        assert selCol.allowsBlanks();
+        table.editColAttributes('\0');
+        assert !selCol.allowsBlanks();
+        table.editColAttributes('\0');
+        assert selCol.allowsBlanks();
+
+        //Try changing default value
+        //Type string
+        table.setColumnEditMode(const_default_val);
+        table.editColAttributes('a');
+        table.editColAttributes('b');
+        table.editColAttributes('\b');
+        table.editColAttributes('c');
+        assertEquals("ac", selCol.getDefaultValue());
+
+        //Type email
+        table.setColumnEditMode(const_type);
+        table.editColAttributes('\0');
+        //default value is unchanged but invalid now
+        assertEquals("Email", selCol.getType());
+        assertEquals("ac", selCol.getDefaultValue());
+        //so this fails
+        table.selectCol(1);
+        assertEquals(table.getCols().get(0), table.getSelectedCol());
+
+        //Type boolean
+        table.setColumnEditMode(const_type);
+        table.editColAttributes('\0');
+        assertEquals("Boolean", selCol.getType());
+        assertEquals("True", selCol.getDefaultValue());
+        table.setColumnEditMode(const_default_val);
+        table.editColAttributes('\0');
+        assertEquals("False", selCol.getDefaultValue());
+        table.editColAttributes('\0');
+        assertEquals("", selCol.getDefaultValue());
+        //Now with allow blanks disabled
+        table.setColumnEditMode(const_allow_blanks);
+        table.editColAttributes('\0');
+        //Default is no longer blank but True instead
+        table.setColumnEditMode(const_default_val);
+        assertEquals("True", selCol.getDefaultValue());
+        table.editColAttributes('\0');
+        assertEquals("False", selCol.getDefaultValue());
+        table.editColAttributes('\0');
+        assertEquals("True", selCol.getDefaultValue());
+        //Allow blanks again
+        table.setColumnEditMode(const_allow_blanks);
+        table.editColAttributes('\0');
+        assert selCol.allowsBlanks();
+
+        //Integer
+        table.setColumnEditMode(const_type);
+        table.editColAttributes('\0');
+        assertEquals("Integer", selCol.getType());
+        assertEquals("0", selCol.getDefaultValue());
+        table.setColumnEditMode(const_default_val);
+        //Reject non numbers
+        table.editColAttributes('a');
+        assertEquals("0",selCol.getDefaultValue());
+        //Try switching allow blanks off when default value is blank
+        table.editColAttributes('\b');
+        table.setColumnEditMode(const_allow_blanks);
+        table.editColAttributes('\0');
+        //Default value should switch back to 0
+        assertEquals("0",selCol.getDefaultValue());
+        //Try switching columns with invalid default value, should not work
+        table.setColumnEditMode(const_default_val);
+        table.editColAttributes('\b');
+        table.selectCol(1);
+        assertEquals(table.getCols().get(0), table.getSelectedCol());
+        //Switch back to default string
+        table.setColumnEditMode(const_type);
+        table.editColAttributes('\0');
+        table.setColumnEditMode(const_allow_blanks);
+        table.editColAttributes('\0');
+        assertEquals("String", selCol.getType());
+        assert selCol.allowsBlanks();
+        assertEquals("", selCol.getDefaultValue());
+        //Now we can switch
+        table.selectCol(1);
+        assertEquals(table.getCols().get(1), table.getSelectedCol());
 
         // Reset state for other tests
         resetState();
