@@ -34,12 +34,12 @@ public class TablesMode extends Mode {
 
                     //if table has no columns, change to design mode
                     if (selected.getCols().isEmpty()) {
-                        window.setTitle("Tablr: " + ModeManager.toTableDesignMode());
+                        window.setTitle("Tablr: " + ModeManager.toTableDesignMode() + " - " + selected.getName());
                     }
 
                     //else change to rows mode
                     else {
-                        window.setTitle("Tablr: " + ModeManager.toTableRowsMode());
+                        window.setTitle("Tablr: " + ModeManager.toTableRowsMode() + " - " + selected.getName());
                     }
                 }
             }

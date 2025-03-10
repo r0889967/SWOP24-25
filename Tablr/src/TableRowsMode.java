@@ -43,7 +43,7 @@ public class TableRowsMode extends Mode {
             else if(keyCode == 10) {
                 if (isControlDown) {
                     // Ctrl+Enter switches to table design mode
-                    window.setTitle("Tablr: " + ModeManager.toTableDesignMode());
+                    window.setTitle("Tablr: " + ModeManager.toTableDesignMode()+ " - " + selectedTable.getName());
                 } else {
                     // Just Enter unselects cell and row
                     selectedTable.unSelectCell();
