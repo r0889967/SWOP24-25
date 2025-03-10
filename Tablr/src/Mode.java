@@ -14,8 +14,8 @@ public abstract class Mode {
     
     //locate table entry in 1D after clicking
     public static int getIdx(int height, int hscale, int width, int wscale,int x, int y, int xoffset, int yoffset) {
-        int entryHeight = (height-30) / TableManager.getMaxTablePerCol();
-        int entryWidth = width / TableManager.getMaxTablePerRow();
+        int entryHeight = height / hscale;
+        int entryWidth = width / wscale;
 
         int entryCol = (x-xoffset)/ entryWidth;
         int entryRow = (y-yoffset)/ entryHeight;

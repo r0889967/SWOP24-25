@@ -12,7 +12,7 @@ public class TablesMode extends Mode {
     @Override
     public void handleMouseEvent(Frame frame, CanvasWindow window, int x, int y, int clickCount) {
         Table currentlySelectedTable = TableManager.getSelectedTable();
-        int idx = getIdx(frame.getHeight(),30,frame.getWidth(),TableManager.getMaxTablePerRow(),x,y,0,0);
+        int idx = getIdx(frame.getHeight() - 30,TableManager.getMaxTablePerCol(),frame.getWidth(),TableManager.getMaxTablePerRow(),x,y,0,0);
         if(clickCount==1){
             TableManager.selectTable(idx);
             TableManager.saveNewName();

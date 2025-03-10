@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 
 public class TableManager {
-    private static final int maxTablePerRow = 2;
-    private static final int maxTablePerCol = 10;
+    private static final int maxTablePerRow = 1;
+    private static final int maxTablePerCol = 20;
     private static final int maxTables = maxTablePerRow*maxTablePerCol;
     private static final ArrayList<Table> tables = new ArrayList<Table>();
     private static int sequenceNumber = 0;
