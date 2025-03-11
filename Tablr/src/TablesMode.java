@@ -9,10 +9,17 @@ public class TablesMode extends Mode {
         super();
     }
 
+    /*
+    Handles mouse events
+    Double-clicking: If no table is selected, create a new one
+    Double-clicking: If a table is selected, open the table
+    Opens table design mode when no columns exist yet, otherwise opens table row mode
+    Single-click: Selects the chosen table
+     */
     @Override
     public void handleMouseEvent(Frame frame, CanvasWindow window, int x, int y, int clickCount) {
         Table currentlySelectedTable = TableManager.getSelectedTable();
-        int idx = getIdx(frame.getHeight() - 30,TableManager.getMaxTablePerCol(),frame.getWidth(),TableManager.getMaxTablePerRow(),x,y,0,0);
+        int idx = getIdx1D(frame.getHeight() - 30,TableManager.getMaxTablePerCol(),frame.getWidth(),TableManager.getMaxTablePerRow(),x,y,0,0);
         if(clickCount==1){
             TableManager.selectTable(idx);
             TableManager.saveNewName();
@@ -45,7 +52,16 @@ public class TablesMode extends Mode {
             }
         }
     }
-    
+
+    /*
+    Handles keyboard events
+    Delete: if a table is selected then delete the table otherwise do nothing
+    When editing a table name:
+    Escape: stop editing the name and undo edits that haven't been saved
+    Enter: stop editing the name and save changes
+    Backspace: deletes last character of name (if not empty)
+    Any non-special character: appends the character to the name
+     */
     @Override
     public void handleKeyEvent(CanvasWindow window, int keyCode, char keyChar, boolean isControlDown) {
         //del key
@@ -71,6 +87,10 @@ public class TablesMode extends Mode {
         }
     }
 
+    /*
+    Draws table manager screen
+    If a name is invalid: mark it as red otherwise keep it gray
+     */
     @Override
     public void drawMode(Frame frame, Graphics g){
         int width = frame.getWidth();

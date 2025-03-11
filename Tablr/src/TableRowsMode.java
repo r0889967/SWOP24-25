@@ -9,6 +9,11 @@ public class TableRowsMode extends Mode {
         super();
     }
 
+    /*
+    Handles mouse events
+    Double-clicking: If at the bottom of the screen: create a new row with default values
+    Single-click: Selects the clicked row and cell and marks the cell for editing
+     */
     @Override
     public void handleMouseEvent(Frame frame, CanvasWindow window, int x, int y, int clickCount) {
         //mouse clicked, select row and cell of table
@@ -18,7 +23,7 @@ public class TableRowsMode extends Mode {
             selectedTable.unSelectCell();
             selectedTable.unSelectRow();
     
-            int idx = getIdx(3*frame.getHeight()/4,selectedTable.getRows().size(),frame.getWidth(),1,x,y,x,frame.getHeight()/8);
+            int idx = getIdx1D(3*frame.getHeight()/4,selectedTable.getRows().size(),frame.getWidth(),1,x,y,x,frame.getHeight()/8);
             int[] position = getIdx2D(3*frame.getHeight()/4,selectedTable.getRows().size(),frame.getWidth(),selectedTable.getCols().size(),x,y,0,frame.getHeight()/8);
             selectedTable.selectRow(idx);
             selectedTable.selectCell(position[0],position[1]);
@@ -32,7 +37,18 @@ public class TableRowsMode extends Mode {
             }
         }
     }
-    
+
+    /*
+    Handles keyboard events
+    Delete: The selected row is deleted. If no row is selected do nothing
+    Escape: Return to tables mode. Only allowed if all cells are in a valid state.
+    Ctrl + Enter: Switches to table designer mode if all columns are in a valid state
+    When editing a cell value:
+    Enter: stop editing value
+    Backspace: deletes last character of value (if not empty)
+    Any non-special character: appends the character to the name
+    If column has type integer: Any non-special non-numeric character is rejected
+     */
     @Override
     public void handleKeyEvent(CanvasWindow window, int keyCode, char keyChar, boolean isControlDown) {
         Table selectedTable = TableManager.getSelectedTable();
@@ -69,6 +85,12 @@ public class TableRowsMode extends Mode {
         }
     }
 
+    /*
+    Draws table designer screen
+    If a name or default value is invalid: mark it as red otherwise keep it gray
+    If a cell in the appropriate column has an invalid value:
+    Mark the violated field in red otherwise keep it gray
+     */
     public void drawMode(Frame frame, Graphics g){
         Table table = TableManager.getSelectedTable();
         drawRows(frame, g, table);

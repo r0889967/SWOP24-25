@@ -10,17 +10,23 @@ public class TableDesignMode extends Mode {
     public TableDesignMode() {
         super();
     }
-    
 
+    /*
+    Handles mouse events
+    Double-clicking: If at the bottom of the screen: create a new column otherwise do nothing
+    Single-click: Selects the clicked column and marks the selected field for editing.
+    If the currently selected column is in an invalid state the select request is rejected
+    Clicking below the fields results in the last one being selected (if possible)
+     */
     @Override
     public void handleMouseEvent(Frame frame, CanvasWindow window, int x, int y, int clickCount) {
         //mouse clicked, select col of table
         if(clickCount==1){
             Table selectedTable = TableManager.getSelectedTable();
             if (selectedTable != null){
-                int idx = getIdx(frame.getHeight(),8,frame.getWidth(),selectedTable.getCols().size(),x,y,0,0);
+                int idx = getIdx1D(frame.getHeight(),8,frame.getWidth(),selectedTable.getCols().size(),x,y,0,0);
                 selectedTable.selectCol(idx);
-                int idx2 = getIdx(frame.getHeight()/8,4,frame.getWidth(),1,x,y,0,0);
+                int idx2 = getIdx1D(frame.getHeight()/8,4,frame.getWidth(),1,x,y,0,0);
                 selectedTable.setColumnEditMode(idx2);
                 selectedTable.editColAttributes('\0');
             }
@@ -33,7 +39,19 @@ public class TableDesignMode extends Mode {
             }
         }
     }
-    
+
+    /*
+    Handles keyboard events
+    Delete: The selected column is deleted. If no column is selected do nothing
+    Escape: Return to tables mode. Only allowed if all columns are in a valid state.
+    Ctrl + Enter: Switches to table rows mode if all columns are in a valid state
+    When editing a column name or the default value of string/email:
+    Enter: stop editing the name
+    Backspace: deletes last character of name (if not empty)
+    Any non-special character: appends the character to the name
+    When editing a column type, allow blanks value or boolean/integer default value
+    Any character: same behaviour as clicking it = switches to next option
+     */
     @Override
     public void handleKeyEvent(CanvasWindow window, int keyCode, char keyChar, boolean isControlDown) {
         Table selectedTable = TableManager.getSelectedTable();
@@ -69,12 +87,20 @@ public class TableDesignMode extends Mode {
             }
         }
     }
-    
+
+    /*
+    Draws table designer screen
+    If a name or default value is invalid: mark it as red otherwise keep it gray
+    If a cell in the appropriate column has an invalid value:
+    Mark the violated field in red otherwise keep it gray
+     */
     @Override
     public void drawMode(Frame frame, Graphics g){
         Table table = TableManager.getSelectedTable();
-        drawRows(frame, g, table);
-        drawCols(frame, g, table);
+        if (table != null){
+            drawRows(frame, g, table);
+            drawCols(frame, g, table);
+        }
     }
 
     private static void drawCols(Frame frame,Graphics g,Table table){

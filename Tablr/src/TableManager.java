@@ -8,7 +8,7 @@ public class TableManager {
     private static int sequenceNumber = 1;
 
 
-    //generate random name for table
+    //generate incremental name for table
     private static String generateName(){
         return "Table"+sequenceNumber++;
     }
@@ -39,6 +39,7 @@ public class TableManager {
         }
     }
 
+    //unselect the currently selected table
     public static void unselectTable(){
         Table table = getSelectedTable();
         if(validTableName(table)) {
@@ -66,6 +67,7 @@ public class TableManager {
         }
     }
 
+    //restore old name of selected table
     public static void undoEditName(){
         Table table = getSelectedTable();
         if(table!=null) {
@@ -73,6 +75,7 @@ public class TableManager {
         }
     }
 
+    //save selected table name and deleted old name
     public static void saveNewName(){
         Table table = getSelectedTable();
         if(validTableName(table)) {
@@ -138,7 +141,7 @@ public class TableManager {
         return true;
     }
 
-    // Reset static table manager state for tests
+    //reset static table manager state only for testing purposes
     public static void resetState(){
         tables.clear();
         sequenceNumber = 1;

@@ -365,7 +365,7 @@ class TablrTest {
         assertEquals(table.getSelectedCell(), table.getRows().get(1).getCells().get(0));
         String cellVal = "\b\b\b";
         for (char keyChar : cellVal.toCharArray()) {
-            table.editColAttributes(keyChar);
+            table.editCellValue(keyChar);
         }
         //Select another cell, cell 1,0 is invalid now but select should go through
         table.unSelectCell();
@@ -386,7 +386,7 @@ class TablrTest {
         assertEquals(table.getSelectedCell(), table.getRows().get(1).getCells().get(0));
         cellVal = "def";
         for (char keyChar : cellVal.toCharArray()) {
-            table.editColAttributes(keyChar);
+            table.editCellValue(keyChar);
         }
         assertEquals("def", table.getRows().get(1).getCells().get(0).getValue());
         //Now we can exit if we wish

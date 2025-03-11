@@ -15,10 +15,12 @@ public class Column {
         return name;
     }
 
+    //directly sets name
     public void setName(String name) {
         this.name = name;
     }
 
+    //appends given character to name, deletes last character if the given character is backspace.
     public void editName(char keyChar) {
         if(keyChar=='\b'){
             this.name = this.name.substring(0, this.name.length()-1);
@@ -31,6 +33,7 @@ public class Column {
         return type;
     }
 
+    //cycles through available types
     public void switchType() {
         switch (type) {
             case "String" -> type = ("Email");
@@ -55,6 +58,7 @@ public class Column {
         return allowsBlanks;
     }
 
+    //inverts the boolean value of allow blank
     public void invertAllowBlank() {
         allowsBlanks = !allowsBlanks;
         //Correct default value if possible
@@ -71,6 +75,12 @@ public class Column {
         return defaultValue;
     }
 
+    /*
+    Edits the default value:
+    If type is string/email: append character or remove last character if given character is backspace.
+    If type is boolean: cycles through allowed values
+    If type is integer: same behaviour as string/email but only accepts numerical characters or backspace
+     */
     public void editDefaultValue(char keyChar) {
         // True -> False -> Blank; skips blank if not allowed
         if (type.equals("Boolean")){
@@ -113,10 +123,12 @@ public class Column {
         return isSelected;
     }
 
+    //selects this column
     public void select(){
         isSelected = true;
     }
 
+    //unselects this column
     public void unselect(){
         isSelected = false;
     }

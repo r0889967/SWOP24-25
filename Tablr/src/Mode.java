@@ -4,8 +4,11 @@ import java.awt.Graphics;
 
 public abstract class Mode {
 
+    //handles a given mouse event
     public abstract void handleMouseEvent(Frame frame, CanvasWindow window, int x, int y, int clickCount);
+    //handles a given keyboard event
     public abstract void handleKeyEvent(CanvasWindow window, int keyCode, char keyChar, boolean isControlDown);
+    //draws the relevant mode
     public abstract void drawMode(Frame frame, Graphics graphics);
 
     // ==========================
@@ -13,7 +16,7 @@ public abstract class Mode {
     // ==========================
     
     //locate table entry in 1D after clicking
-    public static int getIdx(int height, int hscale, int width, int wscale,int x, int y, int xoffset, int yoffset) {
+    public static int getIdx1D(int height, int hscale, int width, int wscale, int x, int y, int xoffset, int yoffset) {
         int entryHeight = height / hscale;
         int entryWidth = width / wscale;
 

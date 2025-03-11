@@ -15,15 +15,21 @@ public class Cell {
         return isSelected;
     }
 
+    //selects this cell
     public void select() {
         isSelected = true;
     }
 
+    //unselects this cell
     public void unSelect() {
         isSelected = false;
     }
 
-
+    /*
+    Edits the cell's value:
+    If given type is string/email/boolean: append character or remove last character if given character is backspace.
+    If given type is integer: same behaviour as string/email but only accepts numerical characters or backspace
+     */
     public void editValue(char keyChar, String type) {
         //Filter non-numbers for Integer fields
         if (type.equals("Integer")) {
