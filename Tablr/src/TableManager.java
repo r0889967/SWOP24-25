@@ -137,4 +137,10 @@ public class TableManager {
         }
         return true;
     }
+
+    // Reset static table manager state for tests
+    public static void resetState(){
+        tables.clear();
+        sequenceNumber = 1;
+    }
 }

@@ -389,8 +389,5 @@ public class Table {
     public boolean allValidColumns(){
         return cols.stream().allMatch(col -> validColumn(col,cols));
     }
-
-
-
     //endregion
 }

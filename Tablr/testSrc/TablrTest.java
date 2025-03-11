@@ -5,20 +5,15 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TablrTest {
-
     private void resetState(){
-        ArrayList<Table> tables = TableManager.getTables();
-        for (Table table : new ArrayList<>(tables)) {
-            table.select();
-            TableManager.deleteTable();
-        }
+        TableManager.resetState();
         ModeManager.toTablesMode();
         // Assert reset successful
         assert TableManager.getTables().isEmpty();
         assertInstanceOf(TablesMode.class, ModeManager.getMode());
     }
 
-    // Test table creation
+    // Test table management
     @Test
     void tableManager() {
         TableManager.createAndAddTable();
@@ -89,9 +84,9 @@ class TablrTest {
         resetState();
     }
 
+    // Test column management
     @Test
     void columnManager() {
-
         // Create initial table to edit
         TableManager.createAndAddTable();
         TableManager.selectTable(0);
@@ -276,6 +271,128 @@ class TablrTest {
 
         // Reset state for other tests
         resetState();
+    }
 
+    // Test row management
+    @Test
+    void rowManager(){
+        // Edit constants
+        int const_type = 1;
+        int const_allow_blanks = 2;
+        int const_default_val = 3;
+        // Create initial table to edit
+        TableManager.createAndAddTable();
+        TableManager.selectTable(0);
+        Table table = TableManager.getSelectedTable();
+        ModeManager.toTableDesignMode();
+        assert table != null;
+        // Create a column for each type
+        table.addCol();
+        table.addCol();
+        table.addCol();
+        table.addCol();
+        // Column 1
+        table.selectCol(0);
+        Column selCol = table.getSelectedCol();
+        assert selCol != null;
+        table.setColumnEditMode(const_allow_blanks);
+        table.editColAttributes('\0');
+        table.setColumnEditMode(const_default_val);
+        table.editColAttributes('a');
+        table.editColAttributes('b');
+        table.editColAttributes('c');
+        // Column 2
+        table.selectCol(1);
+        assertEquals(table.getCols().get(1), table.getSelectedCol());
+        selCol = table.getSelectedCol();
+        assert selCol != null;
+        table.setColumnEditMode(const_type);
+        table.editColAttributes('\0');
+        table.setColumnEditMode(const_allow_blanks);
+        table.editColAttributes('\0');
+        table.setColumnEditMode(const_default_val);
+        String defEmail = "abc@gmail.com";
+        for (char keyChar : defEmail.toCharArray()){
+            table.editColAttributes(keyChar);
+        }
+        // Column 3
+        table.selectCol(2);
+        assertEquals(table.getCols().get(2), table.getSelectedCol());
+        selCol = table.getSelectedCol();
+        assert selCol != null;
+        table.setColumnEditMode(const_type);
+        table.editColAttributes('\0');
+        table.editColAttributes('\0');
+        table.setColumnEditMode(const_allow_blanks);
+        table.editColAttributes('\0');
+        table.setColumnEditMode(const_default_val);
+        table.editColAttributes('\0');
+        // Column 4
+        table.selectCol(3);
+        assertEquals(table.getCols().get(3), table.getSelectedCol());
+        selCol = table.getSelectedCol();
+        assert selCol != null;
+        table.setColumnEditMode(const_type);
+        table.editColAttributes('\0');
+        table.editColAttributes('\0');
+        table.editColAttributes('\0');
+        table.setColumnEditMode(const_allow_blanks);
+        table.editColAttributes('\0');
+        table.setColumnEditMode(const_default_val);
+        String defInteger = "\b123";
+        for (char keyChar : defInteger.toCharArray()){
+            table.editColAttributes(keyChar);
+        }
+        //Select first column 1 again
+        table.selectCol(0);
+        assertEquals(table.getCols().get(0), table.getSelectedCol());
+
+        //Try adding rows
+        ModeManager.toTableRowsMode();
+        table.addRow();
+        //Ensure that row was added properly and default values are correctly filled
+        assert table.getRows().size() == 1;
+        Row row = table.getRows().get(0);
+        assertEquals("abc", row.getCells().get(0).getValue());
+        assertEquals("abc@gmail.com", row.getCells().get(1).getValue());
+        assertEquals("False", row.getCells().get(2).getValue());
+        assertEquals("123", row.getCells().get(3).getValue());
+        //Try editing rows
+        table.addRow();
+        table.selectRow(1);
+        table.selectCell(1,0);
+        assertEquals(table.getSelectedRow(), table.getRows().get(1));
+        assertEquals(table.getSelectedCell(), table.getRows().get(1).getCells().get(0));
+        String cellVal = "\b\b\b";
+        for (char keyChar : cellVal.toCharArray()) {
+            table.editColAttributes(keyChar);
+        }
+        //Select another cell, cell 1,0 is invalid now but select should go through
+        table.unSelectCell();
+        table.unSelectRow();
+        table.selectRow(1);
+        table.selectCell(1, 2);
+        assertEquals(table.getSelectedRow(), table.getRows().get(1));
+        assertEquals(table.getSelectedCell(), table.getRows().get(1).getCells().get(2));
+        //But exiting row mode is not possible because columns are invalid
+        assert !table.allValidColumns();
+
+        //Restore cell 1,0 to valid state
+        table.unSelectCell();
+        table.unSelectRow();
+        table.selectRow(1);
+        table.selectCell(1, 0);
+        assertEquals(table.getSelectedRow(), table.getRows().get(1));
+        assertEquals(table.getSelectedCell(), table.getRows().get(1).getCells().get(0));
+        cellVal = "def";
+        for (char keyChar : cellVal.toCharArray()) {
+            table.editColAttributes(keyChar);
+        }
+        assertEquals("def", table.getRows().get(1).getCells().get(0).getValue());
+        //Now we can exit if we wish
+        assert table.allValidColumns();
+
+        // Reset state for other tests
+        resetState();
     }
 }
