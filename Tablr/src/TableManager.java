@@ -1,33 +1,39 @@
 import java.util.ArrayList;
 
 public class TableManager {
-    private static final int maxTablePerRow = 1;
-    private static final int maxTablePerCol = 20;
-    private static final int maxTables = maxTablePerRow*maxTablePerCol;
-    private static final ArrayList<Table> tables = new ArrayList<Table>();
-    private static int sequenceNumber = 1;
+    private  final int maxTablePerRow = 1;
+    private  final int maxTablePerCol = 20;
+    private  final int maxTables = maxTablePerRow*maxTablePerCol;
+    private  final ArrayList<Table> tables = new ArrayList<Table>();
+    private  int sequenceNumber = 1;
 
 
-    //generate incremental name for table
-    private static String generateName(){
+    /**
+     * generate incremental name for table
+     */
+    private  String generateName(){
         return "Table"+sequenceNumber++;
     }
 
-    public static int getMaxTablePerRow(){
+    public  int getMaxTablePerRow(){
         return maxTablePerRow;
     }
 
-    public static int getMaxTablePerCol(){
+    public  int getMaxTablePerCol(){
         return maxTablePerCol;
     }
 
-    //get table by index
-    public static Table getTableByIndex(int idx){
+    /**
+     * get table by index
+     */
+    public  Table getTableByIndex(int idx){
         return tables.get(idx);
     }
 
-    //select table with idx
-    public static void selectTable(int idx){
+    /**
+     * select table with idx
+     */
+    public  void selectTable(int idx){
         Table table = getSelectedTable();
         if(validTableName(table)) {
             if(table!=null) {
@@ -39,8 +45,10 @@ public class TableManager {
         }
     }
 
-    //unselect the currently selected table
-    public static void unselectTable(){
+    /**
+     * unselect the currently selected table
+     */
+    public  void unselectTable(){
         Table table = getSelectedTable();
         if(validTableName(table)) {
             if (table != null) {
@@ -49,8 +57,10 @@ public class TableManager {
         }
     }
 
-    //retrieve selected table
-    public static Table getSelectedTable(){
+    /**
+     * retrieve selected table
+     */
+    public  Table getSelectedTable(){
         for (Table table : tables) {
             if (table.isSelected()) {
                 return table;
@@ -59,24 +69,30 @@ public class TableManager {
         return null;
     }
 
-    //edit selected table's name
-    public static void editTableName(char keyChar){
+    /**
+     * edit selected table's name
+     */
+    public  void editTableName(char keyChar){
         Table table = getSelectedTable();
         if(table!=null) {
             table.editName(keyChar);
         }
     }
 
-    //restore old name of selected table
-    public static void undoEditName(){
+    /**
+     * restore old name of selected table
+     */
+    public  void undoNameEdits(){
         Table table = getSelectedTable();
         if(table!=null) {
             table.restoreOldName();
         }
     }
 
-    //save selected table name and deleted old name
-    public static void saveNewName(){
+    /**
+     * save selected table name and deleted old name
+     */
+    public  void saveNewName(){
         Table table = getSelectedTable();
         if(validTableName(table)) {
             if (table != null) {
@@ -86,13 +102,17 @@ public class TableManager {
     }
 
 
-    //retrieve all tables
-    public static ArrayList<Table> getTables(){
+    /**
+     * retrieve all tables
+     */
+    public  ArrayList<Table> getTables(){
         return tables;
     }
 
-    //create and add a new table
-    public static void createAndAddTable(){
+    /**
+     * create and add a new table
+     */
+    public  void createAndAddTable(){
         Table table = getSelectedTable();
         if(validTableName(table)) {
             if (tables.size() < maxTables) {
@@ -107,15 +127,19 @@ public class TableManager {
         }
     }
 
-    //delete selected table
-    public static void deleteTable(){
+    /**
+     * delete selected table
+     */
+    public  void deleteTable(){
         Table table = getSelectedTable();
         tables.remove(table);
     }
 
 
-    //check if table has valid name
-    public static boolean validTableName(Table table){
+    /**
+     * check if table has valid name
+     */
+    public  boolean validTableName(Table table){
         if(table == null){
             return true;
         }
@@ -128,8 +152,10 @@ public class TableManager {
         return true;
     }
 
-    // check if table name is unique
-    public static boolean uniqueTableName(Table table){
+    /**
+     * check if table name is unique
+     */
+    public  boolean uniqueTableName(Table table){
         for(Table t:tables){
             if(t==table){
                 continue;
@@ -139,11 +165,5 @@ public class TableManager {
             }
         }
         return true;
-    }
-
-    //reset static table manager state only for testing purposes
-    public static void resetState(){
-        tables.clear();
-        sequenceNumber = 1;
     }
 }

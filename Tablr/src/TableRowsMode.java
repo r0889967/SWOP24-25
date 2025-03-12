@@ -5,20 +5,20 @@ import java.awt.Color;
 import java.awt.Font;
 
 public class TableRowsMode extends Mode {
-    public TableRowsMode(){
-        super();
+    public TableRowsMode(TableManager tableManager){
+        super(tableManager);
     }
 
-    /*
-    Handles mouse events
-    Double-clicking: If at the bottom of the screen: create a new row with default values
-    Single-click: Selects the clicked row and cell and marks the cell for editing
+    /**
+     * Handles mouse events
+     * Double-clicking: If at the bottom of the screen: create a new row with default values
+     * Single-click: Selects the clicked row and cell and marks the cell for editing
      */
     @Override
     public void handleMouseEvent(Frame frame, CanvasWindow window, int x, int y, int clickCount) {
         //mouse clicked, select row and cell of table
         if(clickCount==1){
-            Table selectedTable = TableManager.getSelectedTable();
+            Table selectedTable = tableManager.getSelectedTable();
 
             selectedTable.unSelectCell();
             selectedTable.unSelectRow();
@@ -31,32 +31,33 @@ public class TableRowsMode extends Mode {
 
         //mouse is double-clicked outside row list, add row to table
         else if(y>7*frame.getHeight()/8 && clickCount==2) {
-            Table selectedTable = TableManager.getSelectedTable();
+            Table selectedTable = tableManager.getSelectedTable();
             if (selectedTable != null){
                 selectedTable.addRow();
             }
         }
     }
 
-    /*
-    Handles keyboard events
-    Delete: The selected row is deleted. If no row is selected do nothing
-    Escape: Return to tables mode. Only allowed if all cells are in a valid state.
-    Ctrl + Enter: Switches to table designer mode if all columns are in a valid state
-    When editing a cell value:
-    Enter: stop editing value
-    Backspace: deletes last character of value (if not empty)
-    Any non-special character: appends the character to the name
-    If column has type integer: Any non-special non-numeric character is rejected
+    /**
+     * Handles keyboard events
+     * Delete: The selected row is deleted. If no row is selected do nothing
+     * Escape: Return to tables mode. Only allowed if all cells are in a valid state.
+     * Ctrl + Enter: Switches to table designer mode if all columns are in a valid state
+     * When editing a cell value:
+     * Enter: stop editing value
+     * Backspace: deletes last character of value (if not empty)
+     * Any non-special character: appends the character to the name
+     * If column has type integer: Any non-special non-numeric character is rejected
      */
     @Override
     public void handleKeyEvent(CanvasWindow window, int keyCode, char keyChar, boolean isControlDown) {
-        Table selectedTable = TableManager.getSelectedTable();
+        Table selectedTable = tableManager.getSelectedTable();
         if (selectedTable != null) {
             //escape key
             if (keyCode == 27) {
                 if (selectedTable.allValidColumns()){
-                    window.setTitle("Tablr: " + ModeManager.toTablesMode());
+                    ModeManager.toTablesMode(tableManager);
+                    window.setTitle(CONST_TABLE_MODE_TITLE);
                 }
             }
 
@@ -65,7 +66,8 @@ public class TableRowsMode extends Mode {
                 if (selectedTable.allValidColumns()) {
                     if (isControlDown) {
                         // Ctrl+Enter switches to table rows mode
-                        window.setTitle("Tablr: " + ModeManager.toTableDesignMode() + " - " + selectedTable.getName());
+                        ModeManager.toTableDesignMode(tableManager);
+                        window.setTitle(CONST_TABLE_COLUMN_MODE_TITLE + " - " + selectedTable.getName());
                     } else {
                         // Just Enter unselects column
                         selectedTable.unselectCol();
@@ -85,14 +87,14 @@ public class TableRowsMode extends Mode {
         }
     }
 
-    /*
-    Draws table designer screen
-    If a name or default value is invalid: mark it as red otherwise keep it gray
-    If a cell in the appropriate column has an invalid value:
-    Mark the violated field in red otherwise keep it gray
+    /**
+     * Draws table designer screen
+     * If a name or default value is invalid: mark it as red otherwise keep it gray
+     * If a cell in the appropriate column has an invalid value:
+     * Mark the violated field in red otherwise keep it gray
      */
     public void drawMode(Frame frame, Graphics g){
-        Table table = TableManager.getSelectedTable();
+        Table table = tableManager.getSelectedTable();
         drawRows(frame, g, table);
         drawCols(frame, g, table);
     }

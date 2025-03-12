@@ -4,81 +4,83 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * General input tests for Tablr
+ */
 class TablrTest {
     private void resetState(){
-        TableManager.resetState();
-        ModeManager.toTablesMode();
+        ModeManager.toTablesMode(new TableManager());
         // Assert reset successful
-        assert TableManager.getTables().isEmpty();
         assertInstanceOf(TablesMode.class, ModeManager.getMode());
     }
 
     // Test table management
     @Test
     void tableManager() {
-        TableManager.createAndAddTable();
+        TableManager tableManager = new TableManager();
+        tableManager.createAndAddTable();
         // Make sure table was created correctly
-        assert TableManager.getTables().size() == 1;
-        Table genTable = TableManager.getTables().get(0);
+        assert tableManager.getTables().size() == 1;
+        Table genTable = tableManager.getTables().get(0);
         assert genTable.getName().equals("Table1");
 
         // Select first table
-        TableManager.getTableByIndex(0).select();
+        tableManager.getTableByIndex(0).select();
         // Make sure table was selected
-        assertNotNull(TableManager.getSelectedTable());
-        assert TableManager.getSelectedTable().equals(genTable);
+        assertNotNull(tableManager.getSelectedTable());
+        assert tableManager.getSelectedTable().equals(genTable);
 
         // Double click to create another table
-        TableManager.createAndAddTable();
-        assert TableManager.getTables().size() == 2;
-        assert TableManager.getTableByIndex(1).getName().equals("Table2");
+        tableManager.createAndAddTable();
+        assert tableManager.getTables().size() == 2;
+        assert tableManager.getTableByIndex(1).getName().equals("Table2");
 
         // Select table 1 and change name to Table2
-        TableManager.getTableByIndex(0).select();
-        TableManager.editTableName('\b');
-        TableManager.editTableName('2');
+        tableManager.getTableByIndex(0).select();
+        tableManager.editTableName('\b');
+        tableManager.editTableName('2');
 
         // Try to select table 2 and fail
-        TableManager.selectTable(1);
-        assertEquals(TableManager.getSelectedTable(), TableManager.getTableByIndex(0));
+        tableManager.selectTable(1);
+        assertEquals(tableManager.getSelectedTable(), tableManager.getTableByIndex(0));
 
         // Change table 1 name to Table3
-        TableManager.editTableName('\b');
-        TableManager.editTableName('3');
+        tableManager.editTableName('\b');
+        tableManager.editTableName('3');
 
         // Autogen table 3 with name Table4 because Table3 is taken
-        TableManager.createAndAddTable();
-        assertEquals("Table4", TableManager.getTableByIndex(2).getName());
+        tableManager.createAndAddTable();
+        assertEquals("Table4", tableManager.getTableByIndex(2).getName());
 
         // Change table 1 name to Table1
-        TableManager.editTableName('\b');
-        TableManager.editTableName('2');
+        tableManager.editTableName('\b');
+        tableManager.editTableName('2');
 
         // table 1 is invalid so cannot unselect with enter or select other table
-        TableManager.saveNewName();
-        assertEquals("Table2", TableManager.getSelectedTable().getName());
-        TableManager.selectTable(1);
-        assertEquals(TableManager.getSelectedTable(), TableManager.getTableByIndex(0));
+        tableManager.saveNewName();
+        assertEquals("Table2", tableManager.getSelectedTable().getName());
+        tableManager.selectTable(1);
+        assertEquals(tableManager.getSelectedTable(), tableManager.getTableByIndex(0));
 
         // table 1 resets name because of esc
-        TableManager.undoEditName();
-        assertEquals("Table1", TableManager.getSelectedTable().getName());
-        TableManager.unselectTable();
+        tableManager.undoNameEdits();
+        assertEquals("Table1", tableManager.getSelectedTable().getName());
+        tableManager.unselectTable();
 
         // No table selected, so nothing deleted
-        TableManager.deleteTable();
-        assert TableManager.getTables().size() == 3;
+        tableManager.deleteTable();
+        assert tableManager.getTables().size() == 3;
         // Try deleting table 2
-        Table table1 = TableManager.getTables().get(0);
-        Table table2 = TableManager.getTables().get(1);
-        Table table3 = TableManager.getTables().get(2);
-        TableManager.selectTable(1);
-        TableManager.deleteTable();
+        Table table1 = tableManager.getTables().get(0);
+        Table table2 = tableManager.getTables().get(1);
+        Table table3 = tableManager.getTables().get(2);
+        tableManager.selectTable(1);
+        tableManager.deleteTable();
         // Make sure that table 2 was deleted and nothing else
-        assert TableManager.getTables().size() == 2;
-        assertEquals(table1, TableManager.getTableByIndex(0));
-        assertEquals(table3, TableManager.getTableByIndex(1));
-        assert !TableManager.getTables().contains(table2);
+        assert tableManager.getTables().size() == 2;
+        assertEquals(table1, tableManager.getTableByIndex(0));
+        assertEquals(table3, tableManager.getTableByIndex(1));
+        assert !tableManager.getTables().contains(table2);
 
         // Reset state for other tests
         resetState();
@@ -87,14 +89,15 @@ class TablrTest {
     // Test column management
     @Test
     void columnManager() {
+        TableManager tableManager = new TableManager();
         // Create initial table to edit
-        TableManager.createAndAddTable();
-        TableManager.selectTable(0);
-        Table table = TableManager.getSelectedTable();
+        tableManager.createAndAddTable();
+        tableManager.selectTable(0);
+        Table table = tableManager.getSelectedTable();
         assert table != null;
 
         // Start designing table
-        ModeManager.toTableDesignMode();
+        ModeManager.toTableDesignMode(tableManager);
 
         // Try adding a column and selecting it
         table.addCol();
@@ -276,15 +279,16 @@ class TablrTest {
     // Test row management
     @Test
     void rowManager(){
+        TableManager tableManager = new TableManager();
         // Edit constants
         int const_type = 1;
         int const_allow_blanks = 2;
         int const_default_val = 3;
         // Create initial table to edit
-        TableManager.createAndAddTable();
-        TableManager.selectTable(0);
-        Table table = TableManager.getSelectedTable();
-        ModeManager.toTableDesignMode();
+        tableManager.createAndAddTable();
+        tableManager.selectTable(0);
+        Table table = tableManager.getSelectedTable();
+        ModeManager.toTableDesignMode(tableManager);
         assert table != null;
         // Create a column for each type
         table.addCol();
@@ -348,7 +352,7 @@ class TablrTest {
         assertEquals(table.getCols().get(0), table.getSelectedCol());
 
         //Try adding rows
-        ModeManager.toTableRowsMode();
+        ModeManager.toTableRowsMode(tableManager);
         table.addRow();
         //Ensure that row was added properly and default values are correctly filled
         assert table.getRows().size() == 1;

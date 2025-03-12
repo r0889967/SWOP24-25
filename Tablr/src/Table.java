@@ -31,14 +31,18 @@ public class Table {
         return name;
     }
 
-    //Carefull!, this edits both names, use restoreOldName() or saveName() instead
-    //sets a new name without regard for saving the old name
+    /**
+     * sets a new name without regard for saving the old name
+     */
+    //Warning!, this method edits both names, use restoreOldName() or saveName() instead
     public void setBothNames(String name){
         this.name = name;
         this.oldName = name;
     }
 
-    //edits the table name
+    /**
+     * edits the table name
+     */
     public void editName(char keyChar){
         if (keyChar == '\b') {
             name = (name.substring(0, name.length() - 1));
@@ -47,12 +51,16 @@ public class Table {
         }
     }
 
-    //restores the table name to its value before edits
+    /**
+     * restores the table name to its value before edits
+     */
     public void restoreOldName(){
         name = oldName;
     }
 
-    //saves the table name and wipes the stored old name
+    /**
+     * saves the table name and wipes the stored old name
+     */
     public void saveName(){
         oldName = name;
     }
@@ -70,7 +78,9 @@ public class Table {
         return this.columnEditMode;
     }
 
-    //sets the selected field. Any value outside [0,3] range is set to the closest boundary
+    /**
+     * sets the selected field. Any value outside [0,3] range is set to the closest boundary
+     */
     public void setColumnEditMode(int mode) {
         if (mode > 3){
             mode = 3;
@@ -82,6 +92,9 @@ public class Table {
     }
     //endregion
     //region Column Management
+    /**
+     * creates and adds a new column with a default generated name
+     */
     public void addCol(){
         Column col = new Column(generateColumnName());
         Column selCol = getSelectedCol();
@@ -98,7 +111,9 @@ public class Table {
         }
     }
 
-    //delete the currently selected column if any
+    /**
+     * delete the currently selected column if any
+     */
     public void deleteCol(){
         Column col = getSelectedCol();
         if (col != null){
@@ -108,12 +123,16 @@ public class Table {
         }
     }
 
-    //generate an incremental name
+    /**
+     * generate an incremental name
+     */
     private String generateColumnName(){
         return "Column"+this.colSequenceNumber++;
     }
 
-    //retrieves the currently selected column
+    /**
+     * retrieves the currently selected column
+     */
     public Column getSelectedCol(){
         for (Column col : this.cols){
             if (col.isSelected()){
@@ -123,16 +142,16 @@ public class Table {
         return null;
     }
 
-    /*
-    Edits the value of the selected field with the given character
-    If selected field is:
-    Name: appends character or delete last character if backspace
-    Type: cycles through allowed values regardless of input
-    Allow blanks: Inverts the allowed value regardless of input
-    Default value:
-    If the type is name/field: appends character or deletes last character if backspace was pressed
-    If the type is integer: same behaviour but only accepts numerical characters and backspace
-    If the type is boolean: cycles through allowed values
+    /**
+     * Edits the value of the selected field with the given character
+     * If selected field is:
+     * Name: appends character or delete last character if backspace
+     * Type: cycles through allowed values regardless of input
+     * Allow blanks: Inverts the allowed value regardless of input
+     * Default value:
+     * If the type is name/field: appends character or deletes last character if backspace was pressed
+     * If the type is integer: same behaviour but only accepts numerical characters and backspace
+     * If the type is boolean: cycles through allowed values
      */
     public void editColAttributes(char keyChar){
         if(this.columnEditMode==0){
@@ -176,7 +195,9 @@ public class Table {
         }
     }
 
-    //Select the column at given index
+    /**
+     * Select the column at given index
+     */
     public void selectCol(int idx){
         if (validColumn(getSelectedCol(),cols)){
             unselectColNoCheck();
@@ -184,7 +205,9 @@ public class Table {
         }
     }
 
-    //Unselect the currently selected column if it is in a valid state
+    /**
+     * Unselect the currently selected column if it is in a valid state
+     */
     public void unselectCol(){
         Column col = getSelectedCol();
         if (col != null){
@@ -194,7 +217,9 @@ public class Table {
         }
     }
 
-    // Warning: Does not check for valid column
+    /**
+     * Warning: Does not check for valid column
+     */
     private void unselectColNoCheck(){
         Column col = getSelectedCol();
         if (col != null) {
@@ -203,7 +228,9 @@ public class Table {
     }
     //endregion
     //region Row Management
-    //creates and adds a new row
+    /**
+     * creates and adds a new row
+     */
     public void addRow(){
         Row row = new Row();
         for (Column c : this.cols) {
@@ -212,13 +239,17 @@ public class Table {
         rows.add(row);
     }
 
-    //deletes the selected row
+    /**
+     * deletes the selected row
+     */
     public void deleteRow(){
         Row row = getSelectedRow();
         rows.remove(row);
     }
 
-    //retrieve the selected row
+    /**
+     * retrieve the selected row
+     */
     public Row getSelectedRow(){
         for (Row row : this.rows){
             if (row.isSelected()){
@@ -228,7 +259,9 @@ public class Table {
         return null;
     }
 
-    //edit the selected cell's value
+    /**
+     * edit the selected cell's value
+     */
     public void editCellValue(char keyChar) {
         Cell cell = getSelectedCell();
         if (cell != null){
@@ -240,12 +273,16 @@ public class Table {
         }
     }
 
-    //select the row at given index
+    /**
+     * select the row at given index
+     */
     public void selectRow(int idx) {
         rows.get(idx).select();
     }
 
-    //unselect the currently selected row
+    /**
+     * unselect the currently selected row
+     */
     public void unSelectRow(){
         Row row = getSelectedRow();
         if (row != null) {
@@ -255,7 +292,9 @@ public class Table {
 
     //endregion
     //region Cell Management
-    //retrieves all cells belonging to a certain column
+    /**
+     * retrieves all cells belonging to a certain column
+     */
     private ArrayList<Cell> getCellsByCol(Column col){
         int idx = cols.indexOf(col);
         ArrayList<Cell> cells = new ArrayList<>();
@@ -265,7 +304,9 @@ public class Table {
         return cells;
     }
 
-    //retrieve the currently selected cell
+    /**
+     * retrieve the currently selected cell
+     */
     public Cell getSelectedCell(){
         if (getSelectedRow() == null){
             return null;
@@ -273,14 +314,18 @@ public class Table {
         return getSelectedRow().getSelectedCell();
     }
 
-    //select the cell at a given row and column index
+    /**
+     * select the cell at a given row and column index
+     */
     public void selectCell(int ridx,int cidx) {
         if (ridx < rows.size()) {
             rows.get(ridx).getCells().get(cidx).select();
         }
     }
 
-    //unselect the currently selected cells
+    /**
+     * unselect the currently selected cells
+     */
     public void unSelectCell() {
         Cell cell = getSelectedCell();
         if (cell != null) {
@@ -288,7 +333,9 @@ public class Table {
         }
     }
 
-    //when column is deleted: remove the associated cells in rows
+    /**
+     * when column is deleted: remove the associated cells in rows
+     */
     private void synchronize(int idx){
         for(Row row : rows){
             row.deleteCell(idx);
@@ -298,7 +345,9 @@ public class Table {
         }
     }
 
-    //when column is added: append new cells to all rows
+    /**
+     * when column is added: append new cells to all rows
+     */
     private void fillCells(){
         Column col = getSelectedCol();
         for (Row row : rows){
@@ -307,7 +356,9 @@ public class Table {
     }
     //endregion
     //region Validation
-    //check if cell has valid value
+    /**
+     * check if cell has valid value
+     */
     private static boolean validCellValue(Cell cell,Column col){
         if(col == null){
             return true;
@@ -321,7 +372,9 @@ public class Table {
         || col.getType().equals("Email") && validEmail(value);
     }
 
-    //check if string is valid email
+    /**
+     * check if string is valid email
+     */
     private static boolean validEmail(String str){
         int count = 0;
         for(char chr: str.toCharArray()){
@@ -332,7 +385,9 @@ public class Table {
         return count==1;
     }
 
-    //check if string is valid integer
+    /**
+     * check if string is valid integer
+     */
     private static boolean validInt(String str){
         if(str.isEmpty()){
             return false;
@@ -345,7 +400,9 @@ public class Table {
         return String.valueOf(Integer.parseInt(str)).equals(str);
     }
 
-    //check if col has valid type
+    /**
+     * check if col has valid type
+     */
     public boolean validColType(Column col){
         if(col == null){
             return true;
@@ -368,7 +425,9 @@ public class Table {
         return validColDefaultValue(col);
     }
 
-    //check if col has valid allow blanks
+    /**
+     * check if col has valid allow blanks
+     */
     public boolean validColAllowBlanks(Column col){
         if(col == null||col.allowsBlanks()){
             return true;
@@ -377,7 +436,9 @@ public class Table {
         return cells.stream().noneMatch(cell -> cell.getValue().isEmpty());
     }
 
-    //check if col has valid default value
+    /**
+     * check if col has valid default value
+     */
     public boolean validColDefaultValue(Column col){
         if(col==null || col.getType().equals("Boolean")){
             return true;
@@ -390,7 +451,9 @@ public class Table {
 
     }
 
-    //check if col has valid name
+    /**
+     * check if col has valid name
+     */
     public boolean validColName(Column col,ArrayList<Column> cols){
         if(col == null){
             return true;
@@ -409,7 +472,9 @@ public class Table {
         return true;
     }
 
-    //check if a given col is valid
+    /**
+     * check if a given col is valid
+     */
     public boolean validColumn(Column col,ArrayList<Column> cols){
         Boolean v1 = validColName(col,cols);
         Boolean v2 = validColType(col);
@@ -418,7 +483,9 @@ public class Table {
         return v1 && v2 && v3 && v4;
     }
 
-    //check if all cols of table are valid
+    /**
+     * check if all cols of table are valid
+     */
     public boolean allValidColumns(){
         return cols.stream().allMatch(col -> validColumn(col,cols));
     }

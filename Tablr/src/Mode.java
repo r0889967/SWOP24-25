@@ -1,21 +1,34 @@
 import java.awt.Frame;
 import java.awt.Graphics;
 
-
 public abstract class Mode {
+    protected final String CONST_TABLE_MODE_TITLE = "Tablr: Tables Mode";
+    protected final String CONST_TABLE_COLUMN_MODE_TITLE = "Tablr: Table Design Mode";
+    protected final String CONST_TABLE_ROW_MODE_TITLE = "Tablr: Table Rows Mode";
+    protected TableManager tableManager;
 
-    //handles a given mouse event
+    public Mode(TableManager tableManager) {
+        this.tableManager = tableManager;
+    }
+    /**
+     * Handles a given mouse event
+     */
     public abstract void handleMouseEvent(Frame frame, CanvasWindow window, int x, int y, int clickCount);
-    //handles a given keyboard event
+
+    /**
+     * Handles a given keyboard event
+     */
     public abstract void handleKeyEvent(CanvasWindow window, int keyCode, char keyChar, boolean isControlDown);
-    //draws the relevant mode
+
+    /**
+     * Draws the relevant mode
+     */
     public abstract void drawMode(Frame frame, Graphics graphics);
 
-    // ==========================
-    // ===      Locating      ===
-    // ==========================
-    
-    //locate table entry in 1D after clicking
+    //region Locating
+    /**
+     * Locate table entry in 1D after clicking
+     */
     public static int getIdx1D(int height, int hscale, int width, int wscale, int x, int y, int xoffset, int yoffset) {
         int entryHeight = height / hscale;
         int entryWidth = width / wscale;
@@ -26,7 +39,9 @@ public abstract class Mode {
         return Math.max(0,entryIdx);
     }
 
-    //locate table entry in 2D after clicking
+    /**
+     * Locate table entry in 2D after clicking
+     */
     public static int[] getIdx2D(int height, int hscale, int width, int wscale,int x, int y, int xoffset, int yoffset) {
         int[] position = {0,0};
         int entryHeight = height / hscale;
@@ -37,4 +52,5 @@ public abstract class Mode {
         position[1] = Math.max(0,entryCol);
         return position;
     }
+    //endregion
 }
