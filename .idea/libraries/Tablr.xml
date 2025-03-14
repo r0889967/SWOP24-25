@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Tablr">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/Tablr/out/artifacts/Tablr_jar/Tablr.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
