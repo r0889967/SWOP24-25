@@ -25,7 +25,7 @@ class TablrTest {
         assert genTable.getName().equals("Table1");
 
         // Select first table
-        tableManager.getTableByIndex(0).select();
+        tableManager.selectTable(0);
         // Make sure table was selected
         assertNotNull(tableManager.getSelectedTable());
         assert tableManager.getSelectedTable().equals(genTable);
@@ -36,7 +36,7 @@ class TablrTest {
         assert tableManager.getTableByIndex(1).getName().equals("Table2");
 
         // Select table 1 and change name to Table2
-        tableManager.getTableByIndex(0).select();
+        tableManager.selectTable(0);
         tableManager.editTableName('\b');
         tableManager.editTableName('2');
 

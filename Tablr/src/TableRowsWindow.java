@@ -127,7 +127,7 @@ public class TableRowsWindow extends SubWindow {
                 g.setColor(Color.lightGray);
                 g.fillRect(i * colEntryWidth, 0, colEntryWidth, colEntryHeight);
                 g.setColor(Color.red);
-                if(!table.validColName(col,cols)){
+                if(!table.validColName(col)){
                     g.fillRect(i * colEntryWidth, 0, colEntryWidth, colEntryHeight/4);
                 }
                 if(!table.validColType(col)){
@@ -180,14 +180,14 @@ public class TableRowsWindow extends SubWindow {
                     g.setColor(Color.black);
 
                     String value = cell.getValue();
-                    if(cell.isSelected()){
+                    if(cell.equals(table.getSelectedCell())){
                         value+="\uD83D\uDC46";
                     }
                     g.drawString(value, col * cellEntryWidth, (height / 8) +row * cellEntryHeight+10);
                     col++;
                 }
                 col = 0;
-                if(r.isSelected()){
+                if(r.equals(table.getSelectedRow())){
                     g.drawString("\uD83D\uDC46",0,height/8+(row+1)*cellEntryHeight);
                 }
                 row++;

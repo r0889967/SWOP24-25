@@ -1,7 +1,5 @@
 public class Cell {
     private String value;
-    private boolean isSelected;
-
 
     public Cell(String value) {
         this.value = value;
@@ -9,24 +7,6 @@ public class Cell {
 
     public String getValue() {
         return value;
-    }
-
-    public boolean isSelected() {
-        return isSelected;
-    }
-
-    /**
-     * selects this cell
-     */
-    public void select() {
-        isSelected = true;
-    }
-
-    /**
-     * unselects this cell
-     */
-    public void unSelect() {
-        isSelected = false;
     }
 
     /**

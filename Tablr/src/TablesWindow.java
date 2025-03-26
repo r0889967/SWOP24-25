@@ -35,7 +35,7 @@ public class TablesWindow extends SubWindow {
             }
 
             //open table design mode or rows mode for table
-            else if (tableManager.isValidTableName(currentlySelectedTable)) {
+            else if (tableManager.isValidTable(currentlySelectedTable)) {
                 Table selected = tableManager.getSelectedTable();
                 if(selected!=null) {
 
@@ -109,12 +109,12 @@ public class TablesWindow extends SubWindow {
         for(Table table:tableManager.getTables()) {
             String name = table.getName();
                       
-            if(table.isSelected()){
+            if(table.equals(tableManager.getSelectedTable())) {
                 name += "\uD83D\uDC46";
             }
 
 
-            if(!tableManager.isValidTableName(table)) {
+            if(!tableManager.isValidTable(table)) {
                 g.setColor(Color.red);
             }else{
                 g.setColor(Color.lightGray);

@@ -69,8 +69,11 @@ public class TableDesignWindow extends SubWindow {
                 if (selectedTable.allValidColumns()){
                     if (isControlDown) {
                         // Ctrl+Enter switches to table rows mode
-                        SubWindowManager.toTableRowsWindow(tableManager);
-                        window.setTitle(CONST_TABLE_ROW_MODE_TITLE + " - " + selectedTable.getName());
+                        // Do not switch if there are no columns
+                        if (!selectedTable.getCols().isEmpty()){
+                            SubWindowManager.toTableRowsWindow(tableManager);
+                            window.setTitle(CONST_TABLE_ROW_MODE_TITLE + " - " + selectedTable.getName());
+                        }
                     } else {
                         // Just Enter unselects column
                         selectedTable.unselectCol();
@@ -128,7 +131,7 @@ public class TableDesignWindow extends SubWindow {
                 String type = cols.get(i).getType();
                 String allowsBlanks = cols.get(i).allowsBlanks() ? "☑" : "☐";
                 String defaultValue = cols.get(i).getDefaultValue();
-                if (col.isSelected()) {
+                if (col.equals(table.getSelectedCol())) {
                     switch (table.getColumnEditMode()) {
                         case 0:
                             name += "\uD83D\uDC46";
@@ -151,7 +154,7 @@ public class TableDesignWindow extends SubWindow {
                 g.setColor(Color.lightGray);
                 g.fillRect(i * colEntryWidth, 0, colEntryWidth, colEntryHeight);
                 g.setColor(Color.red);
-                if(!table.validColName(col,cols)){
+                if(!table.validColName(col)){
                     g.fillRect(i * colEntryWidth, 0, colEntryWidth, colEntryHeight/4);
                 }
                 if(!table.validColType(col)){
@@ -204,14 +207,14 @@ public class TableDesignWindow extends SubWindow {
                     g.setColor(Color.black);
 
                     String value = cell.getValue();
-                    if(cell.isSelected()){
+                    if(cell.equals(table.getSelectedCell())){
                         value+="\uD83D\uDC46";
                     }
                     g.drawString(value, col * cellEntryWidth, (height / 8) +row * cellEntryHeight+10);
                     col++;
                 }
                 col = 0;
-                if(r.isSelected()){
+                if(r.equals(table.getSelectedRow())){
                     g.drawString("\uD83D\uDC46",0,height/8+(row+1)*cellEntryHeight);
                 }
                 row++;

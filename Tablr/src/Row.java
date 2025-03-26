@@ -1,27 +1,8 @@
 import java.util.ArrayList;
 
 public class Row {
-    private boolean isSelected = false;
 
     private final ArrayList<Cell> cells = new ArrayList<>();
-
-    public boolean isSelected() {
-        return isSelected;
-    }
-
-    /**
-     * selects this row
-     */
-    public void select(){
-        isSelected = true;
-    }
-
-    /**
-     * unselects this row
-     */
-    public void unselect(){
-        isSelected = false;
-    }
 
     public ArrayList<Cell> getCells(){
         return cells;
@@ -38,18 +19,12 @@ public class Row {
      * deletes the cell at give index
      */
     public void deleteCell(int idx){
-        cells.remove(idx);
+        if (idx >= 0 && idx < cells.size()){
+            cells.remove(idx);
+        }
     }
 
-    /**
-     * retrieves the selected cell
-     */
-    public Cell getSelectedCell() {
-        for (Cell cell : cells) {
-            if (cell.isSelected()) {
-                return cell;
-            }
-        }
-        return null;
+    public Cell getCellByIdx(int colIdx) {
+        return cells.get(colIdx);
     }
 }

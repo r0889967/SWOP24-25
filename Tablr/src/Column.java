@@ -4,8 +4,6 @@ public class Column {
     private String type = "String";
     private Boolean allowsBlanks = true;
     private String defaultValue = "";
-
-    private boolean isSelected = false;
     
     Column(String name) {
         this.name = name;
@@ -126,23 +124,4 @@ public class Column {
             }
         }
     }
-
-    public boolean isSelected(){
-        return isSelected;
-    }
-
-    /**
-     * selects this column
-     */
-    public void select(){
-        isSelected = true;
-    }
-
-    /**
-     * unselects this column
-     */
-    public void unselect(){
-        isSelected = false;
-    }
-
 }
