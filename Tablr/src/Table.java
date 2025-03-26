@@ -366,18 +366,10 @@ public class Table {
      * check if col has valid type
      */
     public boolean validColType(Column col){
-        //TODO: wat doet deze functie? Dit lijkt niet overeen te komen met wat ik van de naam zou verwachten. (Wouter)
         if (col == null) {
             return true;
         }
-
-        String defaultValue = col.getDefaultValue();
-        ArrayList<Cell> cells = getCellsByCol(col);
-        if (defaultValue.isEmpty() && cells.isEmpty()) {
-            return true;
-        }
-
-        for (Cell cell : cells) {
+        for (Cell cell : getCellsByCol(col)) {
             String cellValue = cell.getValue();
             if (cellValue.isEmpty()) {
                 continue;
@@ -386,7 +378,7 @@ public class Table {
                 return false;
             }
         }
-        return validColDefaultValue(col);
+        return true;
     }
 
     /**
