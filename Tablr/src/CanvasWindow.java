@@ -266,7 +266,7 @@ public class CanvasWindow {
 	 * @param g This object offers the methods that allow you to paint on the canvas.
 	 */
 	protected void paint(Graphics g) {
-		ModeManager.getMode().drawMode(frame, g);
+		SubWindowManager.getWindow().drawMode(frame, g);
 	}
 	
 	private void handleMouseEvent_(MouseEvent e) {
@@ -282,7 +282,7 @@ public class CanvasWindow {
 	protected void handleMouseEvent(int id, int x, int y, int clickCount) {
 
 		if(id == 500){
-			ModeManager.getMode().handleMouseEvent(frame, this, x, y, clickCount);
+			SubWindowManager.getWindow().handleMouseEvent(frame, this, x, y, clickCount);
 		}
 
 		repaint();
@@ -301,7 +301,7 @@ public class CanvasWindow {
 	protected void handleKeyEvent(int id, int keyCode, char keyChar, boolean isControlDown) {
 
 		if(id == 401){
-			ModeManager.getMode().handleKeyEvent(this, keyCode, keyChar, isControlDown);
+			SubWindowManager.getWindow().handleKeyEvent(this, keyCode, keyChar, isControlDown);
 		}
 		repaint();
 	}

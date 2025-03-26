@@ -9,9 +9,9 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class TablrTest {
     private void resetState(){
-        ModeManager.toTablesMode(new TableManager());
+        SubWindowManager.toTablesWindow(new TableManager());
         // Assert reset successful
-        assertInstanceOf(TablesMode.class, ModeManager.getMode());
+        assertInstanceOf(TablesWindow.class, SubWindowManager.getWindow());
     }
 
     // Test table management
@@ -97,7 +97,7 @@ class TablrTest {
         assert table != null;
 
         // Start designing table
-        ModeManager.toTableDesignMode(tableManager);
+        SubWindowManager.toTableDesignWindow(tableManager);
 
         // Try adding a column and selecting it
         table.addCol();
@@ -288,7 +288,7 @@ class TablrTest {
         tableManager.createAndAddTable();
         tableManager.selectTable(0);
         Table table = tableManager.getSelectedTable();
-        ModeManager.toTableDesignMode(tableManager);
+        SubWindowManager.toTableDesignWindow(tableManager);
         assert table != null;
         // Create a column for each type
         table.addCol();
@@ -352,7 +352,7 @@ class TablrTest {
         assertEquals(table.getCols().get(0), table.getSelectedCol());
 
         //Try adding rows
-        ModeManager.toTableRowsMode(tableManager);
+        SubWindowManager.toTableRowsWindow(tableManager);
         table.addRow();
         //Ensure that row was added properly and default values are correctly filled
         assert table.getRows().size() == 1;

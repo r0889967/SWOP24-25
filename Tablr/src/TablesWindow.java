@@ -3,9 +3,9 @@ import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.Font;
 
-public class TablesMode extends Mode {
+public class TablesWindow extends SubWindow {
 
-    public TablesMode(TableManager tableManager){
+    public TablesWindow(TableManager tableManager){
         super(tableManager);
     }
 
@@ -41,13 +41,13 @@ public class TablesMode extends Mode {
 
                     //if table has no columns, change to design mode
                     if (selected.getCols().isEmpty()) {
-                        ModeManager.toTableDesignMode(tableManager);
+                        SubWindowManager.toTableDesignWindow(tableManager);
                         window.setTitle(CONST_TABLE_COLUMN_MODE_TITLE + " - " + selected.getName());
                     }
 
                     //else change to rows mode
                     else {
-                        ModeManager.toTableRowsMode(tableManager);
+                        SubWindowManager.toTableRowsWindow(tableManager);
                         window.setTitle(CONST_TABLE_ROW_MODE_TITLE + " - " + selected.getName());
                     }
                 }

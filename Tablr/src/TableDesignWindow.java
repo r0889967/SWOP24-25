@@ -1,53 +1,56 @@
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.util.ArrayList;
+
 import java.awt.Color;
 import java.awt.Font;
 
-public class TableRowsMode extends Mode {
-    public TableRowsMode(TableManager tableManager){
+public class TableDesignWindow extends SubWindow {
+    
+    public TableDesignWindow(TableManager tableManager) {
         super(tableManager);
     }
 
     /**
      * Handles mouse events
-     * Double-clicking: If at the bottom of the screen: create a new row with default values
-     * Single-click: Selects the clicked row and cell and marks the cell for editing
+     * Double-clicking: If at the bottom of the screen: create a new column otherwise do nothing
+     * Single-click: Selects the clicked column and marks the selected field for editing.
+     * If the currently selected column is in an invalid state the select request is rejected
+     * Clicking below the fields results in the last one being selected (if possible)
      */
     @Override
     public void handleMouseEvent(Frame frame, CanvasWindow window, int x, int y, int clickCount) {
-        //mouse clicked, select row and cell of table
+        //mouse clicked, select col of table
         if(clickCount==1){
             Table selectedTable = tableManager.getSelectedTable();
-
-            selectedTable.unSelectCell();
-            selectedTable.unSelectRow();
-    
-            int idx = getIdx1D(3*frame.getHeight()/4,selectedTable.getRows().size(),frame.getWidth(),1,x,y,x,frame.getHeight()/8);
-            int[] position = getIdx2D(3*frame.getHeight()/4,selectedTable.getRows().size(),frame.getWidth(),selectedTable.getCols().size(),x,y,0,frame.getHeight()/8);
-            selectedTable.selectRow(idx);
-            selectedTable.selectCell(position[0],position[1]);
-        }
-
-        //mouse is double-clicked outside row list, add row to table
-        else if(y>7*frame.getHeight()/8 && clickCount==2) {
-            Table selectedTable = tableManager.getSelectedTable();
             if (selectedTable != null){
-                selectedTable.addRow();
+                int idx = getIdx1D(frame.getHeight(),8,frame.getWidth(),selectedTable.getCols().size(),x,y,0,0);
+                selectedTable.selectCol(idx);
+                int idx2 = getIdx1D(frame.getHeight()/8,4,frame.getWidth(),1,x,y,0,0);
+                selectedTable.setColumnEditMode(idx2);
+                selectedTable.editColAttributes('\0');
+            }
+        }
+        //mouse is double-clicked outside column list, add col to table
+        else if (y > 7*frame.getHeight()/8 && clickCount == 2) {
+            Table selected = tableManager.getSelectedTable();
+            if (selected != null){
+                selected.addCol();
             }
         }
     }
 
     /**
      * Handles keyboard events
-     * Delete: The selected row is deleted. If no row is selected do nothing
-     * Escape: Return to tables mode. Only allowed if all cells are in a valid state.
-     * Ctrl + Enter: Switches to table designer mode if all columns are in a valid state
-     * When editing a cell value:
-     * Enter: stop editing value
-     * Backspace: deletes last character of value (if not empty)
+     * Delete: The selected column is deleted. If no column is selected do nothing
+     * Escape: Return to tables mode. Only allowed if all columns are in a valid state.
+     * Ctrl + Enter: Switches to table rows mode if all columns are in a valid state
+     * When editing a column name or the default value of string/email:
+     * Enter: stop editing the name
+     * Backspace: deletes last character of name (if not empty)
      * Any non-special character: appends the character to the name
-     * If column has type integer: Any non-special non-numeric character is rejected
+     * When editing a column type, allow blanks value or boolean/integer default value
+     * Any character: same behaviour as clicking it = switches to next option
      */
     @Override
     public void handleKeyEvent(CanvasWindow window, int keyCode, char keyChar, boolean isControlDown) {
@@ -55,19 +58,19 @@ public class TableRowsMode extends Mode {
         if (selectedTable != null) {
             //escape key
             if (keyCode == 27) {
-                if (selectedTable.allValidColumns()){
-                    ModeManager.toTablesMode(tableManager);
+                if (selectedTable.allValidColumns()) {
+                    SubWindowManager.toTablesWindow(tableManager);
                     window.setTitle(CONST_TABLE_MODE_TITLE);
                 }
             }
 
             //enter
-            else if(keyCode == 10) {
-                if (selectedTable.allValidColumns()) {
+            else if (keyCode == 10) {
+                if (selectedTable.allValidColumns()){
                     if (isControlDown) {
                         // Ctrl+Enter switches to table rows mode
-                        ModeManager.toTableDesignMode(tableManager);
-                        window.setTitle(CONST_TABLE_COLUMN_MODE_TITLE + " - " + selectedTable.getName());
+                        SubWindowManager.toTableRowsWindow(tableManager);
+                        window.setTitle(CONST_TABLE_ROW_MODE_TITLE + " - " + selectedTable.getName());
                     } else {
                         // Just Enter unselects column
                         selectedTable.unselectCol();
@@ -77,12 +80,12 @@ public class TableRowsMode extends Mode {
 
             //del key
             else if (keyCode == 127) {
-                selectedTable.deleteRow();
+                selectedTable.deleteCol();
             }
 
-            //other keys
+            //character keys
             else if (!((keyCode >= 16) && (keyCode <= 20))) {
-                selectedTable.editCellValue(keyChar);
+                selectedTable.editColAttributes(keyChar);
             }
         }
     }
@@ -93,10 +96,13 @@ public class TableRowsMode extends Mode {
      * If a cell in the appropriate column has an invalid value:
      * Mark the violated field in red otherwise keep it gray
      */
+    @Override
     public void drawMode(Frame frame, Graphics g){
         Table table = tableManager.getSelectedTable();
-        drawRows(frame, g, table);
-        drawCols(frame, g, table);
+        if (table != null){
+            drawRows(frame, g, table);
+            drawCols(frame, g, table);
+        }
     }
 
     private static void drawCols(Frame frame,Graphics g,Table table){
@@ -122,7 +128,26 @@ public class TableRowsMode extends Mode {
                 String type = cols.get(i).getType();
                 String allowsBlanks = cols.get(i).allowsBlanks() ? "☑" : "☐";
                 String defaultValue = cols.get(i).getDefaultValue();
-                
+                if (col.isSelected()) {
+                    switch (table.getColumnEditMode()) {
+                        case 0:
+                            name += "\uD83D\uDC46";
+                            break;
+                        case 1:
+                            type += "\uD83D\uDC46";
+                            break;
+                        case 2:
+                            allowsBlanks += "\uD83D\uDC46";
+                            break;
+                        case 3:
+                            defaultValue += "\uD83D\uDC46";
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+
                 g.setColor(Color.lightGray);
                 g.fillRect(i * colEntryWidth, 0, colEntryWidth, colEntryHeight);
                 g.setColor(Color.red);

@@ -1,13 +1,13 @@
 import java.awt.Frame;
 import java.awt.Graphics;
 
-public abstract class Mode {
+public abstract class SubWindow {
     protected final String CONST_TABLE_MODE_TITLE = "Tablr: Tables Mode";
     protected final String CONST_TABLE_COLUMN_MODE_TITLE = "Tablr: Table Design Mode";
     protected final String CONST_TABLE_ROW_MODE_TITLE = "Tablr: Table Rows Mode";
     protected TableManager tableManager;
 
-    public Mode(TableManager tableManager) {
+    public SubWindow(TableManager tableManager) {
         this.tableManager = tableManager;
     }
     /**
