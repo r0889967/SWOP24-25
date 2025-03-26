@@ -5,6 +5,7 @@ public class TableManager {
     private  final int maxTablePerCol = 20;
     private  final int maxTables = maxTablePerRow*maxTablePerCol;
     private  final ArrayList<Table> tables = new ArrayList<Table>();
+    private Table selectedTable = null;
     private  int sequenceNumber = 1;
 
 
@@ -34,48 +35,51 @@ public class TableManager {
      * select table with idx
      */
     public  void selectTable(int idx){
-        Table table = getSelectedTable();
-        if(validTableName(table)) {
-            if(table!=null) {
-                table.unselect();
+        if(validTableName(selectedTable)){
+            if(selectedTable != null){
+                selectedTable.unselect();
+                selectedTable = null;
             }
-            if(idx<tables.size()) {
-                tables.get(idx).select();
+
+            if(idx<tables.size()){
+                selectedTable = tables.get(idx);
+                selectedTable.select();
             }
         }
+
     }
+
+
 
     /**
      * unselect the currently selected table
      */
     public  void unselectTable(){
-        Table table = getSelectedTable();
-        if(validTableName(table)) {
-            if (table != null) {
-                table.unselect();
+        if(validTableName(selectedTable)) {
+            if (selectedTable != null) {
+                selectedTable.unselect();
+                selectedTable = null;
             }
         }
     }
+
+
 
     /**
      * retrieve selected table
      */
     public  Table getSelectedTable(){
-        for (Table table : tables) {
-            if (table.isSelected()) {
-                return table;
-            }
-        }
-        return null;
+        return selectedTable;
     }
+
+
 
     /**
      * edit selected table's name
      */
     public  void editTableName(char keyChar){
-        Table table = getSelectedTable();
-        if(table!=null) {
-            table.editName(keyChar);
+        if(selectedTable!=null) {
+            selectedTable.editName(keyChar);
         }
     }
 
@@ -83,9 +87,8 @@ public class TableManager {
      * restore old name of selected table
      */
     public  void undoNameEdits(){
-        Table table = getSelectedTable();
-        if(table!=null) {
-            table.restoreOldName();
+        if(selectedTable!=null) {
+            selectedTable.restoreOldName();
         }
     }
 
@@ -93,10 +96,9 @@ public class TableManager {
      * save selected table name and deleted old name
      */
     public  void saveNewName(){
-        Table table = getSelectedTable();
-        if(validTableName(table)) {
-            if (table != null) {
-                table.saveName();
+        if(validTableName(selectedTable)) {
+            if (selectedTable != null) {
+                selectedTable.saveName();
             }
         }
     }
@@ -113,8 +115,7 @@ public class TableManager {
      * create and add a new table
      */
     public  void createAndAddTable(){
-        Table table = getSelectedTable();
-        if(validTableName(table)) {
+        if(validTableName(selectedTable)) {
             if (tables.size() < maxTables) {
                 String name = generateName();
                 Table table_ = new Table(name);
@@ -131,8 +132,8 @@ public class TableManager {
      * delete selected table
      */
     public  void deleteTable(){
-        Table table = getSelectedTable();
-        tables.remove(table);
+        tables.remove(selectedTable);
+        selectedTable = null;
     }
 
 

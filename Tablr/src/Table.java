@@ -7,8 +7,11 @@ public class Table {
     private final ArrayList<Column> cols = new ArrayList<>();
     private final ArrayList<Row> rows = new ArrayList<>();
     private boolean selected = false;
+    private Column selectedCol = null;
+    private Row selectedRow = null;
     private int colSequenceNumber = 1;
     private int columnEditMode = 0;
+
 
     Table(String name){
         this.name = name;
@@ -97,11 +100,8 @@ public class Table {
      */
     public void addCol(){
         Column col = new Column(generateColumnName());
-        Column selCol = getSelectedCol();
-        if (selCol == null || validColumn(selCol,this.cols)) {
-            if (selCol == null){
-                col.select();
-            }
+        if (validColumn(selectedCol,this.cols)) {
+
             while (!validColName(col, this.cols)) {
                 name = generateColumnName();
                 col.setName(name);
@@ -115,10 +115,9 @@ public class Table {
      * delete the currently selected column if any
      */
     public void deleteCol(){
-        Column col = getSelectedCol();
-        if (col != null){
-            int idx = this.cols.indexOf(col);
-            cols.remove(col);
+        if (selectedCol!= null){
+            int idx = this.cols.indexOf(selectedCol);
+            cols.remove(selectedCol);
             synchronize(idx);
         }
     }
@@ -134,12 +133,7 @@ public class Table {
      * retrieves the currently selected column
      */
     public Column getSelectedCol(){
-        for (Column col : this.cols){
-            if (col.isSelected()){
-                return col;
-            }
-        }
-        return null;
+        return selectedCol;
     }
 
     /**
@@ -168,30 +162,26 @@ public class Table {
     }
 
     private void editColName(char keyChar){
-        Column col = getSelectedCol();
-        if (col != null) {
-            col.editName(keyChar);
+        if (selectedCol != null) {
+            selectedCol.editName(keyChar);
         }
     }
 
     private void editColType(){
-        Column col = getSelectedCol();
-        if (col != null){
-            col.switchType();
+        if (selectedCol != null){
+            selectedCol.switchType();
         }
     }
 
     private void editColAllowsBlank(){
-        Column col = getSelectedCol();
-        if (col != null) {
-            col.invertAllowBlank();
+        if (selectedCol != null) {
+            selectedCol.invertAllowBlank();
         }
     }
 
     private void editColDefaultValue(char keyChar){
-        Column col = getSelectedCol();
-        if (col != null) {
-            col.editDefaultValue(keyChar);
+        if (selectedCol != null) {
+            selectedCol.editDefaultValue(keyChar);
         }
     }
 
@@ -199,9 +189,16 @@ public class Table {
      * Select the column at given index
      */
     public void selectCol(int idx){
-        if (validColumn(getSelectedCol(),cols)){
-            unselectColNoCheck();
-            cols.get(idx).select();
+        if(validColName(selectedCol,cols)){
+            if(selectedCol != null) {
+                selectedCol.unselect();
+                selectedCol = null;
+            }
+
+            if(idx<cols.size()) {
+                selectedCol = cols.get(idx);
+                selectedCol.select();
+            }
         }
     }
 
@@ -209,23 +206,15 @@ public class Table {
      * Unselect the currently selected column if it is in a valid state
      */
     public void unselectCol(){
-        Column col = getSelectedCol();
-        if (col != null){
-            if (validColumn(col,cols)) {
-                col.unselect();
+        if (validColumn(selectedCol,cols)) {
+            if(selectedCol!=null) {
+                selectedCol.unselect();
+                selectedCol = null;
             }
         }
+
     }
 
-    /**
-     * Warning: Does not check for valid column
-     */
-    private void unselectColNoCheck(){
-        Column col = getSelectedCol();
-        if (col != null) {
-            col.unselect();
-        }
-    }
     //endregion
     //region Row Management
     /**
@@ -243,20 +232,14 @@ public class Table {
      * deletes the selected row
      */
     public void deleteRow(){
-        Row row = getSelectedRow();
-        rows.remove(row);
+        rows.remove(selectedRow);
     }
 
     /**
      * retrieve the selected row
      */
     public Row getSelectedRow(){
-        for (Row row : this.rows){
-            if (row.isSelected()){
-                return row;
-            }
-        }
-        return null;
+        return selectedRow;
     }
 
     /**
@@ -265,7 +248,7 @@ public class Table {
     public void editCellValue(char keyChar) {
         Cell cell = getSelectedCell();
         if (cell != null){
-            int idx = getSelectedRow().getCells().indexOf(cell);
+            int idx = selectedRow.getCells().indexOf(cell);
             if (idx != -1){
                 String type = cols.get(idx).getType();
                 cell.editValue(keyChar, type);
@@ -277,16 +260,19 @@ public class Table {
      * select the row at given index
      */
     public void selectRow(int idx) {
-        rows.get(idx).select();
+        if(idx<rows.size()) {
+            selectedRow = rows.get(idx);
+            selectedRow.select();
+        }
     }
 
     /**
      * unselect the currently selected row
      */
     public void unSelectRow(){
-        Row row = getSelectedRow();
-        if (row != null) {
-            row.unselect();
+        if (selectedRow != null) {
+            selectedRow.unselect();
+            selectedRow = null;
         }
     }
 
@@ -308,10 +294,10 @@ public class Table {
      * retrieve the currently selected cell
      */
     public Cell getSelectedCell(){
-        if (getSelectedRow() == null){
+        if (selectedRow == null){
             return null;
         }
-        return getSelectedRow().getSelectedCell();
+        return selectedRow.getSelectedCell();
     }
 
     /**
@@ -349,9 +335,8 @@ public class Table {
      * when column is added: append new cells to all rows
      */
     private void fillCells(){
-        Column col = getSelectedCol();
         for (Row row : rows){
-            row.addCell(col.getDefaultValue());
+            row.addCell(selectedCol.getDefaultValue());
         }
     }
     //endregion
@@ -376,28 +361,14 @@ public class Table {
      * check if string is valid email
      */
     private static boolean validEmail(String str){
-        int count = 0;
-        for(char chr: str.toCharArray()){
-            if(chr=='@'){
-                count++;
-            }
-        }
-        return count==1;
+        return str.matches("[^@]*@[^@]*");
     }
 
     /**
      * check if string is valid integer
      */
     private static boolean validInt(String str){
-        if(str.isEmpty()){
-            return false;
-        }
-        for(char chr: str.toCharArray()){
-            if(!Character.isDigit(chr)){
-                return false;
-            }
-        }
-        return String.valueOf(Integer.parseInt(str)).equals(str);
+        return str.matches("[0-9]|[1-9][0-9]+");
     }
 
     /**
