@@ -93,13 +93,14 @@ public class TableRowsWindow extends SubWindow {
      * If a cell in the appropriate column has an invalid value:
      * Mark the violated field in red otherwise keep it gray
      */
+    @Override
     public void drawMode(Frame frame, Graphics g){
         Table table = tableManager.getSelectedTable();
         drawRows(frame, g, table);
         drawCols(frame, g, table);
     }
 
-    private static void drawCols(Frame frame,Graphics g,Table table){
+    private void drawCols(Frame frame,Graphics g,Table table){
         int width = frame.getWidth();
         int height = frame.getHeight();
         ArrayList<Column> cols = table.getCols();
@@ -153,7 +154,7 @@ public class TableRowsWindow extends SubWindow {
 
     }
 
-    private static void drawRows(Frame frame,Graphics g,Table table){
+    private void drawRows(Frame frame,Graphics g,Table table){
         int width = frame.getWidth();
         int height = frame.getHeight();
         ArrayList<Column> cols = table.getCols();

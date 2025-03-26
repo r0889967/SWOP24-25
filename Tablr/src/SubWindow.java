@@ -29,7 +29,7 @@ public abstract class SubWindow {
     /**
      * Locate table entry in 1D after clicking
      */
-    public static int getIdx1D(int height, int hscale, int width, int wscale, int x, int y, int xoffset, int yoffset) {
+    public int getIdx1D(int height, int hscale, int width, int wscale, int x, int y, int xoffset, int yoffset) {
         int entryHeight = height / hscale;
         int entryWidth = width / wscale;
 
@@ -42,7 +42,7 @@ public abstract class SubWindow {
     /**
      * Locate table entry in 2D after clicking
      */
-    public static int[] getIdx2D(int height, int hscale, int width, int wscale,int x, int y, int xoffset, int yoffset) {
+    public int[] getIdx2D(int height, int hscale, int width, int wscale,int x, int y, int xoffset, int yoffset) {
         int[] position = {0,0};
         int entryHeight = height / hscale;
         int entryWidth = width/wscale;

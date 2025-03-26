@@ -359,7 +359,7 @@ public class Table {
     /**
      * check if cell has valid value
      */
-    private static boolean validCellValue(Cell cell,Column col){
+    private boolean validCellValue(Cell cell,Column col){
         if(col == null){
             return true;
         }
@@ -375,7 +375,7 @@ public class Table {
     /**
      * check if string is valid email
      */
-    private static boolean validEmail(String str){
+    private boolean validEmail(String str){
         int count = 0;
         for(char chr: str.toCharArray()){
             if(chr=='@'){
@@ -388,7 +388,7 @@ public class Table {
     /**
      * check if string is valid integer
      */
-    private static boolean validInt(String str){
+    private boolean validInt(String str){
         if(str.isEmpty()){
             return false;
         }

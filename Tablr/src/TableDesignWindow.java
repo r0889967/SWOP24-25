@@ -105,7 +105,7 @@ public class TableDesignWindow extends SubWindow {
         }
     }
 
-    private static void drawCols(Frame frame,Graphics g,Table table){
+    private void drawCols(Frame frame,Graphics g,Table table){
         int width = frame.getWidth();
         int height = frame.getHeight();
         ArrayList<Column> cols = table.getCols();
@@ -178,7 +178,7 @@ public class TableDesignWindow extends SubWindow {
 
     }
 
-    private static void drawRows(Frame frame,Graphics g,Table table){
+    private void drawRows(Frame frame,Graphics g,Table table){
         int width = frame.getWidth();
         int height = frame.getHeight();
         ArrayList<Column> cols = table.getCols();

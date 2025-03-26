@@ -35,7 +35,7 @@ public class TableManager {
      */
     public  void selectTable(int idx){
         Table table = getSelectedTable();
-        if(validTableName(table)) {
+        if(isValidTableName(table)) {
             if(table!=null) {
                 table.unselect();
             }
@@ -50,7 +50,7 @@ public class TableManager {
      */
     public  void unselectTable(){
         Table table = getSelectedTable();
-        if(validTableName(table)) {
+        if(isValidTableName(table)) {
             if (table != null) {
                 table.unselect();
             }
@@ -94,7 +94,7 @@ public class TableManager {
      */
     public  void saveNewName(){
         Table table = getSelectedTable();
-        if(validTableName(table)) {
+        if(isValidTableName(table)) {
             if (table != null) {
                 table.saveName();
             }
@@ -114,11 +114,11 @@ public class TableManager {
      */
     public  void createAndAddTable(){
         Table table = getSelectedTable();
-        if(validTableName(table)) {
+        if(isValidTableName(table)) {
             if (tables.size() < maxTables) {
                 String name = generateName();
                 Table table_ = new Table(name);
-                while(!validTableName(table_)) {
+                while(!isValidTableName(table_)) {
                     name = generateName();
                     table_.setBothNames(name);
                 }
@@ -139,23 +139,17 @@ public class TableManager {
     /**
      * check if table has valid name
      */
-    public  boolean validTableName(Table table){
+    public boolean isValidTableName(Table table){
         if(table == null){
             return true;
         }
-        if(table.getName().isEmpty()){
-            return false;
-        }
-        if (!uniqueTableName(table)){
-            return false;
-        }
-        return true;
+        return !table.getName().isEmpty() && uniqueTableName(table);
     }
 
     /**
      * check if table name is unique
      */
-    public  boolean uniqueTableName(Table table){
+    private boolean uniqueTableName(Table table){
         for(Table t:tables){
             if(t==table){
                 continue;
