@@ -2,4 +2,4 @@
 
 David, Jenno, Wouter
 
-Gelieve de folder met David only niet aan te passen!!!
+Gelieve de folder met David only niet aan te passen!!! ik had deze folder gemaakt zodat ik zonder zorgen zelf kan werken.
