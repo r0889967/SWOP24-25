@@ -9,9 +9,9 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class TablrTest {
     private void resetState(){
-        ModeManager.toTablesMode(new TableManager());
+        SubWindowManager.toTablesWindow(new TableManager());
         // Assert reset successful
-        assertInstanceOf(TablesMode.class, ModeManager.getMode());
+        assertInstanceOf(TablesWindow.class, SubWindowManager.getWindow());
     }
 
     // Test table management
@@ -25,7 +25,7 @@ class TablrTest {
         assert genTable.getName().equals("Table1");
 
         // Select first table
-        tableManager.getTableByIndex(0).select();
+        tableManager.selectTable(0);
         // Make sure table was selected
         assertNotNull(tableManager.getSelectedTable());
         assert tableManager.getSelectedTable().equals(genTable);
@@ -36,7 +36,7 @@ class TablrTest {
         assert tableManager.getTableByIndex(1).getName().equals("Table2");
 
         // Select table 1 and change name to Table2
-        tableManager.getTableByIndex(0).select();
+        tableManager.selectTable(0);
         tableManager.editTableName('\b');
         tableManager.editTableName('2');
 
@@ -97,7 +97,7 @@ class TablrTest {
         assert table != null;
 
         // Start designing table
-        ModeManager.toTableDesignMode(tableManager);
+        SubWindowManager.toTableDesignWindow(tableManager);
 
         // Try adding a column and selecting it
         table.addCol();
@@ -288,7 +288,7 @@ class TablrTest {
         tableManager.createAndAddTable();
         tableManager.selectTable(0);
         Table table = tableManager.getSelectedTable();
-        ModeManager.toTableDesignMode(tableManager);
+        SubWindowManager.toTableDesignWindow(tableManager);
         assert table != null;
         // Create a column for each type
         table.addCol();
@@ -352,7 +352,7 @@ class TablrTest {
         assertEquals(table.getCols().get(0), table.getSelectedCol());
 
         //Try adding rows
-        ModeManager.toTableRowsMode(tableManager);
+        SubWindowManager.toTableRowsWindow(tableManager);
         table.addRow();
         //Ensure that row was added properly and default values are correctly filled
         assert table.getRows().size() == 1;
