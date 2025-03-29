@@ -342,26 +342,6 @@ public class Table {
     }
     //endregion
     //region Validation
-  
-    /**
-     * check if cell has valid value
-     */
-    private boolean validCellValue(Cell cell,Column col){
-        if(col == null){
-            return true;
-        }
-        String value = cell.getValue();
-        if (value.isEmpty()) {
-            return col.allowsBlanks();
-        }
-        return switch (col.getType()) {
-            case "String" -> true;
-            case "Boolean" -> value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false");
-            case "Integer" -> validInt(value);
-            case "Email" -> validEmail(value);
-            default -> false;
-        };
-    }
 
 
     /**
@@ -396,7 +376,6 @@ public class Table {
             if (cellValue.isEmpty()) {
                 continue;
             }
-
             if (!cell.hasValidValue()) {
                 return false;
             }
