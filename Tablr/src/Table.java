@@ -108,9 +108,26 @@ public class Table {
         return "Column"+this.colSequenceNumber++;
     }
 
-    public void editColName(char keyChar){
+
+    /**
+     * edit column attributes
+     */
+
+    public void removeLastColNameChar(){
         if (selectedColumn != null) {
-            selectedColumn.editName(keyChar);
+            String colName = selectedColumn.getName();
+            if (colName.length() > 0) {
+                colName = colName.substring(0, colName.length() - 1);
+                selectedColumn.setName(colName);
+            }
+        }
+    }
+
+    public void appendCharToColName(char keyChar){
+        if (selectedColumn != null) {
+            String colName = selectedColumn.getName();
+            colName = colName + keyChar;
+            selectedColumn.setName(colName);
         }
     }
 
@@ -126,11 +143,6 @@ public class Table {
         }
     }
 
-    public void editColDefaultValue(char keyChar){
-        if (selectedColumn != null) {
-            selectedColumn.editDefaultValue(keyChar);
-        }
-    }
 
     /**
      * Select the column at given index

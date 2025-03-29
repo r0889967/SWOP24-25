@@ -20,17 +20,6 @@ public class Column {
         this.name = name;
     }
 
-    /**
-     * appends given character to name, deletes last character if the given character is backspace.
-     */
-    public void editName(char keyChar) {
-        if(keyChar=='\b'){
-            this.name = this.name.substring(0, this.name.length()-1);
-        }else{
-            this.name = this.name + keyChar;
-        }
-    }
-
     public String getType() {
         return type;
     }
@@ -81,47 +70,22 @@ public class Column {
         return defaultValue;
     }
 
-    /**
-     * Edits the default value:
-     * If type is string/email: append character or remove last character if given character is backspace.
-     * If type is boolean: cycles through allowed values
-     * If type is integer: same behaviour as string/email but only accepts numerical characters or backspace
-     */
-    public void editDefaultValue(char keyChar) {
-        // True -> False -> Blank; skips blank if not allowed
-        if (type.equals("Boolean")){
-            switch (defaultValue) {
-                case "True":
-                    defaultValue = "False";
-                    break;
-                case "False":
-                    defaultValue = (allowsBlanks ? "" : "True");
-                    break;
-                default:
-                    defaultValue = ("True");
-            }
+    public void setDefaultValue(String defaultValue) {
+            this.defaultValue = defaultValue;
         }
-        else{
-            if(keyChar!='\0'){
-                if (type.equals("Integer")) {
-                    //Default Integer value must consist of numbers
-                    if (Character.isDigit(keyChar) || keyChar == '\b') {
-                        if (keyChar == '\b') {
-                            defaultValue = (defaultValue.substring(0, defaultValue.length() - 1));
-                        } else {
-                            defaultValue += keyChar;
-                        }
-                    }
-                }
-                // Case string or email, no special actions
-                else{
-                    if (keyChar == '\b') {
-                        defaultValue = (defaultValue.substring(0, defaultValue.length() - 1));
-                    } else {
-                        defaultValue += keyChar;
-                    }
-                }
-            }
+
+
+
+    public void switchBooleanDefaultValue(){
+        switch (defaultValue) {
+            case "True":
+                defaultValue = "False";
+                break;
+            case "False":
+                defaultValue = (allowsBlanks ? "" : "True");
+                break;
+            default:
+                defaultValue = ("True");
         }
     }
 }

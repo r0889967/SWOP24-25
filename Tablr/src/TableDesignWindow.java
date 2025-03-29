@@ -114,7 +114,7 @@ public class TableDesignWindow extends SubWindow {
         }
     }
 
-            /**
+    /**
      * Edits the value of the selected field with the given character
      * If selected field is:
      * Name: appends character or delete last character if backspace
@@ -128,14 +128,65 @@ public class TableDesignWindow extends SubWindow {
     public void editColAttributes(Table selectedTable ,char keyChar){
         if(this.EditMode==0){
             if(keyChar!='\0') {
-                selectedTable.editColName(keyChar);
+                editColName(selectedTable, keyChar);
             }
         }else if(this.EditMode==1){
             selectedTable.editColType();
         }else if(this.EditMode==2){
             selectedTable.editColAllowsBlank();
         }else if(this.EditMode==3){
-            selectedTable.editColDefaultValue(keyChar);
+            //selectedTable.editColDefaultValue(keyChar);
+            editColDefaultValue(selectedTable, keyChar);
+        }
+    }
+
+    private void editColName(Table selectedTable, char keyChar) {
+        if (keyChar != '\0') {
+            // backspace
+            if (keyChar == '\b') {
+                selectedTable.removeLastColNameChar();
+            } else {
+                // append character to name
+                selectedTable.appendCharToColName(keyChar);
+            }
+        }
+    }
+
+
+    /**
+     * Edits the default value:
+     * If type is string/email: append character or remove last character if given character is backspace.
+     * If type is boolean: cycles through allowed values
+     * If type is integer: same behaviour as string/email but only accepts numerical characters or backspace
+     */
+    private void editColDefaultValue(Table selectedTable, char keyChar) {
+        if(selectedTable.getSelectedCol() == null) return;
+        Column selectedCol = selectedTable.getSelectedCol();
+        String type = selectedCol.getType();
+        String defaultValue = selectedCol.getDefaultValue();
+        if(type.equals("Boolean")){
+            selectedTable.getSelectedCol().switchBooleanDefaultValue();
+        }
+        else {
+            if (keyChar != '\0'){
+                if (type.equals("Integer")) {
+                    if (Character.isDigit(keyChar) || keyChar == '\b') {
+                        if (keyChar == '\b') {
+                            defaultValue = (defaultValue.substring(0, defaultValue.length() - 1));
+                        } else {
+                            defaultValue += keyChar;
+                        }
+                        selectedCol.setDefaultValue(defaultValue);
+                    }
+                } else {
+                    if (keyChar == '\b') {
+                        defaultValue = (defaultValue.substring(0, defaultValue.length() - 1));
+                    } else {
+                        defaultValue += keyChar;
+                    }
+                    selectedCol.setDefaultValue(defaultValue);
+                    }
+            } 
         }
     }
 
