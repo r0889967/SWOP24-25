@@ -1,13 +1,11 @@
 import java.util.ArrayList;
 
 public class TableManager {
-    private  final int maxTablePerRow = 1;
-    private  final int maxTablePerCol = 20;
-    private  final int maxTables = maxTablePerRow*maxTablePerCol;
-    private  final ArrayList<Table> tables = new ArrayList<Table>();
+    private final int maxTablePerRow = 1;
+    private final int maxTablePerCol = 20;
+    private final ArrayList<Table> tables = new ArrayList<>();
+    private int sequenceNumber = 1;
     private Table selectedTable = null;
-    private  int sequenceNumber = 1;
-
 
     /**
      * generate incremental name for table
@@ -35,35 +33,19 @@ public class TableManager {
      * select table with idx
      */
     public  void selectTable(int idx){
-        if(validTableName(selectedTable)){
-            if(selectedTable != null){
-                selectedTable.unselect();
-                selectedTable = null;
-            }
-
-            if(idx<tables.size()){
-                selectedTable = tables.get(idx);
-                selectedTable.select();
-            }
+        if(isValidTable(selectedTable) && idx >= 0 && idx < tables.size()) {
+            selectedTable = tables.get(idx);
         }
-
     }
-
-
 
     /**
      * unselect the currently selected table
      */
     public  void unselectTable(){
-        if(validTableName(selectedTable)) {
-            if (selectedTable != null) {
-                selectedTable.unselect();
-                selectedTable = null;
-            }
+        if(isValidTable(selectedTable)) {
+            selectedTable = null;
         }
     }
-
-
 
     /**
      * retrieve selected table
@@ -71,8 +53,6 @@ public class TableManager {
     public  Table getSelectedTable(){
         return selectedTable;
     }
-
-
 
     /**
      * edit selected table's name
@@ -96,13 +76,12 @@ public class TableManager {
      * save selected table name and deleted old name
      */
     public  void saveNewName(){
-        if(validTableName(selectedTable)) {
-            if (selectedTable != null) {
+        if(isValidTable(selectedTable)) {
+            if(selectedTable!=null) {
                 selectedTable.saveName();
             }
         }
     }
-
 
     /**
      * retrieve all tables
@@ -115,16 +94,14 @@ public class TableManager {
      * create and add a new table
      */
     public  void createAndAddTable(){
-        if(validTableName(selectedTable)) {
-            if (tables.size() < maxTables) {
-                String name = generateName();
-                Table table_ = new Table(name);
-                while(!validTableName(table_)) {
-                    name = generateName();
-                    table_.setBothNames(name);
-                }
-                tables.add(table_);
+        if(isValidTable(selectedTable) && tables.size() < maxTablePerRow * maxTablePerCol) {
+            String name = generateName();
+            Table newTable = new Table(name);
+            while(!isValidTable(newTable)) {
+                name = generateName();
+                newTable.setBothNames(name);
             }
+            tables.add(newTable);
         }
     }
 
@@ -132,31 +109,27 @@ public class TableManager {
      * delete selected table
      */
     public  void deleteTable(){
-        tables.remove(selectedTable);
-        selectedTable = null;
+        if (selectedTable != null) {
+            tables.remove(selectedTable);
+            selectedTable = null;
+        }
     }
 
 
     /**
      * check if table has valid name
      */
-    public  boolean validTableName(Table table){
+    public boolean isValidTable(Table table){
         if(table == null){
             return true;
         }
-        if(table.getName().isEmpty()){
-            return false;
-        }
-        if (!uniqueTableName(table)){
-            return false;
-        }
-        return true;
+        return !table.getName().isEmpty() && uniqueTableName(table);
     }
 
     /**
      * check if table name is unique
      */
-    public  boolean uniqueTableName(Table table){
+    private boolean uniqueTableName(Table table){
         for(Table t:tables){
             if(t==table){
                 continue;

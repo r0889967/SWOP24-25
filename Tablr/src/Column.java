@@ -4,8 +4,6 @@ public class Column {
     private String type = "String";
     private Boolean allowsBlanks = true;
     private String defaultValue = "";
-
-    private boolean isSelected = false;
     
     Column(String name) {
         this.name = name;
@@ -107,7 +105,7 @@ public class Column {
             if(keyChar!='\0'){
                 if (type.equals("Integer")) {
                     //Default Integer value must consist of numbers
-                    if (Character.isDigit(keyChar) || keyChar == '\b') {
+                    if (Character.isDigit(keyChar) || keyChar=='-' || keyChar == '\b') {
                         if (keyChar == '\b') {
                             defaultValue = (defaultValue.substring(0, defaultValue.length() - 1));
                         } else {
@@ -126,23 +124,4 @@ public class Column {
             }
         }
     }
-
-    public boolean isSelected(){
-        return isSelected;
-    }
-
-    /**
-     * selects this column
-     */
-    public void select(){
-        isSelected = true;
-    }
-
-    /**
-     * unselects this column
-     */
-    public void unselect(){
-        isSelected = false;
-    }
-
 }

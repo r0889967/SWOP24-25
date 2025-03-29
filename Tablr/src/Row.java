@@ -1,27 +1,8 @@
 import java.util.ArrayList;
 
 public class Row {
-    private boolean isSelected = false;
 
-    private final ArrayList<Cell> cells = new ArrayList<>();
-
-    public boolean isSelected() {
-        return isSelected;
-    }
-
-    /**
-     * selects this row
-     */
-    public void select(){
-        isSelected = true;
-    }
-
-    /**
-     * unselects this row
-     */
-    public void unselect(){
-        isSelected = false;
-    }
+    private ArrayList<Cell> cells = new ArrayList<>();
 
     public ArrayList<Cell> getCells(){
         return cells;
@@ -30,26 +11,40 @@ public class Row {
     /**
      * adds a cell to this row with given value
      */
-    public void addCell(String value){
-        cells.add(new Cell(value));
+    public void addCell(String value,String type){
+        if(type.equals("String")) {
+            cells.add(new StringCell(value));
+        }else if(type.equals("Integer")) {
+            cells.add(new IntCell(value));
+        }else if (type.equals("Email")) {
+            cells.add(new EmailCell(value));
+        }else if (type.equals("Boolean")) {
+            cells.add(new BoolCell(value));
+        }
+    }
+
+    public void addCellatIdx(String value,String type,int idx){
+        if(type.equals("String")) {
+            cells.add(idx,new StringCell(value));
+        }else if(type.equals("Integer")) {
+            cells.add(idx,new IntCell(value));
+        }else if (type.equals("Email")) {
+            cells.add(idx,new EmailCell(value));
+        }else if (type.equals("Boolean")) {
+            cells.add(idx,new BoolCell(value));
+        }
     }
 
     /**
      * deletes the cell at give index
      */
     public void deleteCell(int idx){
-        cells.remove(idx);
+        if (idx >= 0 && idx < cells.size()){
+            cells.remove(idx);
+        }
     }
 
-    /**
-     * retrieves the selected cell
-     */
-    public Cell getSelectedCell() {
-        for (Cell cell : cells) {
-            if (cell.isSelected()) {
-                return cell;
-            }
-        }
-        return null;
+    public Cell getCellByIdx(int colIdx) {
+        return cells.get(colIdx);
     }
 }

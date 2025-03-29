@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 public class Table {
 
@@ -6,30 +7,16 @@ public class Table {
     private String oldName;
     private final ArrayList<Column> cols = new ArrayList<>();
     private final ArrayList<Row> rows = new ArrayList<>();
-    private boolean selected = false;
-    private Column selectedCol = null;
+    private Column selectedColumn = null;
     private Row selectedRow = null;
     private int colSequenceNumber = 1;
     private int columnEditMode = 0;
-
 
     Table(String name){
         this.name = name;
         this.oldName = name;
     }
     //region Getters and setters
-    public boolean isSelected(){
-        return selected;
-    }
-
-    public void select(){
-        selected = true;
-    }
-
-    public void unselect(){
-        selected = false;
-    }
-
     public String getName(){
         return name;
     }
@@ -93,6 +80,13 @@ public class Table {
         }
         this.columnEditMode = mode;
     }
+
+    /**
+     * retrieves the currently selected column
+     */
+    public Column getSelectedCol(){
+        return selectedColumn;
+    }
     //endregion
     //region Column Management
     /**
@@ -100,9 +94,11 @@ public class Table {
      */
     public void addCol(){
         Column col = new Column(generateColumnName());
-        if (validColumn(selectedCol,this.cols)) {
-
-            while (!validColName(col, this.cols)) {
+        if (selectedColumn == null || validColumn(selectedColumn)) {
+            if (selectedColumn == null){
+                selectedColumn = col;
+            }
+            while (!validColName(col)) {
                 name = generateColumnName();
                 col.setName(name);
             }
@@ -115,9 +111,10 @@ public class Table {
      * delete the currently selected column if any
      */
     public void deleteCol(){
-        if (selectedCol!= null){
-            int idx = this.cols.indexOf(selectedCol);
-            cols.remove(selectedCol);
+        if (selectedColumn != null){
+            int idx = this.cols.indexOf(selectedColumn);
+            cols.remove(selectedColumn);
+            selectedColumn = null;
             synchronize(idx);
         }
     }
@@ -127,13 +124,6 @@ public class Table {
      */
     private String generateColumnName(){
         return "Column"+this.colSequenceNumber++;
-    }
-
-    /**
-     * retrieves the currently selected column
-     */
-    public Column getSelectedCol(){
-        return selectedCol;
     }
 
     /**
@@ -154,34 +144,54 @@ public class Table {
             }
         }else if(this.columnEditMode==1){
             editColType();
+            changeCellTypeOfCol();
         }else if(this.columnEditMode==2){
             editColAllowsBlank();
+            changeCellAllowsBlankOfCol();
         }else if(this.columnEditMode==3){
             editColDefaultValue(keyChar);
         }
     }
 
+    private void changeCellTypeOfCol(){
+        int idx = this.cols.indexOf(selectedColumn);
+        for(Row row : rows){
+            String value = row.getCellByIdx(idx).getValue();
+            row.deleteCell(idx);
+            row.addCellatIdx(value,selectedColumn.getType(),idx);
+        }
+
+    }
+
+    private void changeCellAllowsBlankOfCol(){
+        int idx = this.cols.indexOf(selectedColumn);
+        for(Row row : rows){
+            row.getCellByIdx(idx).setAllowsBlank(selectedColumn.allowsBlanks());
+        }
+
+    }
+
     private void editColName(char keyChar){
-        if (selectedCol != null) {
-            selectedCol.editName(keyChar);
+        if (selectedColumn != null) {
+            selectedColumn.editName(keyChar);
         }
     }
 
     private void editColType(){
-        if (selectedCol != null){
-            selectedCol.switchType();
+        if (selectedColumn != null){
+            selectedColumn.switchType();
         }
     }
 
     private void editColAllowsBlank(){
-        if (selectedCol != null) {
-            selectedCol.invertAllowBlank();
+        if (selectedColumn != null) {
+            selectedColumn.invertAllowBlank();
         }
     }
 
     private void editColDefaultValue(char keyChar){
-        if (selectedCol != null) {
-            selectedCol.editDefaultValue(keyChar);
+        if (selectedColumn != null) {
+            selectedColumn.editDefaultValue(keyChar);
         }
     }
 
@@ -189,16 +199,8 @@ public class Table {
      * Select the column at given index
      */
     public void selectCol(int idx){
-        if(validColName(selectedCol,cols)){
-            if(selectedCol != null) {
-                selectedCol.unselect();
-                selectedCol = null;
-            }
-
-            if(idx<cols.size()) {
-                selectedCol = cols.get(idx);
-                selectedCol.select();
-            }
+        if (validColumn(selectedColumn) && idx >= 0 && idx < cols.size()){
+            selectedColumn = cols.get(idx);
         }
     }
 
@@ -206,15 +208,10 @@ public class Table {
      * Unselect the currently selected column if it is in a valid state
      */
     public void unselectCol(){
-        if (validColumn(selectedCol,cols)) {
-            if(selectedCol!=null) {
-                selectedCol.unselect();
-                selectedCol = null;
-            }
+        if (validColumn(selectedColumn)) {
+            selectedColumn = null;
         }
-
     }
-
     //endregion
     //region Row Management
     /**
@@ -222,17 +219,20 @@ public class Table {
      */
     public void addRow(){
         Row row = new Row();
-        for (Column c : this.cols) {
-            row.addCell(c.getDefaultValue());
-        }
         rows.add(row);
+        for (Column c : this.cols) {
+            row.addCell(c.getDefaultValue(),c.getType());
+        }
     }
 
     /**
      * deletes the selected row
      */
     public void deleteRow(){
-        rows.remove(selectedRow);
+        if (selectedRow != null){
+            rows.remove(selectedRow);
+            selectedRow = null;
+        }
     }
 
     /**
@@ -248,21 +248,20 @@ public class Table {
     public void editCellValue(char keyChar) {
         Cell cell = getSelectedCell();
         if (cell != null){
-            int idx = selectedRow.getCells().indexOf(cell);
+            int idx = getSelectedRow().getCells().indexOf(cell);
             if (idx != -1){
-                String type = cols.get(idx).getType();
-                cell.editValue(keyChar, type);
+                cell.editValue(keyChar);
             }
         }
     }
+
 
     /**
      * select the row at given index
      */
     public void selectRow(int idx) {
-        if(idx<rows.size()) {
+        if (idx >= 0 && idx < rows.size()){
             selectedRow = rows.get(idx);
-            selectedRow.select();
         }
     }
 
@@ -270,10 +269,7 @@ public class Table {
      * unselect the currently selected row
      */
     public void unSelectRow(){
-        if (selectedRow != null) {
-            selectedRow.unselect();
-            selectedRow = null;
-        }
+        selectedRow = null;
     }
 
     //endregion
@@ -283,8 +279,12 @@ public class Table {
      */
     private ArrayList<Cell> getCellsByCol(Column col){
         int idx = cols.indexOf(col);
+        //No column no cells
+        if (idx < 0 || idx >= cols.size()){
+            return new ArrayList<>();
+        }
         ArrayList<Cell> cells = new ArrayList<>();
-        for(Row row : getRows()){
+        for(Row row : rows){
             cells.add(row.getCells().get(idx));
         }
         return cells;
@@ -294,18 +294,21 @@ public class Table {
      * retrieve the currently selected cell
      */
     public Cell getSelectedCell(){
-        if (selectedRow == null){
+        //No column or row no cell
+        if (selectedColumn == null || selectedRow == null){
             return null;
         }
-        return selectedRow.getSelectedCell();
+        int colIdx = cols.indexOf(selectedColumn);
+        return selectedRow.getCellByIdx(colIdx);
     }
 
     /**
      * select the cell at a given row and column index
      */
     public void selectCell(int ridx,int cidx) {
-        if (ridx < rows.size()) {
-            rows.get(ridx).getCells().get(cidx).select();
+        if (ridx >= 0 && ridx < rows.size() && cidx >= 0 && cidx < cols.size()){
+            selectedRow = rows.get(ridx);
+            selectedColumn = cols.get(cidx);
         }
     }
 
@@ -313,10 +316,8 @@ public class Table {
      * unselect the currently selected cells
      */
     public void unSelectCell() {
-        Cell cell = getSelectedCell();
-        if (cell != null) {
-            cell.unSelect();
-        }
+        selectedRow = null;
+        selectedColumn = null;
     }
 
     /**
@@ -336,64 +337,50 @@ public class Table {
      */
     private void fillCells(){
         for (Row row : rows){
-            row.addCell(selectedCol.getDefaultValue());
+            row.addCell("","String");
         }
     }
     //endregion
     //region Validation
-    /**
-     * check if cell has valid value
-     */
-    private static boolean validCellValue(Cell cell,Column col){
-        if(col == null){
-            return true;
-        }
-        String value = cell.getValue();
-        return value.isEmpty() && col.allowsBlanks()
-        || col.getType().equals("String") && !value.isEmpty()
-        || col.getType().equals("Boolean") && (value.equals("true") || value.equals("false")
-                || value.equals("True") || value.equals("False"))
-        || col.getType().equals("Integer") && validInt(value)
-        || col.getType().equals("Email") && validEmail(value);
-    }
+
 
     /**
      * check if string is valid email
      */
-    private static boolean validEmail(String str){
-        return str.matches("[^@]*@[^@]*");
+    private boolean validEmail(String str){
+        String emailRegex = "[^@]*@[^@]*";
+        return Pattern.matches(emailRegex, str);
     }
 
     /**
      * check if string is valid integer
      */
-    private static boolean validInt(String str){
-        return str.matches("[0-9]|[1-9][0-9]+");
+    private boolean validInt(String str){
+        if (str == null || str.isEmpty()) {
+            return false;
+        }
+        //Valid if: positive or negative, no leading zero's or exactly 0
+        String regex = "-?([0-9]|[1-9][0-9]+)";
+        return Pattern.matches(regex, str);
     }
 
     /**
      * check if col has valid type
      */
     public boolean validColType(Column col){
-        if(col == null){
+        if (col == null) {
             return true;
         }
-        String dValue = col.getDefaultValue();
-        ArrayList<Cell> cells = getCellsByCol(col);
-        if(dValue.isEmpty() && cells.isEmpty()){
-            return true;
-        }
-
-        for(Cell cell: cells){
-            if(cell.getValue().isEmpty()){
+        for (Cell cell : getCellsByCol(col)) {
+            String cellValue = cell.getValue();
+            if (cellValue.isEmpty()) {
                 continue;
             }
-            if(!validCellValue(cell,col)){
+            if (!cell.hasValidValue()) {
                 return false;
             }
-
         }
-        return validColDefaultValue(col);
+        return true;
     }
 
     /**
@@ -411,21 +398,29 @@ public class Table {
      * check if col has valid default value
      */
     public boolean validColDefaultValue(Column col){
-        if(col==null || col.getType().equals("Boolean")){
+        if (col == null){
             return true;
         }
         String dValue = col.getDefaultValue();
-        return dValue.isEmpty() && col.allowsBlanks()
-                || col.getType().equals("String") && !dValue.isEmpty()
-                || col.getType().equals("Integer") && validInt(dValue)
-                || col.getType().equals("Email") && validEmail(dValue);
+        //Blank value is valid if blanks are allowed
+        if (col.allowsBlanks() && dValue.isEmpty()) {
+            return true;
+        }
+        //Else check case by case
+        return switch (col.getType()) {
+            case "String" -> !dValue.isEmpty();
+            case "Email" -> validEmail(dValue);
+            case "Boolean" -> true; //No user input
+            case "Integer" -> validInt(dValue);
+            default -> false;
+        };
 
     }
 
     /**
      * check if col has valid name
      */
-    public boolean validColName(Column col,ArrayList<Column> cols){
+    public boolean validColName(Column col){
         if(col == null){
             return true;
         }
@@ -446,8 +441,8 @@ public class Table {
     /**
      * check if a given col is valid
      */
-    public boolean validColumn(Column col,ArrayList<Column> cols){
-        Boolean v1 = validColName(col,cols);
+    public boolean validColumn(Column col){
+        Boolean v1 = validColName(col);
         Boolean v2 = validColType(col);
         Boolean v3 = validColAllowBlanks(col);
         Boolean v4 = validColDefaultValue(col);
@@ -458,7 +453,7 @@ public class Table {
      * check if all cols of table are valid
      */
     public boolean allValidColumns(){
-        return cols.stream().allMatch(col -> validColumn(col,cols));
+        return cols.stream().allMatch(this::validColumn);
     }
     //endregion
 }

@@ -1,7 +1,6 @@
-public class Cell {
-    private String value;
-    private boolean isSelected;
-
+public abstract class Cell {
+    protected String value;
+    protected boolean allowsBlank = true;
 
     public Cell(String value) {
         this.value = value;
@@ -11,22 +10,12 @@ public class Cell {
         return value;
     }
 
-    public boolean isSelected() {
-        return isSelected;
+    public void setValue(String value) {
+        this.value = value;
     }
 
-    /**
-     * selects this cell
-     */
-    public void select() {
-        isSelected = true;
-    }
-
-    /**
-     * unselects this cell
-     */
-    public void unSelect() {
-        isSelected = false;
+    public void setAllowsBlank(boolean allowsBlank) {
+        this.allowsBlank = allowsBlank;
     }
 
     /**
@@ -34,23 +23,7 @@ public class Cell {
      * If given type is string/email/boolean: append character or remove last character if given character is backspace.
      * If given type is integer: same behaviour as string/email but only accepts numerical characters or backspace
      */
-    public void editValue(char keyChar, String type) {
-        //Filter non-numbers for Integer fields
-        if (type.equals("Integer")) {
-            if (Character.isDigit(keyChar) || keyChar == '\b') {
-                if (keyChar == '\b') {
-                    value = value.substring(0, value.length() - 1);
-                } else {
-                    value += keyChar;
-                }
-            }
-        }
-        else {
-            if (keyChar == '\b') {
-                value = value.substring(0, value.length() - 1);
-            } else {
-                value += keyChar;
-            }
-        }
-    }
+    public abstract void editValue(char keyChar);
+
+    public abstract boolean hasValidValue();
 }
