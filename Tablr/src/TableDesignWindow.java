@@ -178,7 +178,7 @@ public class TableDesignWindow extends SubWindow {
                 String allowsBlanks = cols.get(i).allowsBlanks() ? "☑" : "☐";
                 String defaultValue = cols.get(i).getDefaultValue();
                 if (col.equals(table.getSelectedCol())) {
-                    switch (table.getColumnEditMode()) {
+                    switch (getEditMode()) {
                         case 0:
                             name += "\uD83D\uDC46";
                             break;

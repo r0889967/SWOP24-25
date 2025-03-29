@@ -10,7 +10,6 @@ public class Table {
     private Column selectedColumn = null;
     private Row selectedRow = null;
     private int colSequenceNumber = 1;
-    private int columnEditMode = 0;
 
     Table(String name){
         this.name = name;
@@ -62,23 +61,6 @@ public class Table {
 
     public ArrayList<Row> getRows(){
         return rows;
-    }
-
-    public int getColumnEditMode() {
-        return this.columnEditMode;
-    }
-
-    /**
-     * sets the selected field. Any value outside [0,3] range is set to the closest boundary
-     */
-    public void setColumnEditMode(int mode) {
-        if (mode > 3){
-            mode = 3;
-        }
-        else if (mode < 0){
-            mode = 0;
-        }
-        this.columnEditMode = mode;
     }
 
     /**
