@@ -6,10 +6,31 @@ import java.awt.Color;
 import java.awt.Font;
 
 public class TableDesignWindow extends SubWindow {
+    private int EditMode = 0;
     
     public TableDesignWindow(TableManager tableManager) {
         super(tableManager);
     }
+
+    /**
+     * getter for the EditMode variable
+     */
+    public int getEditMode() {
+        return this.EditMode;
+    }
+    /**
+     * sets the selected field. Any value outside [0,3] range is set to the closest boundary
+     */
+    public void setEditMode(int mode) {
+        if (mode > 3){
+            mode = 3;
+        }
+        else if (mode < 0){
+            mode = 0;
+        }
+        this.EditMode = mode;
+    }
+
 
     /**
      * Handles mouse events
@@ -27,8 +48,8 @@ public class TableDesignWindow extends SubWindow {
                 int idx = getIdx1D(frame.getHeight(),8,frame.getWidth(),selectedTable.getCols().size(),x,y,0,0);
                 selectedTable.selectCol(idx);
                 int idx2 = getIdx1D(frame.getHeight()/8,4,frame.getWidth(),1,x,y,0,0);
-                selectedTable.setColumnEditMode(idx2);
-                selectedTable.editColAttributes('\0');
+                setEditMode(idx2);
+                editColAttributes(selectedTable ,'\0');
             }
         }
         //mouse is double-clicked outside column list, add col to table
@@ -88,8 +109,33 @@ public class TableDesignWindow extends SubWindow {
 
             //character keys
             else if (!((keyCode >= 16) && (keyCode <= 20))) {
-                selectedTable.editColAttributes(keyChar);
+                editColAttributes(selectedTable, keyChar);
             }
+        }
+    }
+
+            /**
+     * Edits the value of the selected field with the given character
+     * If selected field is:
+     * Name: appends character or delete last character if backspace
+     * Type: cycles through allowed values regardless of input
+     * Allow blanks: Inverts the allowed value regardless of input
+     * Default value:
+     * If the type is name/field: appends character or deletes last character if backspace was pressed
+     * If the type is integer: same behaviour but only accepts numerical characters and backspace
+     * If the type is boolean: cycles through allowed values
+     */
+    public void editColAttributes(Table selectedTable ,char keyChar){
+        if(this.EditMode==0){
+            if(keyChar!='\0') {
+                selectedTable.editColName(keyChar);
+            }
+        }else if(this.EditMode==1){
+            selectedTable.editColType();
+        }else if(this.EditMode==2){
+            selectedTable.editColAllowsBlank();
+        }else if(this.EditMode==3){
+            selectedTable.editColDefaultValue(keyChar);
         }
     }
 
