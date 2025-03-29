@@ -2,7 +2,10 @@ import java.util.ArrayList;
 
 public class Row {
 
+
     private ArrayList<Cell> cells = new ArrayList<>();
+
+    
 
     public ArrayList<Cell> getCells(){
         return cells;
