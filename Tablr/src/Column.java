@@ -105,7 +105,7 @@ public class Column {
             if(keyChar!='\0'){
                 if (type.equals("Integer")) {
                     //Default Integer value must consist of numbers
-                    if (Character.isDigit(keyChar) || keyChar == '\b') {
+                    if (Character.isDigit(keyChar) || keyChar=='-' || keyChar == '\b') {
                         if (keyChar == '\b') {
                             defaultValue = (defaultValue.substring(0, defaultValue.length() - 1));
                         } else {

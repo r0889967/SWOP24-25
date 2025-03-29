@@ -77,7 +77,9 @@ public class TableManager {
      */
     public  void saveNewName(){
         if(isValidTable(selectedTable)) {
-            selectedTable.saveName();
+            if(selectedTable!=null) {
+                selectedTable.saveName();
+            }
         }
     }
 

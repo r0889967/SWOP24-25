@@ -144,11 +144,31 @@ public class Table {
             }
         }else if(this.columnEditMode==1){
             editColType();
+            changeCellTypeOfCol();
         }else if(this.columnEditMode==2){
             editColAllowsBlank();
+            changeCellAllowsBlankOfCol();
         }else if(this.columnEditMode==3){
             editColDefaultValue(keyChar);
         }
+    }
+
+    private void changeCellTypeOfCol(){
+        int idx = this.cols.indexOf(selectedColumn);
+        for(Row row : rows){
+            String value = row.getCellByIdx(idx).getValue();
+            row.deleteCell(idx);
+            row.addCellatIdx(value,selectedColumn.getType(),idx);
+        }
+
+    }
+
+    private void changeCellAllowsBlankOfCol(){
+        int idx = this.cols.indexOf(selectedColumn);
+        for(Row row : rows){
+            row.getCellByIdx(idx).setAllowsBlank(selectedColumn.allowsBlanks());
+        }
+
     }
 
     private void editColName(char keyChar){
@@ -201,7 +221,7 @@ public class Table {
         Row row = new Row();
         rows.add(row);
         for (Column c : this.cols) {
-            row.addCell(c.getDefaultValue());
+            row.addCell(c.getDefaultValue(),c.getType());
         }
     }
 
@@ -230,11 +250,11 @@ public class Table {
         if (cell != null){
             int idx = getSelectedRow().getCells().indexOf(cell);
             if (idx != -1){
-                String type = cols.get(idx).getType();
-                cell.editValue(keyChar, type);
+                cell.editValue(keyChar);
             }
         }
     }
+
 
     /**
      * select the row at given index
@@ -317,11 +337,12 @@ public class Table {
      */
     private void fillCells(){
         for (Row row : rows){
-            row.addCell(selectedColumn.getDefaultValue());
+            row.addCell("","String");
         }
     }
     //endregion
     //region Validation
+  
     /**
      * check if cell has valid value
      */
@@ -342,11 +363,12 @@ public class Table {
         };
     }
 
+
     /**
      * check if string is valid email
      */
     private boolean validEmail(String str){
-        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+        String emailRegex = "[^@]*@[^@]*";
         return Pattern.matches(emailRegex, str);
     }
 
@@ -358,7 +380,7 @@ public class Table {
             return false;
         }
         //Valid if: positive or negative, no leading zero's or exactly 0
-        String regex = "^-?(0|[1-9]\\d*)$";
+        String regex = "-?([0-9]|[1-9][0-9]+)";
         return Pattern.matches(regex, str);
     }
 
@@ -374,7 +396,8 @@ public class Table {
             if (cellValue.isEmpty()) {
                 continue;
             }
-            if (!validCellValue(cell, col)) {
+
+            if (!cell.hasValidValue()) {
                 return false;
             }
         }

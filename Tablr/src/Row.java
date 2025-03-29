@@ -2,7 +2,10 @@ import java.util.ArrayList;
 
 public class Row {
 
-    private final ArrayList<Cell> cells = new ArrayList<>();
+
+    private ArrayList<Cell> cells = new ArrayList<>();
+
+    
 
     public ArrayList<Cell> getCells(){
         return cells;
@@ -11,8 +14,28 @@ public class Row {
     /**
      * adds a cell to this row with given value
      */
-    public void addCell(String value){
-        cells.add(new Cell(value));
+    public void addCell(String value,String type){
+        if(type.equals("String")) {
+            cells.add(new StringCell(value));
+        }else if(type.equals("Integer")) {
+            cells.add(new IntCell(value));
+        }else if (type.equals("Email")) {
+            cells.add(new EmailCell(value));
+        }else if (type.equals("Boolean")) {
+            cells.add(new BoolCell(value));
+        }
+    }
+
+    public void addCellatIdx(String value,String type,int idx){
+        if(type.equals("String")) {
+            cells.add(idx,new StringCell(value));
+        }else if(type.equals("Integer")) {
+            cells.add(idx,new IntCell(value));
+        }else if (type.equals("Email")) {
+            cells.add(idx,new EmailCell(value));
+        }else if (type.equals("Boolean")) {
+            cells.add(idx,new BoolCell(value));
+        }
     }
 
     /**
