@@ -1,4 +1,3 @@
-import java.awt.Frame;
 import java.awt.Graphics;
 import java.util.ArrayList;
 
@@ -6,9 +5,12 @@ import java.awt.Color;
 import java.awt.Font;
 
 public class TableDesignWindow extends SubWindow {
-    
-    public TableDesignWindow(TableManager tableManager) {
-        super(tableManager);
+
+    private Table selectedTable;
+
+    public TableDesignWindow(TableManager tableManager, int xcor, int ycor, int width, int height) {
+        super(tableManager, xcor, ycor, width, height);
+        this.selectedTable = tableManager.getSelectedTable();
     }
 
     /**
@@ -19,24 +21,41 @@ public class TableDesignWindow extends SubWindow {
      * Clicking below the fields results in the last one being selected (if possible)
      */
     @Override
-    public void handleMouseEvent(Frame frame, CanvasWindow window, int x, int y, int clickCount) {
-        //mouse clicked, select col of table
-        if(clickCount==1){
-            Table selectedTable = tableManager.getSelectedTable();
-            if (selectedTable != null){
-                int idx = getIdx1D(frame.getHeight(),8,frame.getWidth(),selectedTable.getCols().size(),x,y,0,0);
-                selectedTable.selectCol(idx);
-                int idx2 = getIdx1D(frame.getHeight()/8,4,frame.getWidth(),1,x,y,0,0);
-                selectedTable.setColumnEditMode(idx2);
-                selectedTable.editColAttributes('\0');
+    public void handleMouseEvent(int id,int x, int y, int clickCount) {
+        SubWindowManager.switchSubWindow(x,y, id);
+        SubWindow curWindow = SubWindowManager.getWindow();
+        if (this.equals(curWindow) && cursorInside(x, y)) {
+            if (id == 500) {
+
+                //mouse clicked, select col of table
+                if (clickCount == 1) {
+
+                    if(cursorInsideCloseButton(x, y)) {
+                        SubWindowManager.removeSubWindow(this);
+                    }
+
+                    if (selectedTable != null) {
+                        int idx = getIdx1D(height - 2 * borderThickness, 8, width - 2 * borderThickness, selectedTable.getCols().size(), x, y, xcor + borderThickness, ycor + borderThickness);
+                        selectedTable.selectCol(idx);
+                        int idx2 = getIdx1D((height - 2 * borderThickness) / 8, 4, width - 2 * borderThickness, 1, x, y, xcor + borderThickness, ycor + borderThickness);
+                        selectedTable.setColumnEditMode(idx2);
+                        selectedTable.editColAttributes('\0');
+                    }
+
+                }
+                //mouse is double-clicked outside column list, add col to table
+                else if (y > (7 * height - 2 * borderThickness) / 8 && clickCount == 2) {
+                    if (selectedTable != null) {
+                        selectedTable.addCol();
+                    }
+                }
+
+
+
+            }else if(id==506){
+                drag(x,y);
             }
-        }
-        //mouse is double-clicked outside column list, add col to table
-        else if (y > 7*frame.getHeight()/8 && clickCount == 2) {
-            Table selected = tableManager.getSelectedTable();
-            if (selected != null){
-                selected.addCol();
-            }
+
         }
     }
 
@@ -53,42 +72,42 @@ public class TableDesignWindow extends SubWindow {
      * Any character: same behaviour as clicking it = switches to next option
      */
     @Override
-    public void handleKeyEvent(CanvasWindow window, int keyCode, char keyChar, boolean isControlDown) {
-        Table selectedTable = tableManager.getSelectedTable();
-        if (selectedTable != null) {
-            //escape key
-            if (keyCode == 27) {
-                if (selectedTable.allValidColumns()) {
-                    SubWindowManager.toTablesWindow(tableManager);
-                    window.setTitle(CONST_TABLE_MODE_TITLE);
-                }
-            }
+    public void handleKeyEvent(int id, int keyCode, char keyChar, boolean isControlDown) {
+        if (this.equals(SubWindowManager.getWindow())) {
 
-            //enter
-            else if (keyCode == 10) {
-                if (selectedTable.allValidColumns()){
-                    if (isControlDown) {
-                        // Ctrl+Enter switches to table rows mode
-                        // Do not switch if there are no columns
-                        if (!selectedTable.getCols().isEmpty()){
-                            SubWindowManager.toTableRowsWindow(tableManager);
-                            window.setTitle(CONST_TABLE_ROW_MODE_TITLE + " - " + selectedTable.getName());
+            if (id == 401) {
+                if (selectedTable != null) {
+                    //escape key
+                    if (keyCode == 27) {
+
+                    }
+
+                    //enter
+                    else if (keyCode == 10) {
+                        if (selectedTable.allValidColumns()) {
+                            if (isControlDown) {
+                                // Ctrl+Enter switches to table rows mode
+                                // Do not switch if there are no columns
+                                if (!selectedTable.getCols().isEmpty()) {
+                                    SubWindowManager.toTableRowsWindow(tableManager);
+                                }
+                            } else {
+                                // Just Enter unselects column
+                                selectedTable.unselectCol();
+                            }
                         }
-                    } else {
-                        // Just Enter unselects column
-                        selectedTable.unselectCol();
+                    }
+
+                    //del key
+                    else if (keyCode == 127) {
+                        selectedTable.deleteCol();
+                    }
+
+                    //character keys
+                    else if (!((keyCode >= 16) && (keyCode <= 20))) {
+                        selectedTable.editColAttributes(keyChar);
                     }
                 }
-            }
-
-            //del key
-            else if (keyCode == 127) {
-                selectedTable.deleteCol();
-            }
-
-            //character keys
-            else if (!((keyCode >= 16) && (keyCode <= 20))) {
-                selectedTable.editColAttributes(keyChar);
             }
         }
     }
@@ -100,26 +119,27 @@ public class TableDesignWindow extends SubWindow {
      * Mark the violated field in red otherwise keep it gray
      */
     @Override
-    public void drawMode(Frame frame, Graphics g){
-        Table table = tableManager.getSelectedTable();
-        if (table != null){
-            drawRows(frame, g, table);
-            drawCols(frame, g, table);
+    public void drawMode(Graphics g){
+        if (selectedTable != null){
+            drawRows(g, selectedTable);
+            drawCols(g, selectedTable);
         }
+        drawBorders(g);
+        g.setColor(Color.black);
+        g.drawString("Design mode of "+selectedTable.getName(),xcor,ycor+10);
+        drawCloseButton(g);
     }
 
-    private void drawCols(Frame frame,Graphics g,Table table){
-        int width = frame.getWidth();
-        int height = frame.getHeight();
+    private void drawCols(Graphics g,Table table){
         ArrayList<Column> cols = table.getCols();
 
         g.setColor(Color.CYAN);
-        g.fillRect(0, 0, width, height / 8);
+        g.fillRect(xcor, ycor, width, height / 8);
 
         if (!cols.isEmpty()) {
 
-            int colEntryWidth = width / cols.size();
-            int colEntryHeight = height / 8;
+            int colEntryWidth = (width-2*borderThickness) / cols.size();
+            int colEntryHeight = (height-2*borderThickness) / 8;
 
 
             int i = 0;
@@ -152,47 +172,45 @@ public class TableDesignWindow extends SubWindow {
 
 
                 g.setColor(Color.lightGray);
-                g.fillRect(i * colEntryWidth, 0, colEntryWidth, colEntryHeight);
+                g.fillRect(xcor+borderThickness+i * colEntryWidth, ycor+borderThickness, colEntryWidth, colEntryHeight);
                 g.setColor(Color.red);
                 if(!table.validColName(col)){
-                    g.fillRect(i * colEntryWidth, 0, colEntryWidth, colEntryHeight/4);
+                    g.fillRect(xcor+borderThickness+i * colEntryWidth, ycor+borderThickness, colEntryWidth, colEntryHeight/4);
                 }
                 if(!table.validColType(col)){
-                    g.fillRect(i * colEntryWidth, colEntryHeight/4, colEntryWidth, colEntryHeight/4);
+                    g.fillRect(xcor+borderThickness+i * colEntryWidth, ycor+borderThickness+colEntryHeight/4, colEntryWidth, colEntryHeight/4);
                 }
                 if(!table.validColAllowBlanks(col)){
-                    g.fillRect(i * colEntryWidth, colEntryHeight/2, colEntryWidth, colEntryHeight/4);
+                    g.fillRect(xcor+borderThickness+i * colEntryWidth, ycor+borderThickness+colEntryHeight/2, colEntryWidth, colEntryHeight/4);
                 }
                 if(!table.validColDefaultValue(col)){
-                    g.fillRect(i * colEntryWidth, 3*colEntryHeight/4, colEntryWidth, colEntryHeight/4);
+                    g.fillRect(xcor+borderThickness+i * colEntryWidth, ycor+borderThickness+3*colEntryHeight/4, colEntryWidth, colEntryHeight/4);
                 }
 
                 g.setColor(Color.black);
-                g.drawString(name, i * colEntryWidth, 10);
-                g.drawString(type, i * colEntryWidth, height / 32 + 10);
-                g.drawString("Blanks?" + allowsBlanks, i * colEntryWidth, height * 2 / 32 + 10);
-                g.drawString("DVal:" + defaultValue, i * colEntryWidth, height * 3 / 32 + 10);
+                g.drawString(name, xcor+borderThickness+i * colEntryWidth, ycor+borderThickness+10);
+                g.drawString(type, xcor+borderThickness+i * colEntryWidth, ycor+borderThickness+height / 32 + 10);
+                g.drawString("Blanks?" + allowsBlanks, xcor+borderThickness+i * colEntryWidth, ycor+borderThickness+height * 2 / 32 + 10);
+                g.drawString("DVal:" + defaultValue, xcor+borderThickness+i * colEntryWidth, ycor+borderThickness+height * 3 / 32 + 10);
 
 
-                g.drawLine(i*colEntryWidth, 0, i*colEntryWidth, 7*height/8);
+                g.drawLine(xcor+borderThickness+i*colEntryWidth, ycor+borderThickness, xcor+borderThickness+i*colEntryWidth, ycor+borderThickness+7*height/8);
                 i++;
             }
         }
 
     }
 
-    private void drawRows(Frame frame,Graphics g,Table table){
-        int width = frame.getWidth();
-        int height = frame.getHeight();
+    private void drawRows(Graphics g,Table table){
         ArrayList<Column> cols = table.getCols();
         ArrayList<Row> rows = table.getRows();
 
         g.setColor(Color.green);
-        g.fillRect(0, height / 8, width, 3 * height / 4);
+        g.fillRect(xcor, ycor+height / 8, width, (3 * height / 4));
 
         if (!cols.isEmpty() && !rows.isEmpty()) {
-            int cellEntryWidth = width / cols.size();
-            int cellEntryHeight = (3*height / 4)/rows.size();
+            int cellEntryWidth = (width-2*borderThickness) / cols.size();
+            int cellEntryHeight = ((3*height-2*borderThickness) / 4)/rows.size();
 
             int row = 0;
             int col = 0;
@@ -203,25 +221,22 @@ public class TableDesignWindow extends SubWindow {
                     }else{
                         g.setColor(new Color(200, 200, 200));
                     }
-                    g.fillRect(col * cellEntryWidth, (height / 8) + row * cellEntryHeight, cellEntryWidth, cellEntryHeight);
+                    g.fillRect(xcor+borderThickness+col * cellEntryWidth, ycor+borderThickness+(height / 8) + row * cellEntryHeight, cellEntryWidth, cellEntryHeight);
                     g.setColor(Color.black);
 
                     String value = cell.getValue();
                     if(cell.equals(table.getSelectedCell())){
                         value+="\uD83D\uDC46";
                     }
-                    g.drawString(value, col * cellEntryWidth, (height / 8) +row * cellEntryHeight+10);
+                    g.drawString(value, xcor+borderThickness+col * cellEntryWidth, ycor+borderThickness+(height / 8) +row * cellEntryHeight+10);
                     col++;
                 }
                 col = 0;
                 if(r.equals(table.getSelectedRow())){
-                    g.drawString("\uD83D\uDC46",0,height/8+(row+1)*cellEntryHeight);
+                    g.drawString("\uD83D\uDC46",xcor+borderThickness,ycor+borderThickness+height/8+(row+1)*cellEntryHeight);
                 }
                 row++;
             }
         }
-
-        g.setColor(Color.CYAN);
-        g.fillRect(0, 0, width, height / 8);
     }
 }

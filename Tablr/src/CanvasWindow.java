@@ -128,7 +128,7 @@ class PaintItem extends RecordingItem {
 					} catch (IOException e) {
 						throw new RuntimeException(e);
 					}
-					throw new RuntimeException("Replay: Paint item " + itemIndex + " does not match at x=" + x + " and y=" + y + ".");
+					throw new RuntimeException("Replay: Paint item " + itemIndex + " does not match at x=" + x + " and ycor=" + y + ".");
 				}
 			}
 		}
@@ -217,8 +217,8 @@ class CanvasWindowRecording {
 
 public class CanvasWindow {
 	
-	int width = 600;
-	int height = 600;
+	int width = 1200;
+	int height = 1200;
 	String title;
 	Panel panel;
 	private Frame frame;
@@ -266,7 +266,15 @@ public class CanvasWindow {
 	 * @param g This object offers the methods that allow you to paint on the canvas.
 	 */
 	protected void paint(Graphics g) {
-		SubWindowManager.getWindow().drawMode(frame, g);
+		SubWindowManager.initialize();
+		for(SubWindow window:SubWindowManager.getSubWindows()){
+			window.drawMode(g);
+		}
+		SubWindow curSubWindow = SubWindowManager.getWindow();
+		if(SubWindowManager.getSubWindows().contains(curSubWindow)) {
+			curSubWindow.drawMode(g);
+		}
+
 	}
 	
 	private void handleMouseEvent_(MouseEvent e) {
@@ -274,17 +282,17 @@ public class CanvasWindow {
 		if (recording != null)
 			recording.items.add(new MouseEventItem(e.getID(), e.getX(), e.getY(), e.getClickCount()));
 		handleMouseEvent(e.getID(), e.getX(), e.getY(), e.getClickCount());
+
 	}
 	
 	/**
 	 * Called when the user presses (id == MouseEvent.MOUSE_PRESSED), releases (id == MouseEvent.MOUSE_RELEASED), or drags (id == MouseEvent.MOUSE_DRAGGED) the mouse.
 	 */
 	protected void handleMouseEvent(int id, int x, int y, int clickCount) {
-
-		if(id == 500){
-			SubWindowManager.getWindow().handleMouseEvent(frame, this, x, y, clickCount);
+		SubWindow curSubWindow = SubWindowManager.getWindow();
+		if(curSubWindow != null) {
+			curSubWindow.handleMouseEvent(id, x, y, clickCount);
 		}
-
 		repaint();
 	}
 	
@@ -299,9 +307,9 @@ public class CanvasWindow {
 	 * Called when the user presses a key (id == KeyEvent.KEY_PRESSED) or enters a character (id == KeyEvent.KEY_TYPED).
 	 */
 	protected void handleKeyEvent(int id, int keyCode, char keyChar, boolean isControlDown) {
-
-		if(id == 401){
-			SubWindowManager.getWindow().handleKeyEvent(this, keyCode, keyChar, isControlDown);
+		SubWindow curSubWindow = SubWindowManager.getWindow();
+		if(curSubWindow != null) {
+			curSubWindow.handleKeyEvent(id, keyCode, keyChar, isControlDown);
 		}
 		repaint();
 	}

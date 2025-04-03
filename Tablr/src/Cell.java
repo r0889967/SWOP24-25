@@ -1,8 +1,6 @@
-
 public abstract class Cell {
     protected String value;
     protected boolean allowsBlank = true;
-
 
     public Cell(String value) {
         this.value = value;
@@ -12,7 +10,6 @@ public abstract class Cell {
         return value;
     }
 
-
     public void setValue(String value) {
         this.value = value;
     }
@@ -20,7 +17,6 @@ public abstract class Cell {
     public void setAllowsBlank(boolean allowsBlank) {
         this.allowsBlank = allowsBlank;
     }
-
 
     /**
      * Edits the cell's value:
