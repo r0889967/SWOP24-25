@@ -16,4 +16,9 @@ public class BooleanType implements CustomType {
     public String getDefaultValue(){
         return "True";
     }
+
+    @Override
+    public String getTypeName() {
+        return "Boolean";
+    }
 }

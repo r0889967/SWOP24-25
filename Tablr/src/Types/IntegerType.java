@@ -19,4 +19,9 @@ public class IntegerType implements CustomType{
     public String getDefaultValue(){
         return "0";
     }
+
+    @Override
+    public String getTypeName() {
+        return "Integer";
+    }
 }

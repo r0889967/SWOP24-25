@@ -16,4 +16,9 @@ public class StringType implements CustomType {
     public String getDefaultValue(){
         return "";
     }
+
+    @Override
+    public String getTypeName() {
+        return "String";
+    }
 }

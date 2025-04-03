@@ -19,4 +19,9 @@ public class EmailType implements CustomType{
     public String getDefaultValue(){
         return "";
     }
+
+    @Override
+    public String getTypeName() {
+        return "Email";
+    }
 }
