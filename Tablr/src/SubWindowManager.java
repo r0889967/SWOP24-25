@@ -21,7 +21,7 @@ public class SubWindowManager {
     }
 
     public static void switchSubWindow(int x,int y,int id) {
-        if(!curSubWindow.beingDragged(id) && !curSubWindow.cursorInside(x,y)) {
+        if(!subWindows.contains(curSubWindow)||!curSubWindow.beingDragged(id) && !curSubWindow.cursorInside(x,y)) {
             for (SubWindow subWindow : subWindows) {
                 if (subWindow.cursorInside(x, y)) {
                     curSubWindow = subWindow;
