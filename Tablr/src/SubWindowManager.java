@@ -7,6 +7,9 @@ public class SubWindowManager {
 
     private static List<SubWindow> subWindows = new ArrayList<>();
 
+    private static int defaultWidth = 900;
+    private static int defaultHeight = 600;
+
     public static SubWindow getWindow() {
         return curSubWindow;
     }
@@ -17,7 +20,9 @@ public class SubWindowManager {
 
 
     public static void removeSubWindow(SubWindow subWindow) {
+        int idx = subWindows.indexOf(subWindow);
         subWindows.remove(subWindow);
+        curSubWindow = subWindows.get(idx-1);
     }
 
     public static void switchSubWindow(int x,int y,int id) {
@@ -34,7 +39,7 @@ public class SubWindowManager {
 
     public static void initialize(){
         if(subWindows.isEmpty()){
-            TablesWindow startWindow = new TablesWindow(new TableManager(),0,0,600,600);
+            TablesWindow startWindow = new TablesWindow(new TableManager(),0,0,900,600);
             subWindows.add(startWindow);
             curSubWindow = startWindow;
         }
@@ -45,15 +50,15 @@ public class SubWindowManager {
     /**
      * Switches window for table designing
      */
-    public static void toTableDesignWindow(TableManager tableManager) {
-        subWindows.add(new TableDesignWindow(tableManager,300,300,600,600));
+    public static void openTableDesignWindow(TableManager tableManager) {
+        subWindows.add(new TableDesignWindow(tableManager,300,300,defaultWidth,defaultHeight));
     }
 
     /**
      * Switches window for table editing
      */
-    public static void toTableRowsWindow(TableManager tableManager) {
-        subWindows.add(new TableRowsWindow(tableManager,300,300,600,600));
+    public static void openTableRowsWindow(TableManager tableManager) {
+        subWindows.add(new TableRowsWindow(tableManager,300,300,defaultWidth,defaultHeight));
     }
 
 

@@ -89,7 +89,7 @@ public class TableDesignWindow extends SubWindow {
                                 // Ctrl+Enter switches to table rows mode
                                 // Do not switch if there are no columns
                                 if (!selectedTable.getCols().isEmpty()) {
-                                    SubWindowManager.toTableRowsWindow(tableManager);
+                                    SubWindowManager.openTableRowsWindow(tableManager);
                                 }
                             } else {
                                 // Just Enter unselects column

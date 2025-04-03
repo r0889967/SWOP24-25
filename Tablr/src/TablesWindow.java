@@ -45,12 +45,12 @@ public class TablesWindow extends SubWindow {
 
                             //if table has no columns, change to design mode
                             if (selected.getCols().isEmpty()) {
-                                SubWindowManager.toTableDesignWindow(tableManager);
+                                SubWindowManager.openTableDesignWindow(tableManager);
                             }
 
                             //else change to rows mode
                             else {
-                                SubWindowManager.toTableRowsWindow(tableManager);
+                                SubWindowManager.openTableRowsWindow(tableManager);
                             }
                         }
                     }

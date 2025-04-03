@@ -36,7 +36,11 @@ public abstract class SubWindow {
     public abstract void drawMode(Graphics g);
 
     public void drawBorders(Graphics g){
-        g.setColor(new Color(153,217,234));
+        if(this.equals(SubWindowManager.getWindow())) {
+            g.setColor(new Color(0,162,232));
+        }else{
+            g.setColor(new Color(153, 217, 234));
+        }
         g.fillRect(xcor, ycor, borderThickness, height);
         g.fillRect(xcor, ycor, width, borderThickness);
         g.fillRect(xcor+width-borderThickness, ycor, borderThickness, height);
@@ -104,11 +108,6 @@ public abstract class SubWindow {
         }
     }
 
-    public void resize(int width, int height){
-        this.width = width;
-        this.height = height;
-    }
-
     public boolean cursorInside(int x,int y){
         return x>xcor && x < xcor+width && y>ycor && y < ycor+height;
     }
@@ -119,22 +118,6 @@ public abstract class SubWindow {
 
     public boolean beingDragged(int id){
         return id==506;
-    }
-
-    public int getXcor() {
-        return xcor;
-    }
-
-    public int getYcor() {
-        return ycor;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
     }
 
     //region Locating

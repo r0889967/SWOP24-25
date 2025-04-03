@@ -83,7 +83,7 @@ public class TableRowsWindow extends SubWindow {
                         if (selectedTable.allValidColumns()) {
                             if (isControlDown) {
                                 // Ctrl+Enter switches to table rows mode
-                                SubWindowManager.toTableDesignWindow(tableManager);
+                                SubWindowManager.openTableDesignWindow(tableManager);
                             } else {
                                 // Just Enter unselects column
                                 selectedTable.unSelectCell();

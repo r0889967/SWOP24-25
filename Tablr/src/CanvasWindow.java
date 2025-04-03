@@ -271,10 +271,7 @@ public class CanvasWindow {
 			window.drawMode(g);
 		}
 		SubWindow curSubWindow = SubWindowManager.getWindow();
-		if(SubWindowManager.getSubWindows().contains(curSubWindow)) {
-			curSubWindow.drawMode(g);
-		}
-
+		curSubWindow.drawMode(g);
 	}
 	
 	private void handleMouseEvent_(MouseEvent e) {
