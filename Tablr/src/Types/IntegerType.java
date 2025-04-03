@@ -9,4 +9,14 @@ public class IntegerType implements CustomType{
         String regex = "^-?(0|[1-9]\\d*)$";
         return Pattern.matches(regex, value);
     }
+
+    @Override
+    public CustomType nextType() {
+        return new StringType();
+    }
+
+    @Override
+    public String getDefaultValue(){
+        return "0";
+    }
 }

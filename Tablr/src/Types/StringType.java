@@ -6,4 +6,14 @@ public class StringType implements CustomType {
     public boolean isValid(String value) {
         return value != null && !value.isEmpty();
     }
+
+    @Override
+    public CustomType nextType() {
+        return new EmailType();
+    }
+
+    @Override
+    public String getDefaultValue(){
+        return "";
+    }
 }
