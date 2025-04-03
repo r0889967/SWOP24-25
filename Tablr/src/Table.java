@@ -10,7 +10,6 @@ public class Table {
     private Column selectedColumn = null;
     private Row selectedRow = null;
     private int colSequenceNumber = 1;
-    private int columnEditMode = 0;
 
     Table(String name){
         this.name = name;
@@ -64,23 +63,6 @@ public class Table {
         return rows;
     }
 
-    public int getColumnEditMode() {
-        return this.columnEditMode;
-    }
-
-    /**
-     * sets the selected field. Any value outside [0,3] range is set to the closest boundary
-     */
-    public void setColumnEditMode(int mode) {
-        if (mode > 3){
-            mode = 3;
-        }
-        else if (mode < 0){
-            mode = 0;
-        }
-        this.columnEditMode = mode;
-    }
-
     /**
      * retrieves the currently selected column
      */
@@ -126,74 +108,41 @@ public class Table {
         return "Column"+this.colSequenceNumber++;
     }
 
+
     /**
-     * Edits the value of the selected field with the given character
-     * If selected field is:
-     * Name: appends character or delete last character if backspace
-     * Type: cycles through allowed values regardless of input
-     * Allow blanks: Inverts the allowed value regardless of input
-     * Default value:
-     * If the type is name/field: appends character or deletes last character if backspace was pressed
-     * If the type is integer: same behaviour but only accepts numerical characters and backspace
-     * If the type is boolean: cycles through allowed values
+     * edit column attributes
      */
-    public void editColAttributes(char keyChar){
-        if(this.columnEditMode==0){
-            if(keyChar!='\0') {
-                editColName(keyChar);
-            }
-        }else if(this.columnEditMode==1){
-            editColType();
-            changeCellTypeOfCol();
-        }else if(this.columnEditMode==2){
-            editColAllowsBlank();
-            changeCellAllowsBlankOfCol();
-        }else if(this.columnEditMode==3){
-            editColDefaultValue(keyChar);
-        }
-    }
 
-    private void changeCellTypeOfCol(){
-        int idx = this.cols.indexOf(selectedColumn);
-        for(Row row : rows){
-            String value = row.getCellByIdx(idx).getValue();
-            row.deleteCell(idx);
-            row.addCellatIdx(value,selectedColumn.getType(),idx);
-        }
-
-    }
-
-    private void changeCellAllowsBlankOfCol(){
-        int idx = this.cols.indexOf(selectedColumn);
-        for(Row row : rows){
-            row.getCellByIdx(idx).setAllowsBlank(selectedColumn.allowsBlanks());
-        }
-
-    }
-
-    private void editColName(char keyChar){
+    public void removeLastColNameChar(){
         if (selectedColumn != null) {
-            selectedColumn.editName(keyChar);
+            String colName = selectedColumn.getName();
+            if (colName.length() > 0) {
+                colName = colName.substring(0, colName.length() - 1);
+                selectedColumn.setName(colName);
+            }
         }
     }
 
-    private void editColType(){
+    public void appendCharToColName(char keyChar){
+        if (selectedColumn != null) {
+            String colName = selectedColumn.getName();
+            colName = colName + keyChar;
+            selectedColumn.setName(colName);
+        }
+    }
+
+    public void editColType(){
         if (selectedColumn != null){
             selectedColumn.switchType();
         }
     }
 
-    private void editColAllowsBlank(){
+    public void editColAllowsBlank(){
         if (selectedColumn != null) {
             selectedColumn.invertAllowBlank();
         }
     }
 
-    private void editColDefaultValue(char keyChar){
-        if (selectedColumn != null) {
-            selectedColumn.editDefaultValue(keyChar);
-        }
-    }
 
     /**
      * Select the column at given index

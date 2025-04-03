@@ -98,6 +98,7 @@ class TablrTest {
 
         // Start designing table
         SubWindowManager.toTableDesignWindow(tableManager);
+        TableDesignWindow window = (TableDesignWindow) SubWindowManager.getWindow();
 
         // Try adding a column and selecting it
         table.addCol();
@@ -119,9 +120,9 @@ class TablrTest {
         int const_type = 1;
         int const_allow_blanks = 2;
         int const_default_val = 3;
-        table.setColumnEditMode(const_name);
-        table.editColAttributes('\b');
-        table.editColAttributes('3');
+        window.setEditMode(const_name);
+        window.editColAttributes(table, '\b');
+        window.editColAttributes(table,'3');
         assertEquals("Column3", table.getCols().get(0).getName());
 
         // Generate column3 with name Column4 (because 3 is taken)
@@ -130,9 +131,9 @@ class TablrTest {
         assertEquals(("Column4"), table.getCols().get(2).getName());
 
         // Try editing column 1
-        table.setColumnEditMode(const_name);
-        table.editColAttributes('\b');
-        table.editColAttributes('2');
+        window.setEditMode(const_name);
+        window.editColAttributes(table, '\b');
+        window.editColAttributes(table,'2');
         assertEquals("Column2", table.getCols().get(0).getName());
 
         // Column 1 is now invalid, try unselecting or selecting other column
@@ -142,48 +143,48 @@ class TablrTest {
         assertEquals(table.getCols().get(0), table.getSelectedCol());
 
         // Revert column 1 to basic name
-        table.editColAttributes('\b');
-        table.editColAttributes('1');
+        window.editColAttributes(table, '\b');
+        window.editColAttributes(table,'1');
 
         //Try switching types
         Column selCol = table.getSelectedCol();
         assert selCol != null;
-        table.setColumnEditMode(const_type);
+        window.setEditMode(const_type);
         assertEquals("String", selCol.getType());
         assertEquals("", selCol.getDefaultValue());
-        table.editColAttributes('\0');
+        window.editColAttributes(table,'\0');
         assertEquals("Email", selCol.getType());
         assertEquals("", selCol.getDefaultValue());
-        table.editColAttributes('\0');
+        window.editColAttributes(table,'\0');
         assertEquals("Boolean", selCol.getType());
         assertEquals("True", selCol.getDefaultValue());
-        table.editColAttributes('\0');
+        window.editColAttributes(table,'\0');
         assertEquals("Integer", selCol.getType());
         assertEquals("0", selCol.getDefaultValue());
-        table.editColAttributes('\0');
+        window.editColAttributes(table,'\0');
         assertEquals("String", selCol.getType());
         assertEquals("", selCol.getDefaultValue());
 
         //Try editing allow blanks
-        table.setColumnEditMode(const_allow_blanks);
+        window.setEditMode(const_allow_blanks);
         assert selCol.allowsBlanks();
-        table.editColAttributes('\0');
+        window.editColAttributes(table,'\0');
         assert !selCol.allowsBlanks();
-        table.editColAttributes('\0');
+        window.editColAttributes(table,'\0');
         assert selCol.allowsBlanks();
 
         //Try changing default value
         //Type string
-        table.setColumnEditMode(const_default_val);
-        table.editColAttributes('a');
-        table.editColAttributes('b');
-        table.editColAttributes('\b');
-        table.editColAttributes('c');
+        window.setEditMode(const_default_val);
+        window.editColAttributes(table,'a');
+        window.editColAttributes(table,'b');
+        window.editColAttributes(table, '\b');
+        window.editColAttributes(table,'c');
         assertEquals("ac", selCol.getDefaultValue());
 
         //Type email
-        table.setColumnEditMode(const_type);
-        table.editColAttributes('\0');
+        window.setEditMode(const_type);
+        window.editColAttributes(table,'\0');
         //default value is unchanged but invalid now
         assertEquals("Email", selCol.getType());
         assertEquals("ac", selCol.getDefaultValue());
@@ -192,55 +193,55 @@ class TablrTest {
         assertEquals(table.getCols().get(0), table.getSelectedCol());
 
         //Type boolean
-        table.setColumnEditMode(const_type);
-        table.editColAttributes('\0');
+        window.setEditMode(const_type);
+        window.editColAttributes(table,'\0');
         assertEquals("Boolean", selCol.getType());
         assertEquals("True", selCol.getDefaultValue());
-        table.setColumnEditMode(const_default_val);
-        table.editColAttributes('\0');
+        window.setEditMode(const_default_val);
+        window.editColAttributes(table,'\0');
         assertEquals("False", selCol.getDefaultValue());
-        table.editColAttributes('\0');
+        window.editColAttributes(table,'\0');
         assertEquals("", selCol.getDefaultValue());
         //Now with allow blanks disabled
-        table.setColumnEditMode(const_allow_blanks);
-        table.editColAttributes('\0');
+        window.setEditMode(const_allow_blanks);
+        window.editColAttributes(table,'\0');
         //Default is no longer blank but True instead
-        table.setColumnEditMode(const_default_val);
+        window.setEditMode(const_default_val);
         assertEquals("True", selCol.getDefaultValue());
-        table.editColAttributes('\0');
+        window.editColAttributes(table,'\0');
         assertEquals("False", selCol.getDefaultValue());
-        table.editColAttributes('\0');
+        window.editColAttributes(table,'\0');
         assertEquals("True", selCol.getDefaultValue());
         //Allow blanks again
-        table.setColumnEditMode(const_allow_blanks);
-        table.editColAttributes('\0');
+        window.setEditMode(const_allow_blanks);
+        window.editColAttributes(table,'\0');
         assert selCol.allowsBlanks();
 
         //Integer
-        table.setColumnEditMode(const_type);
-        table.editColAttributes('\0');
+        window.setEditMode(const_type);
+        window.editColAttributes(table,'\0');
         assertEquals("Integer", selCol.getType());
         assertEquals("0", selCol.getDefaultValue());
-        table.setColumnEditMode(const_default_val);
+        window.setEditMode(const_default_val);
         //Reject non numbers
-        table.editColAttributes('a');
+        window.editColAttributes(table,'a');
         assertEquals("0",selCol.getDefaultValue());
         //Try switching allow blanks off when default value is blank
-        table.editColAttributes('\b');
-        table.setColumnEditMode(const_allow_blanks);
-        table.editColAttributes('\0');
+        window.editColAttributes(table, '\b');
+        window.setEditMode(const_allow_blanks);
+        window.editColAttributes(table,'\0');
         //Default value should switch back to 0
         assertEquals("0",selCol.getDefaultValue());
         //Try switching columns with invalid default value, should not work
-        table.setColumnEditMode(const_default_val);
-        table.editColAttributes('\b');
+        window.setEditMode(const_default_val);
+        window.editColAttributes(table, '\b');
         table.selectCol(1);
         assertEquals(table.getCols().get(0), table.getSelectedCol());
         //Switch back to default string
-        table.setColumnEditMode(const_type);
-        table.editColAttributes('\0');
-        table.setColumnEditMode(const_allow_blanks);
-        table.editColAttributes('\0');
+        window.setEditMode(const_type);
+        window.editColAttributes(table,'\0');
+        window.setEditMode(const_allow_blanks);
+        window.editColAttributes(table,'\0');
         assertEquals("String", selCol.getType());
         assert selCol.allowsBlanks();
         assertEquals("", selCol.getDefaultValue());
@@ -289,6 +290,7 @@ class TablrTest {
         tableManager.selectTable(0);
         Table table = tableManager.getSelectedTable();
         SubWindowManager.toTableDesignWindow(tableManager);
+        TableDesignWindow window = (TableDesignWindow) SubWindowManager.getWindow();
         assert table != null;
         // Create a column for each type
         table.addCol();
@@ -299,53 +301,53 @@ class TablrTest {
         table.selectCol(0);
         Column selCol = table.getSelectedCol();
         assert selCol != null;
-        table.setColumnEditMode(const_allow_blanks);
-        table.editColAttributes('\0');
-        table.setColumnEditMode(const_default_val);
-        table.editColAttributes('a');
-        table.editColAttributes('b');
-        table.editColAttributes('c');
+        window.setEditMode(const_allow_blanks);
+        window.editColAttributes(table,'\0');
+        window.setEditMode(const_default_val);
+        window.editColAttributes(table,'a');
+        window.editColAttributes(table,'b');
+        window.editColAttributes(table,'c');
         // Column 2
         table.selectCol(1);
         assertEquals(table.getCols().get(1), table.getSelectedCol());
         selCol = table.getSelectedCol();
         assert selCol != null;
-        table.setColumnEditMode(const_type);
-        table.editColAttributes('\0');
-        table.setColumnEditMode(const_allow_blanks);
-        table.editColAttributes('\0');
-        table.setColumnEditMode(const_default_val);
+        window.setEditMode(const_type);
+        window.editColAttributes(table,'\0');
+        window.setEditMode(const_allow_blanks);
+        window.editColAttributes(table,'\0');
+        window.setEditMode(const_default_val);
         String defEmail = "abc@gmail.com";
         for (char keyChar : defEmail.toCharArray()){
-            table.editColAttributes(keyChar);
+            window.editColAttributes(table,keyChar);
         }
         // Column 3
         table.selectCol(2);
         assertEquals(table.getCols().get(2), table.getSelectedCol());
         selCol = table.getSelectedCol();
         assert selCol != null;
-        table.setColumnEditMode(const_type);
-        table.editColAttributes('\0');
-        table.editColAttributes('\0');
-        table.setColumnEditMode(const_allow_blanks);
-        table.editColAttributes('\0');
-        table.setColumnEditMode(const_default_val);
-        table.editColAttributes('\0');
+        window.setEditMode(const_type);
+        window.editColAttributes(table,'\0');
+        window.editColAttributes(table,'\0');
+        window.setEditMode(const_allow_blanks);
+        window.editColAttributes(table,'\0');
+        window.setEditMode(const_default_val);
+        window.editColAttributes(table,'\0');
         // Column 4
         table.selectCol(3);
         assertEquals(table.getCols().get(3), table.getSelectedCol());
         selCol = table.getSelectedCol();
         assert selCol != null;
-        table.setColumnEditMode(const_type);
-        table.editColAttributes('\0');
-        table.editColAttributes('\0');
-        table.editColAttributes('\0');
-        table.setColumnEditMode(const_allow_blanks);
-        table.editColAttributes('\0');
-        table.setColumnEditMode(const_default_val);
+        window.setEditMode(const_type);
+        window.editColAttributes(table,'\0');
+        window.editColAttributes(table,'\0');
+        window.editColAttributes(table,'\0');
+        window.setEditMode(const_allow_blanks);
+        window.editColAttributes(table,'\0');
+        window.setEditMode(const_default_val);
         String defInteger = "\b123";
         for (char keyChar : defInteger.toCharArray()){
-            table.editColAttributes(keyChar);
+            window.editColAttributes(table,keyChar);
         }
         //Select first column 1 again
         table.selectCol(0);
