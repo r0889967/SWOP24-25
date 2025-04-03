@@ -1,3 +1,7 @@
+package Window;
+import Domain.TableManager;
+
+
 public class SubWindowManager {
     private static SubWindow subWindow = new TablesWindow(new TableManager());
 
