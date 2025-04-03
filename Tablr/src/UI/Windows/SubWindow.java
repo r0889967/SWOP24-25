@@ -1,5 +1,9 @@
+package UI.Windows;
 import java.awt.Frame;
 import java.awt.Graphics;
+
+import Domain.TableManager;
+import UI.CanvasWindow;
 
 public abstract class SubWindow {
     protected final String CONST_TABLE_MODE_TITLE = "Tablr: Tables Mode";

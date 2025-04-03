@@ -1,4 +1,4 @@
-package Window;
+package UI.Windows;
 import Domain.TableManager;
 
 

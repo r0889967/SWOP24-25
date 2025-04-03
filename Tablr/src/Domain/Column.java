@@ -1,5 +1,5 @@
 package Domain;
-import Types.*;
+import Domain.Types.*;
 
 public class Column {
 

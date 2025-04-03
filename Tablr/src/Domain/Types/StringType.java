@@ -1,24 +1,24 @@
-package Types;
+package Domain.Types;
 
-public class BooleanType implements CustomType {
+public class StringType implements CustomType {
     
     @Override
     public boolean isValid(String value) {
-        return value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false");
+        return value != null && !value.isEmpty();
     }
 
     @Override
     public CustomType nextType() {
-        return new IntegerType();
+        return new EmailType();
     }
 
     @Override
     public String getDefaultValue(){
-        return "True";
+        return "";
     }
 
     @Override
     public String getTypeName() {
-        return "Boolean";
+        return "String";
     }
 }

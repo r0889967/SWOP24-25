@@ -1,4 +1,4 @@
-package Types;
+package Domain.Types;
 
 import java.util.regex.Pattern;
 

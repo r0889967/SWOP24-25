@@ -1,6 +1,4 @@
-
-
-
+package UI;
 public class Tablr {
 
     /**

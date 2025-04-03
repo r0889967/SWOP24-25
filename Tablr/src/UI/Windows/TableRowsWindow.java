@@ -1,6 +1,15 @@
+package UI.Windows;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.util.ArrayList;
+
+import UI.CanvasWindow;
+import Domain.Cell;
+import Domain.Column;
+import Domain.Row;
+import Domain.Table;
+import Domain.TableManager;
+
 import java.awt.Color;
 import java.awt.Font;
 
@@ -121,7 +130,7 @@ public class TableRowsWindow extends SubWindow {
 
                 String name = cols.get(i).getName();
                 String type = cols.get(i).getType();
-                String allowsBlanks = cols.get(i).allowsBlanks() ? "☑" : "☐";
+                String allowsBlanks = cols.get(i).getAllowsBlanks() ? "☑" : "☐";
                 String defaultValue = cols.get(i).getDefaultValue();
                 
                 g.setColor(Color.lightGray);

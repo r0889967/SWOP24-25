@@ -1,5 +1,11 @@
+package UI.Windows;
 import java.awt.Frame;
 import java.awt.Graphics;
+
+import UI.CanvasWindow;
+import Domain.Table;
+import Domain.TableManager;
+
 import java.awt.Color;
 import java.awt.Font;
 

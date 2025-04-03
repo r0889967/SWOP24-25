@@ -1,4 +1,4 @@
-package Types;
+package Domain.Types;
 
 public interface CustomType {
     boolean isValid(String value);

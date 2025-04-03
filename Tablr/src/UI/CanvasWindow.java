@@ -1,3 +1,4 @@
+package UI;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -22,6 +23,8 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import UI.Windows.SubWindowManager;
 
 /**
  * A window for custom drawing.
