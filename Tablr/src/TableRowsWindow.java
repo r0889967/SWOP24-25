@@ -48,7 +48,7 @@ public class TableRowsWindow extends SubWindow {
                     }
                 }
             }else if(id==506){
-                drag(x,y);
+                dragOrResize(x,y);
             }
 
         }

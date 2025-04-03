@@ -32,7 +32,7 @@ public class TablesWindow extends SubWindow {
                 else if (clickCount == 2) {
 
                     int rows = (int) Math.ceil((double) tableManager.getTables().size() / tableManager.getMaxTablePerRow());
-                    int clickableHeight = ycor+rows * (height - 30 - 2*borderThickness) / tableManager.getMaxTablePerCol(); // Nog niet volledig correct -> Bij meer dan 1 tabel per rij, kunnen de laatste tabellen niet toegevoegd worden
+                    int clickableHeight = ycor+(rows+1) * (height - 30 - 2*borderThickness) / tableManager.getMaxTablePerCol(); // Nog niet volledig correct -> Bij meer dan 1 tabel per rij, kunnen de laatste tabellen niet toegevoegd worden
                     //create new table list entry
                     if (y > clickableHeight) {
                         tableManager.createAndAddTable();
@@ -56,7 +56,7 @@ public class TablesWindow extends SubWindow {
                     }
                 }
             }else if(id==506){
-                drag(x,y);
+                dragOrResize(x,y);
             }
 
 

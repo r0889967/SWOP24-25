@@ -7,7 +7,7 @@ public abstract class SubWindow {
     protected int ycor;
     protected int width;
     protected int height;
-    protected int borderThickness = 15;
+    protected int borderThickness = 20;
     private int closeButtonSize = borderThickness;
 
 
@@ -49,9 +49,59 @@ public abstract class SubWindow {
         g.fillRect(xcor+width-3*closeButtonSize, ycor, 2*closeButtonSize,closeButtonSize);
     }
 
-    public void drag(int x,int y){
-        this.xcor = x-width/2;
-        this.ycor = y-height/2;
+    private void dragL(){
+        this.xcor = xcor-6;
+    }
+
+    private void dragR(){
+        this.xcor = xcor+6;
+    }
+
+    private void dragU(){
+        this.ycor = ycor-6;
+    }
+
+    private void dragD(){
+        this.ycor = ycor+6;
+    }
+
+    private void resizeUL(){
+    }
+
+    private void resizeUR(){
+
+    }
+
+    private void resizeDL(){
+
+    }
+
+    private void resizeDR(){
+
+    }
+
+    public void dragOrResize(int x, int y){
+        if(x>xcor && x<xcor+borderThickness){
+            if(y>ycor && y<ycor+borderThickness){
+                resizeUL();
+            }else if(y>ycor+height-borderThickness && y<ycor+height){
+                resizeDL();
+            }else{
+                dragL();
+            }
+        }else if(x>xcor+width-borderThickness && x<xcor+width){
+            if(y>ycor && y<ycor+borderThickness) {
+                resizeUR();
+            }else if(y>ycor+height-borderThickness && y<ycor+height){
+                resizeDR();
+            }else{
+                dragR();
+            }
+        }else if(y>ycor && y<ycor+borderThickness){
+            dragU();
+        }else if(y>ycor+height-borderThickness && y<ycor+height){
+            dragD();
+        }
     }
 
     public void resize(int width, int height){
