@@ -2,7 +2,6 @@ import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 public class Table {
-
     private String name;
     private String oldName;
     private final ArrayList<Column> cols = new ArrayList<>();
@@ -10,6 +9,7 @@ public class Table {
     private Column selectedColumn = null;
     private Row selectedRow = null;
     private int colSequenceNumber = 1;
+    private final ArrayList<Observer> observers = new ArrayList<>();
 
     Table(String name){
         this.name = name;
@@ -86,6 +86,7 @@ public class Table {
             }
             cols.add(col);
             fillCells();
+            notifyObservers();
         }
     }
 
@@ -98,6 +99,7 @@ public class Table {
             cols.remove(selectedColumn);
             selectedColumn = null;
             synchronize(idx);
+            notifyObservers();
         }
     }
 
@@ -116,10 +118,11 @@ public class Table {
     public void removeLastColNameChar(){
         if (selectedColumn != null) {
             String colName = selectedColumn.getName();
-            if (colName.length() > 0) {
+            if (!colName.isEmpty()) {
                 colName = colName.substring(0, colName.length() - 1);
                 selectedColumn.setName(colName);
             }
+            notifyObservers();
         }
     }
 
@@ -128,21 +131,23 @@ public class Table {
             String colName = selectedColumn.getName();
             colName = colName + keyChar;
             selectedColumn.setName(colName);
+            notifyObservers();
         }
     }
 
     public void editColType(){
         if (selectedColumn != null){
             selectedColumn.switchType();
+            notifyObservers();
         }
     }
 
     public void editColAllowsBlank(){
         if (selectedColumn != null) {
             selectedColumn.invertAllowBlank();
+            notifyObservers();
         }
     }
-
 
     /**
      * Select the column at given index
@@ -172,6 +177,7 @@ public class Table {
         for (Column c : this.cols) {
             row.addCell(c.getDefaultValue(),c.getType());
         }
+        notifyObservers();
     }
 
     /**
@@ -181,6 +187,7 @@ public class Table {
         if (selectedRow != null){
             rows.remove(selectedRow);
             selectedRow = null;
+            notifyObservers();
         }
     }
 
@@ -200,6 +207,7 @@ public class Table {
             int idx = getSelectedRow().getCells().indexOf(cell);
             if (idx != -1){
                 cell.editValue(keyChar);
+                notifyObservers();
             }
         }
     }
@@ -403,6 +411,32 @@ public class Table {
      */
     public boolean allValidColumns(){
         return cols.stream().allMatch(this::validColumn);
+    }
+    //endregion
+    //region Observers
+
+    /**
+     * Adds an observer window for this table
+     */
+    public void addObserver(SubWindow subWindow) {
+        observers.add(subWindow);
+    }
+
+    /**
+     * Remove observer when window is closed
+     */
+    public void deleteObserver(SubWindow subWindow){
+        observers.remove(subWindow);
+    }
+
+    /**
+     * Redraw appropriate windows
+     * Used when internal structure changes
+     */
+    private void notifyObservers() {
+        for (Observer observer : observers) {
+            observer.update();
+        }
     }
     //endregion
 }

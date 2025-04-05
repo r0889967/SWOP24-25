@@ -135,5 +135,4 @@ public class TablesWindow extends SubWindow {
             }
         }
     }
-
 }

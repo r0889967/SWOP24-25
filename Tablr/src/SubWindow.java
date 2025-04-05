@@ -1,7 +1,11 @@
 import java.awt.Frame;
 import java.awt.Graphics;
 
-public abstract class SubWindow {
+interface Observer {
+    void update();
+}
+
+public abstract class SubWindow implements Observer {
     protected final String CONST_TABLE_MODE_TITLE = "Tablr: Tables Mode";
     protected final String CONST_TABLE_COLUMN_MODE_TITLE = "Tablr: Table Design Mode";
     protected final String CONST_TABLE_ROW_MODE_TITLE = "Tablr: Table Rows Mode";
@@ -25,6 +29,15 @@ public abstract class SubWindow {
      */
     public abstract void drawMode(Frame frame, Graphics graphics);
 
+    @Override
+    public void update() {
+        refresh();
+    }
+
+    protected void refresh() {
+        System.out.printf("triggered for %s%n", this);
+        //TODO: Implement redrawing (Requires custom MyCanvasWindow extends CanvasWindow and multiple windows)
+    }
     //region Locating
     /**
      * Locate table entry in 1D after clicking

@@ -7,6 +7,10 @@ import java.awt.Font;
 public class TableRowsWindow extends SubWindow {
     public TableRowsWindow(TableManager tableManager){
         super(tableManager);
+        Table table = tableManager.getSelectedTable();
+        if (table != null) {
+            table.addObserver(this);
+        }
     }
 
     /**
