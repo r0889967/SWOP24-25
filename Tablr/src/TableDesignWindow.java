@@ -10,6 +10,10 @@ public class TableDesignWindow extends SubWindow {
     
     public TableDesignWindow(TableManager tableManager) {
         super(tableManager);
+        Table table = tableManager.getSelectedTable();
+        if (table != null) {
+            table.addObserver(this);
+        }
     }
 
     /**
